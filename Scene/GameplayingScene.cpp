@@ -38,8 +38,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 
 	m_map = std::make_shared<Map>();
 	
-	m_player = std::make_shared<Player>(Position2{(271),(Game::kMapChipNumY-5*Game::ChipSize)});
+	m_player = std::make_shared<Player>(Position2{(271),(720/*Game::kMapChipNumY-5*Game::ChipSize*/)});
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player);
+
+	m_map->Movement({0.0f,((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f });
+	m_add.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize));
 
 	for (auto& hp : m_hp)
 	{

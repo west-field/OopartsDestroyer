@@ -8,6 +8,7 @@ Map::Map() :m_handle(-1), m_graphSize(),m_camera()
 {
 	m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
 	GetGraphSize(m_handle, &m_graphSize.w, &m_graphSize.h);
+	//m_camera.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f;
 }
 
 Map::~Map()
