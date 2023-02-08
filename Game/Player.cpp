@@ -5,7 +5,7 @@
 
 namespace
 {
-	constexpr int kSize = -5;
+	constexpr int kSize = 5;
 
 	//プレイヤーグラフィック
 	constexpr int kGraphSizeWidth = 16;		//サイズ
@@ -52,7 +52,7 @@ void Player::Update()
 	{
 		if (m_idxY == 1)
 		{
-			m_idxX = (m_idxX + 1) % ( kMoveFrameNum);
+			m_idxX = (m_idxX + 1) % (kMoveFrameNum);
 		}
 		else
 		{
@@ -60,7 +60,6 @@ void Player::Update()
 		}
 		m_frame = 0;
 	}
-
 }
 
 void Player::Draw()
