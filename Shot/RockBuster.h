@@ -15,6 +15,5 @@ public:
 	virtual void Update();
 	virtual void Draw();
 private:
-	int m_handle;
 };
 
