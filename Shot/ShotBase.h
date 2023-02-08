@@ -27,18 +27,13 @@ public:
 	virtual void Movement(Vector2 vec);
 	
 	virtual const Rect& GetRect()const;
-
-	//衝突判定プレイヤー
-	virtual bool IsColPlayer(bool isExist, Position2 pos, Size colSize);
-	//衝突判定エネミー
-	virtual bool IsColEnemy(bool isExist, Position2 pos, Size colSize);
 protected:
 	
 	int m_handle;//グラフィックハンドル
 	
 	Rect m_rect;
 
-	Vector2 m_vec;	//ベクトル
+	Vector2 m_vel;	//弾のスピード
 	
 	bool m_isExist;//存在するか
 	
