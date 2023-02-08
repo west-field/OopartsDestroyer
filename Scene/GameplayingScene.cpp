@@ -76,8 +76,8 @@ GameplayingScene::Draw()
 	m_map->Draw();
 	m_player->Draw();
 
-	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2+2.0f, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f,
-		m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2-2.0f, m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f, 0xffffff, true);
+	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2+5.0f, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f,
+		m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2-5.0f, m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f, 0xffffff, false);
 	
 	m_enemyFactory->Draw();
 	int num = 0;
@@ -213,7 +213,7 @@ int GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	// 接地判定
 	// キャラクタの左下と右下の下に地面があるか調べる
 	if ((m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
-		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == sky) &&
+		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == sky) ||
 		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
 		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == sky))
 	{
@@ -504,6 +504,7 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
 	PlayerCenter();//プレイヤーがセンターに居るかどうか
+	m_player->Action(ActionType::grah_idle);
 
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;
 	//左に移動
@@ -519,6 +520,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			PlayerMoveX -= kPlayerMoveSpeed;
 			m_player->SetLeft(true);
 		}
+		m_player->Action(ActionType::grah_walk);
 	}
 	//右に移動
 	if (input.IsPressed(InputType::right))
@@ -539,6 +541,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			PlayerMoveX += kPlayerMoveSpeed;
 			m_player->SetLeft(false);
 		}
+		m_player->Action(ActionType::grah_walk);
 	}
 	//プレイヤージャンプ処理
 	if (m_player->IsJump() == false && input.IsTriggered(InputType::junp))
@@ -571,10 +574,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	}
 
 	//梯子移動　　プレイヤーの上下 の場所に梯子があるか
-	if ((m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+2.0f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == ladder1)||
-		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+2.0f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == ladder2) &&
-		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2-2.0f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == ladder1) ||
-		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2-2.0f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == ladder2))
+	if ((m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+5.0f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == ladder1)||
+		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+5.0f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == ladder2) &&
+		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2-5.0f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == ladder1) ||
+		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2-5.0f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == ladder2))
 	{
 		DrawString(500, 40, L"梯子", 0xffffff);
 		//上キーで梯子を上がれる
@@ -624,6 +627,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
+		m_player->Action(ActionType::grah_attack);
 	}
 
 	for (int i = 0; i < kShot; i++)
@@ -664,6 +668,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			shot->SetExist(false);
 			m_hp[Object_Player]->Damage(1);
+			m_player->Action(ActionType::grah_hit);
 			break;
 		}
 	}
@@ -677,6 +682,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			enemy->Damage(1);
 			m_hp[Object_Player]->Damage(1);
+			m_player->Action(ActionType::grah_hit);
 			break;
 		}
 	}

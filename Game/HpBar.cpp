@@ -49,7 +49,8 @@ void HpBar::Draw(bool isPlayer)
 	{
 		if (m_isHpGraph[i])
 		{
-			my::MyDrawRectRotaGraph(x, static_cast<int>(y + i * (kGraphHeight * kScale)), 0, 0, kGraphWidth, kGraphHeight, kScale, 0.0f, m_HpHandle, true);
+			my::MyDrawRectRotaGraph(x, static_cast<int>(y + i * (kGraphHeight * kScale)),
+				0, 0, kGraphWidth, kGraphHeight, kScale, 0.0f, m_HpHandle, true,false);
 		}
 	}
 }

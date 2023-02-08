@@ -42,6 +42,7 @@ namespace my
 	/// <param name="angle">描画角度</param>
 	/// <param name="handle">描画するグラフィックのハンドル</param>
 	/// <param name="transFlg">画像透明度の有無</param>
+	/// <param name="turnFlg">画像反転</param>
 	/// <returns>画像表示</returns>
-	int MyDrawRectRotaGraph(int x, int y, int left, int top, int width, int height, float scale, float angle, int handle, bool transFlg);
+	int MyDrawRectRotaGraph(int x, int y, int left, int top, int width, int height, float scale, float angle, int handle, bool transFlg, bool turnFlg);
 }

@@ -36,6 +36,7 @@ void RockBuster::Update()
 void RockBuster::Draw()
 {
 	if (!m_isExist)	return;
-	my::MyDrawRectRotaGraph(m_rect.center.x, m_rect.center.y, 0, 0, m_rect.size.w, m_rect.size.h, 1.0f, 0.0f, m_handle, true);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		0, 0, m_rect.size.w, m_rect.size.h, 1.0f, 0.0f, m_handle, true,m_isLeft);
 	m_rect.Draw(0xaa00ff);
 }

@@ -29,9 +29,9 @@ namespace my {
 		return DrawGraph(x, y,handle, trasnsFlg);
 	}
 
-	int MyDrawRectRotaGraph(int x, int y, int left, int top, int width, int height, float scale, float angle, int handle, bool transFlg)
+	int MyDrawRectRotaGraph(int x, int y, int left, int top, int width, int height, float scale, float angle, int handle, bool transFlg, bool turnFlg)
 	{
-		return DrawRectRotaGraph(x, y, left, top, width, height, scale, angle, handle, transFlg);
+		return DrawRectRotaGraph(x, y, left, top, width, height, scale, angle, handle, transFlg, turnFlg);
 	}
 
 }//end of namespace my
