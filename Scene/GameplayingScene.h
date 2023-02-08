@@ -67,6 +67,7 @@ public:
 
     std::shared_ptr<Map> m_map;//マップ
     Position2 m_add;//プレイヤーがどのくらい移動しているか
+    bool m_isMapJump = false;//マップでジャンプをしたか
 
     std::shared_ptr<Player> m_player;//プレイヤー
     float m_fallPlayerSpeed = 0;//落ちていくスピード
@@ -85,6 +86,7 @@ public:
     };
     std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;//HPバー
     
+    //自機
     static constexpr int kShot = 15;//ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;//ショット
     int m_shotCount = 0;//今存在しているショットの数
