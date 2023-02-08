@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Screen">
+      <UniqueIdentifier>{605e20e4-7eb8-4457-9540-c1dc967a5d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{29814966-7bd4-4fa9-b197-88b22c53811f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shot">
+      <UniqueIdentifier>{54f95023-8716-4d70-8de0-860c15a917b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{cc30ee72-2de1-4f72-84de-fbedea4ba201}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Game\EnemyBase.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EnemyFactory.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\EnemyMoveSide.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\HpBar.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\DrawFunctions.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Geometry.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\InputState.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\Sound.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Shot\RockBuster.cpp">
+      <Filter>Shot</Filter>
+    </ClCompile>
+    <ClCompile Include="Shot\ShotBase.cpp">
+      <Filter>Shot</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameoverScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameplayingScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameStartCountScene .cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\KeyConfigScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\OperateScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\OptionScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\PauseScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Secne.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ShotChangeScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TitleScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\EnemyBase.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EnemyFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\EnemyMoveSide.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\HpBar.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\DrawFunctions.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Geometry.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\InputState.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Sound.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Shot\RockBuster.h">
+      <Filter>Shot</Filter>
+    </ClInclude>
+    <ClInclude Include="Shot\ShotBase.h">
+      <Filter>Shot</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameoverScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameplayingScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameStartCountScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\KeyConfigScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\OperateScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\OptionScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\PauseScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SceneManager.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Secne.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ShotChangeScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TitleScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
