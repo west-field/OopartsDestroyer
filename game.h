@@ -20,17 +20,20 @@ namespace Game
 	constexpr float kScale = 2.0f;
 
 	//画面におけるマップチップの数
-	static constexpr int kNumX = kScreenWidth / ChipSize;
-	static constexpr int kNumY = kScreenHeight / ChipSize;
+	 constexpr int kNumX = kScreenWidth / ChipSize;
+	 constexpr int kNumY = kScreenHeight / ChipSize;
 
 	//画面に表示できるマップの大きさ
-	static constexpr int kMapNumX = 16;
-	static constexpr int kMapNumY = 16;
-	//マップを表示する画面サイズ
-	static constexpr int kMapScreenX = (kScreenWidth - kMapNumX * ChipSize)/2;
-	static constexpr int kMapScreenY = (kScreenHeight - kMapNumY * ChipSize)/2;
+	 constexpr int kMapNumX = 16;
+	 constexpr int kMapNumY = 16;
+	//マップを表示する画面左上座標
+	 constexpr int kMapScreenLeftX = (kScreenWidth - kMapNumX * ChipSize)/2;
+	 constexpr int kMapScreenTopY = (kScreenHeight - kMapNumY * ChipSize)/2;
+	//マップを表示する画面右下座標
+	 constexpr int kMapScreenRightX = kMapScreenLeftX + kMapNumX * ChipSize;
+	 constexpr int kMapScreenBottomY = kMapScreenTopY + kMapNumY * ChipSize;
 
 	//マップの大きさ
-	static constexpr int kMapChipNumX = 96;//219;
-	static constexpr int kMapChipNumY = 92;//135;
+	 constexpr int kMapChipNumX = 128+16+58+16;//219;
+	 constexpr int kMapChipNumY = 135;//135;
 };

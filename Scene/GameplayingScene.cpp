@@ -40,11 +40,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 
 	m_map = std::make_shared<Map>();
 	
-	m_player = std::make_shared<Player>(Position2{(271),(722)});//プレイヤーの初期位置
+	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*9),(Game::kMapScreenBottomY - 6*Game::ChipSize)});//プレイヤーの初期位置
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player);//プレイヤーを渡す
 
-	m_map->Movement({0.0f,((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f });//表示位置を指定
-	m_add.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize));//移動した分
+	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
+	m_add = { Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY };
 
 	for (auto& hp : m_hp)
 	{
@@ -77,11 +77,6 @@ GameplayingScene::Draw()
 	
 	m_map->Draw();
 	m_player->Draw();
-
-	//梯子に上れる範囲
-	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2+ kPullPos, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f,
-		m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2- kPullPos, m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f, 0xffffff, false);
-	
 	m_enemyFactory->Draw();//エネミーを表示
 	int num = 0;
 	for (auto& shot : m_shots)//ショットを表示
@@ -96,6 +91,10 @@ GameplayingScene::Draw()
 	m_hp[Object_Player]->Draw(true);//HPバーを表示
 
 #ifdef _DEBUG
+	//梯子に上れる範囲
+	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f,
+		m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f, 0xffffff, false);
+
 	DrawFormatString(150, 20, 0xffffff, L"弾の数%d", num);
 	if (m_isPlayerCenterLR)
 	{
@@ -130,6 +129,9 @@ GameplayingScene::Draw()
 	DrawFormatString(0, 80, 0xffffff, L"player.x%3f,y.%3f", m_player->GetRect().center.x+m_add.x, m_player->GetRect().center.y+m_add.y);//プレイヤーと足す座標
 	DrawFormatString(0, 100, 0xffffff, L"player.x%3f,y.%3f", m_player->GetRect().center.x, m_player->GetRect().center.y);//プレイヤー座標
 	DrawFormatString(0, 120, 0xffffff, L"add.x%3f,y.%3f",m_add.x, m_add.y);//画面がどのくらい移動したか
+
+	//表示したいマップ画面
+	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenRightX, Game::kMapScreenBottomY, 0xffffff, false);
 #endif
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -247,24 +249,24 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		hsize = enemy->GetRect().GetSize().h * 0.5f;
 
 		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
-		if (MapHitCheck(enemy->GetRect().GetCenter().x - wsize, enemy->GetRect().GetCenter().y + hsize, Dummy, MoveY) == 3)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x - wsize, m_add.y + enemy->GetRect().GetCenter().y + hsize, Dummy, MoveY) == 3)
 		{
 			m_fallEnemySpeed = 0.0f;
 		}
 		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
-		if (MapHitCheck(enemy->GetRect().GetCenter().x + wsize, enemy->GetRect().GetCenter().y + hsize, Dummy, MoveY) == 3)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x + wsize, m_add.y + enemy->GetRect().GetCenter().y + hsize, Dummy, MoveY) == 3)
 		{
 			m_fallEnemySpeed = 0.0f;
 		}
 
 		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
-		if (MapHitCheck(enemy->GetRect().GetCenter().x - wsize, enemy->GetRect().GetCenter().y - hsize, Dummy, MoveY) == 4)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x - wsize, m_add.y + enemy->GetRect().GetCenter().y - hsize, Dummy, MoveY) == 4)
 		{
 			m_fallEnemySpeed *= -1.0f;
 		}
 
 		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
-		if (MapHitCheck(enemy->GetRect().GetCenter().x + wsize, enemy->GetRect().GetCenter().y - hsize, Dummy, MoveY) == 4)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x + wsize, m_add.y + enemy->GetRect().GetCenter().y - hsize, Dummy, MoveY) == 4)
 		{
 			m_fallEnemySpeed *= -1.0f;
 		}
@@ -277,15 +279,15 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		}
 		// 後に左右移動成分だけでチェック
 		// 左のチェック
-		if (MapHitCheck(enemy->GetRect().GetCenter().x - hsize, enemy->GetRect().GetCenter().y + hsize, MoveX, Dummy) == 2 ||
-			MapHitCheck(enemy->GetRect().GetCenter().x - hsize, enemy->GetRect().GetCenter().y - hsize, MoveX, Dummy) == 2)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x - hsize, m_add.y + enemy->GetRect().GetCenter().y + hsize, MoveX, Dummy) == 2 ||
+			MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x - hsize, m_add.y + enemy->GetRect().GetCenter().y - hsize, MoveX, Dummy) == 2)
 		{
 			enemy->SetExist(false);
 		}
 
 		// 右のチェック
-		if (MapHitCheck(enemy->GetRect().GetCenter().x + hsize, enemy->GetRect().GetCenter().y + hsize, MoveX, Dummy) == 1 ||
-			MapHitCheck(enemy->GetRect().GetCenter().x + hsize, enemy->GetRect().GetCenter().y - hsize, MoveX, Dummy) == 1)
+		if (MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x + hsize, m_add.y + enemy->GetRect().GetCenter().y + hsize, MoveX, Dummy) == 1 ||
+			MapHitCheck(m_add.x + enemy->GetRect().GetCenter().x + hsize, m_add.y + enemy->GetRect().GetCenter().y - hsize, MoveX, Dummy) == 1)
 		{
 			enemy->SetExist(false);
 		}
@@ -295,10 +297,10 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 
 		// 接地判定
 			// キャラクタの左下と右下の下に地面があるか調べる
-		if ((m_map->GetMapChipParam(enemy->GetRect().GetCenter().x - enemy->GetRect().GetSize().w * 0.5f, enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
-			(m_map->GetMapChipParam(enemy->GetRect().GetCenter().x - enemy->GetRect().GetSize().w * 0.5f, enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == sky) &&
-			(m_map->GetMapChipParam(enemy->GetRect().GetCenter().x + enemy->GetRect().GetSize().w * 0.5f, enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
-			(m_map->GetMapChipParam(enemy->GetRect().GetCenter().x + enemy->GetRect().GetSize().w * 0.5f, enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == sky))
+		if ((m_map->GetMapChipParam(m_add.x + enemy->GetRect().GetCenter().x - enemy->GetRect().GetSize().w * 0.5f, m_add.y + enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
+			(m_map->GetMapChipParam(m_add.x + enemy->GetRect().GetCenter().x - enemy->GetRect().GetSize().w * 0.5f, m_add.y + enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == sky) &&
+			(m_map->GetMapChipParam(m_add.x + enemy->GetRect().GetCenter().x + enemy->GetRect().GetSize().w * 0.5f, m_add.y + enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == no)||
+			(m_map->GetMapChipParam(m_add.x + enemy->GetRect().GetCenter().x + enemy->GetRect().GetSize().w * 0.5f, m_add.y + enemy->GetRect().GetCenter().y + enemy->GetRect().GetSize().h * 0.5f + 1.0f) == sky))
 		{
 			// 足場が無かったらジャンプ中にする
 			enemy->SetJump(true);
@@ -355,8 +357,8 @@ int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
 	float blockLeftX = 0.0f, blockTopY = 0.0f, blockRightX = 0.0f, blockBottomY = 0.0f;
 
 	//整数値へ変換
-	int noX = afterX / Game::ChipSize;
-	int noY = afterY / Game::ChipSize;
+	int noX = static_cast<int>(afterX / Game::ChipSize);
+	int noY = static_cast<int>(afterY / Game::ChipSize);
 
 	//当たっていたら壁から離す処理を行う、ブロックの左右上下の座標を算出
 	blockLeftX = static_cast<float>(noX * Game::ChipSize);//左　X座標
@@ -522,7 +524,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 		else
 		{
-			if (m_isPlayerCenterLR && m_map->GetPos().x < 0.0f)
+			if (m_isPlayerCenterLR && m_map->GetPos().x < Game::kMapScreenLeftX)//左端よりも小さい場合
 			{
 				//m_camera.x += kPlayerMoveSpeed;
 				MoveMap(kPlayerMoveSpeed, 0.0f);
@@ -552,7 +554,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		else
 		{
 			float camera = m_map->GetPos().x + Game::kMapChipNumX * Game::ChipSize;
-			if (m_isPlayerCenterLR && camera > Game::kScreenWidth)
+			if (m_isPlayerCenterLR && camera > Game::kMapScreenRightX)//右端よりも大きい場合
 			{
 				//m_camera.x -= kPlayerMoveSpeed;
 				MoveMap(-kPlayerMoveSpeed, 0.0f);
@@ -575,19 +577,13 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		m_player->SetJump(true);
 	}
 
-	float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
-	/*if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
-	{
-		MoveMap(0.0f, kJumpAcc);
-	}*/
-
 	//プレイヤーがジャンプしていたら
 	if (m_player->IsJump())
 	{
 		// 落下処理
 		m_fallPlayerSpeed += 0.4f;
 		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
-		if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
+		if (m_isPlayerCenterUD && camera > Game::kMapScreenBottomY)//下端よりも大きい場合
 		{
 			MoveMap(0.0f, -m_fallPlayerSpeed);
 		}
@@ -608,7 +604,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		//上キーで梯子を上がれる
 		if (input.IsPressed(InputType::up))
 		{
-			if (m_isPlayerCenterUD && m_map->GetPos().y < 0.0f)
+			if (m_isPlayerCenterUD && m_map->GetPos().y < Game::kMapScreenTopY)//上端よりも小さい場合
 			{
 				/*m_map->Movement({ 0.0f,kPlayerMoveSpeed });
 				m_add += {0.0f, -kPlayerMoveSpeed};*/
@@ -622,7 +618,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		//下キーで梯子を下がれる
 		if (input.IsPressed(InputType::down))
 		{
-			if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
+			float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
+			if (m_isPlayerCenterUD && camera > Game::kMapScreenBottomY)//下端よりも大きい場合
 			{
 				//m_map->Movement({ 0.0f,-kPlayerMoveSpeed });
 				//m_add += {0.0f, kPlayerMoveSpeed};
@@ -634,16 +631,12 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			}
 		}
 	}
-	/*else if (m_player->IsJump() == false && m_isPlayerCenterUD && camera > Game::kScreenHeight)
-	{
-		MoveMap( 0.0f,-0.4f );
-	}*/
 
 	// 移動量に基づいてキャラクタの座標を移動
 	MovePlayer(PlayerMoveX, PlayerMoveY);
 
-	m_map->Update();
-	m_player->Update();
+	m_map->Update();		//	マップ更新
+	m_player->Update();		//	プレイヤー更新
 	
 	//エネミー
 	float MoveX = kEnemyMoveSpeed, MoveY = 0.0f;
@@ -713,17 +706,24 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 
-	//プレイヤーのHPが０になったらゲームオーバーにする
-	if (m_hp[Object_Player]->GetHp() <= 0)
+	//ゲームオーバー判定
 	{
-		for (auto& shot : m_shots)
+		//プレイヤーのHPが０になったらゲームオーバーにする
+		if (m_hp[Object_Player]->GetHp() <= 0)
 		{
-			shot->SetExist(false);
+			m_updateFunc = &GameplayingScene::FadeOutUpdat;
+			m_fadeColor = 0xff0000;
 		}
-
-		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0xff0000;
+		//針のある部分に乗っていたら
+		if ((m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == thorn) &&
+			(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == thorn))
+		{
+			m_player->Action(ActionType::grah_hit);
+			m_updateFunc = &GameplayingScene::FadeOutUpdat;
+			m_fadeColor = 0xff0000;
+		}
 	}
+	
 	if (input.IsTriggered(InputType::next))
 	{
 		for (auto& shot : m_shots)
