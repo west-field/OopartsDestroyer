@@ -40,14 +40,15 @@ void Map::Draw()
 			int graphY = 0;
 
 			int X =  static_cast<int>((x * Game::ChipSize + Game::ChipSize / 2) + m_camera.x);
-			int Y = static_cast<int>((y * Game::ChipSize + Game::ChipSize / 2) + m_camera.y);
+			int Y =  static_cast<int>((y * Game::ChipSize + Game::ChipSize / 2) + m_camera.y);
 
 			if (chipNo == 0) continue;
 			my::MyDrawRectRotaGraph(X, Y , graphX, graphY, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, false,false);
 		}
 	}
-
+#ifdef _DEBUG
 	DrawFormatString(0,140, 0xffffff, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
+#endif
 }
 
 void Map::Movement(Vector2 vec)

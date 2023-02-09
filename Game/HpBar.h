@@ -28,8 +28,11 @@ private:
 	int m_Hp;
 	//HP‚Ì‰æ‘œ
 	int m_HpHandle;
+
 	//HP‰æ‘œ•\¦À•W
 	Position2 m_pos;
+	//‰æ‘œ‚Ì•‚Æ‚‚³
+	Size m_size;
 
 	//HP‰æ‘œ‚ğ‰½–‡•\¦‚·‚é‚©
 	bool m_isHpGraph[kHpMax];

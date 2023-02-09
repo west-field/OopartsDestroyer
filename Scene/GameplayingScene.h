@@ -123,5 +123,7 @@ public:
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
     int m_shotCount = 0;                                    //今存在しているショットの数
+
+    Vector2 m_correction;//画面を動かしたとき位置を補正する
 };
 

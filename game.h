@@ -25,9 +25,9 @@ namespace Game
 
 	//画面に表示できるマップの大きさ
 	 constexpr int kMapNumX = 16;
-	 constexpr int kMapNumY = 16;
+	 constexpr int kMapNumY = 15;
 	//マップを表示する画面左上座標
-	 constexpr int kMapScreenLeftX = (kScreenWidth - kMapNumX * ChipSize)/2;
+	 constexpr int kMapScreenLeftX = (kScreenWidth - (kMapNumX-1) * ChipSize)/2;
 	 constexpr int kMapScreenTopY = (kScreenHeight - kMapNumY * ChipSize)/2;
 	//マップを表示する画面右下座標
 	 constexpr int kMapScreenRightX = kMapScreenLeftX + kMapNumX * ChipSize;

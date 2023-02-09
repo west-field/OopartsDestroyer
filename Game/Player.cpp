@@ -31,21 +31,25 @@ Player::~Player()
 void Player::Update()
 {
 	float chipSizeHalf = Game::ChipSize / 2;
-	if (m_rect.center.x < chipSizeHalf)
+	//画面の左端についたらそれ以上動けないようにする
+	if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
 	{
-		m_rect.center.x = chipSizeHalf;
+		m_rect.center.x = Game::kMapScreenLeftX + chipSizeHalf;
 	}
-	else if (m_rect.center.x > Game::kScreenWidth - chipSizeHalf)
+	//画面の右端についたらそれ以上動けないようにする
+	else if (m_rect.center.x > Game::kMapScreenRightX - chipSizeHalf)
 	{
-		m_rect.center.x = Game::kScreenWidth - chipSizeHalf;
+		m_rect.center.x = Game::kMapScreenRightX - chipSizeHalf;
 	}
-	if (m_rect.center.y < chipSizeHalf)
+	//画面の上端についたらそれ以上動けないように
+	if (m_rect.center.y < Game::kMapScreenTopY + chipSizeHalf)
 	{
-		m_rect.center.y = chipSizeHalf;
+		m_rect.center.y = Game::kMapScreenTopY + chipSizeHalf;
 	}
-	else if (m_rect.center.y > Game::kScreenHeight - chipSizeHalf)
+	//画面の下端についたらそれ以上動けないように
+	else if (m_rect.center.y > Game::kMapScreenBottomY - chipSizeHalf)
 	{
-		m_rect.center.y = Game::kScreenHeight - chipSizeHalf;
+		m_rect.center.y = Game::kMapScreenBottomY - chipSizeHalf;
 	}
 
 	if(m_frame++ > kFrameSpeed )
