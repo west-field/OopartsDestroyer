@@ -4,6 +4,11 @@
 #include "game.h"
 #include "Util/DrawFunctions.h"
 
+namespace
+{
+	constexpr float kScale = 1.0f;
+}
+
 Map::Map() :m_handle(-1), m_graphSize(),m_camera()
 {
 	m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
@@ -38,7 +43,7 @@ void Map::Draw()
 			int Y = static_cast<int>((y * Game::ChipSize + Game::ChipSize / 2) + m_camera.y);
 
 			if (chipNo == 0) continue;
-			DrawRectRotaGraph(X, Y , graphX, graphY, Game::ChipSize, Game::ChipSize, 1.0f, 0.0f, m_handle, false);
+			my::MyDrawRectRotaGraph(X, Y , graphX, graphY, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, false,false);
 		}
 	}
 
