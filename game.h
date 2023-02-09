@@ -2,8 +2,12 @@
 
 namespace Game
 {
+#ifdef _DEBUG
 	//ウィンドウモード設定
 	constexpr bool kWindowMode = true;
+#else
+	constexpr bool kWindowMode = false;
+#endif
 	//ウィンドウ名
 	const wchar_t* const kTitleText = L"ロックマン";
 	//ウィンドウサイズ
