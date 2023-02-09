@@ -39,8 +39,9 @@ void MoveSide::Draw()
 	int imgX = (m_idx / anim_frame_speed) * 29;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, kSize, kSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
-
+#ifdef _DEBUG
 	m_rect.Draw(0xff0000);
+#endif
 }
 
 void MoveSide::Movement(Vector2 vec)

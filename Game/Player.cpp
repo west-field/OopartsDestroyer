@@ -66,10 +66,12 @@ void Player::Draw()
 {
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		m_idxX  * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+#ifdef _DEBUG
 	m_rect.Draw(0xaaffaa);
 
 	DrawFormatString(0, 0, 0xffffff, L"%d", m_idxX);
 	DrawFormatString(0, 20, 0xffffff, L"%d", m_idxY);
+#endif
 }
 
 void Player::Movement(Vector2 vec)
