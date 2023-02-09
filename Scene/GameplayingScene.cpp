@@ -40,11 +40,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 
 	m_map = std::make_shared<Map>();
 	
-	m_player = std::make_shared<Player>(Position2{(271),(720/*Game::kMapChipNumY-5*Game::ChipSize*/)});
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player);
+	m_player = std::make_shared<Player>(Position2{(271),(722)});//プレイヤーの初期位置
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player);//プレイヤーを渡す
 
-	m_map->Movement({0.0f,((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f });
-	m_add.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize));
+	m_map->Movement({0.0f,((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f });//表示位置を指定
+	m_add.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize));//移動した分
 
 	for (auto& hp : m_hp)
 	{
@@ -78,12 +78,13 @@ GameplayingScene::Draw()
 	m_map->Draw();
 	m_player->Draw();
 
+	//梯子に上れる範囲
 	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2+ kPullPos, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f,
 		m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2- kPullPos, m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f, 0xffffff, false);
 	
-	m_enemyFactory->Draw();
+	m_enemyFactory->Draw();//エネミーを表示
 	int num = 0;
-	for (auto& shot : m_shots)
+	for (auto& shot : m_shots)//ショットを表示
 	{
 		if (shot->IsExist())
 		{
@@ -92,8 +93,9 @@ GameplayingScene::Draw()
 		}
 	}
 
-	m_hp[Object_Player]->Draw(true);
+	m_hp[Object_Player]->Draw(true);//HPバーを表示
 
+#ifdef _DEBUG
 	DrawFormatString(150, 20, 0xffffff, L"弾の数%d", num);
 	if (m_isPlayerCenterLR)
 	{
@@ -111,12 +113,6 @@ GameplayingScene::Draw()
 	{
 		DrawFormatString(150, 60, 0xff00ff, L"uD,false");
 	}
-
-	/*SetDrawScreen(DX_SCREEN_BACK);
-	int shakeX = GetRand(4) - 2;
-	int shakeY = GetRand(4) - 2;
-	DrawGraph(shakeX, shakeY, m_test, true);*/
-
 	int centeridxX = Game::kNumX / 2;
 	int centeridxY = Game::kNumY / 2;
 	Position2 fieldCenterLeftUp =
@@ -129,12 +125,12 @@ GameplayingScene::Draw()
 		fieldCenterLeftUp.x + Game::ChipSize,
 		fieldCenterLeftUp.y + Game::ChipSize
 	};
-	DrawBoxAA(fieldCenterLeftUp.x, fieldCenterLeftUp.y, fieldCenterRightBottom.x, fieldCenterRightBottom.y, 0xaaffaa, false);
+	DrawBoxAA(fieldCenterLeftUp.x, fieldCenterLeftUp.y, fieldCenterRightBottom.x, fieldCenterRightBottom.y, 0xaaffaa, false);//画面の中心位置
 
 	DrawFormatString(0, 80, 0xffffff, L"player.x%3f,y.%3f", m_player->GetRect().center.x+m_add.x, m_player->GetRect().center.y+m_add.y);//プレイヤーと足す座標
 	DrawFormatString(0, 100, 0xffffff, L"player.x%3f,y.%3f", m_player->GetRect().center.x, m_player->GetRect().center.y);//プレイヤー座標
 	DrawFormatString(0, 120, 0xffffff, L"add.x%3f,y.%3f",m_add.x, m_add.y);//画面がどのくらい移動したか
-
+#endif
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -157,7 +153,7 @@ bool GameplayingScene::createShot(Position2 pos, bool isPlayer, bool isLeft)
 	return false;
 }
 
-int GameplayingScene::MovePlayer(float MoveX, float MoveY)
+void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
@@ -170,6 +166,7 @@ int GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	hsize = m_player->GetRect().GetSize().h * 0.5f;
 
 	// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
+	//左位置、下位置
 	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
 	{
 
@@ -177,18 +174,21 @@ int GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	}
 
 	// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
+	//右位置、下位置
 	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
 	{
 		m_fallPlayerSpeed = 0.0f;
 	}
 
 	// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
+	//左位置、上位置
 	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
 	{
 		m_fallPlayerSpeed *= -1.0f;
 	}
 
 	// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
+	//右位置、上位置
 	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
 	{
 		m_fallPlayerSpeed *= -1.0f;
@@ -198,16 +198,16 @@ int GameplayingScene::MovePlayer(float MoveX, float MoveY)
 
 	// 後に左右移動成分だけでチェック
 	// 左下のチェック
-	MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
+	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
 
 	// 右下のチェック
-	MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
+	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
 
 	// 左上のチェック
-	MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
+	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
 
 	// 右上のチェック
-	MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
+	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
 
 	// 左右移動成分を加算
 	m_player->Movement({ MoveX,0.0f });
@@ -229,10 +229,10 @@ int GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	}
 
 	// 終了
-	return 0;
+	return;
 }
 
-int GameplayingScene::MoveEnemy(float MoveX, float MoveY)
+void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
@@ -311,16 +311,13 @@ int GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 	}
 
 	// 終了
-	return 0;
+	return;
 }
 
-int GameplayingScene::MoveShot(int i ,float MoveX, float MoveY)
+void GameplayingScene::MoveShot(int i ,float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
-
-	// キャラクタの左上、右上、左下、右下部分が当たり判定のある
-	// マップに衝突しているか調べ、衝突していたら補正する
 
 	// 半分のサイズを算出
 	wsize = m_shots[i]->GetRect().GetSize().w * 0.5f;
@@ -328,26 +325,25 @@ int GameplayingScene::MoveShot(int i ,float MoveX, float MoveY)
 
 	if (m_shots[i]->IsLeft())//左に撃った弾かどうか
 	{
+		//左に打った場合は逆方向に移動できるように
 		MoveX *= -1.0f;
 	}
 
 	// 左右移動成分を加算
 	m_shots[i]->Movement({ MoveX,0.0f });
 
-	// 後に左右移動成分だけでチェック
-	// 左のチェック
+	//画面の外に出たら消える
 	if (m_shots[i]->GetRect().GetCenter().x + wsize < 0)
 	{
 		m_shots[i]->SetExist(false);
 	}
-	// 右下
 	if (m_shots[i]->GetRect().GetCenter().x - wsize > Game::kScreenWidth)
 	{
 		m_shots[i]->SetExist(false);
 	}
 
 	// 終了
-	return 0;
+	return ;
 }
 
 int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
@@ -358,18 +354,23 @@ int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
 	afterY = Y + MoveY;
 	float blockLeftX = 0.0f, blockTopY = 0.0f, blockRightX = 0.0f, blockBottomY = 0.0f;
 
+	//整数値へ変換
+	int noX = afterX / Game::ChipSize;
+	int noY = afterY / Game::ChipSize;
+
 	//当たっていたら壁から離す処理を行う、ブロックの左右上下の座標を算出
-	blockLeftX = static_cast<float>((int)afterX / Game::ChipSize) * Game::ChipSize;//左　X座標
-	blockRightX = static_cast<float>((int)afterX / Game::ChipSize + 1) * Game::ChipSize;//右　X座標
+	blockLeftX = static_cast<float>(noX * Game::ChipSize);//左　X座標
+	blockRightX = static_cast<float>((noX + 1) * Game::ChipSize);//右　X座標
 
-	blockTopY = static_cast<float>((int)afterY / Game::ChipSize) * Game::ChipSize;//上　Y座標
-	blockBottomY = static_cast<float>((int)afterY / Game::ChipSize + 1) * Game::ChipSize;//下　Y座標
+	blockTopY = static_cast<float>(noY * Game::ChipSize);//上　Y座標
+	blockBottomY = static_cast<float>((noY + 1) * Game::ChipSize);//下　Y座標
 
+	int mapchip = m_map->GetMapChipParam(afterX, afterY);
 	//当たり判定のあるブロックに当たっているか
-	if (m_map->GetMapChipParam(afterX, afterY ) == terrain ||
-		m_map->GetMapChipParam(afterX , afterY) == wall1 ||
-		m_map->GetMapChipParam(afterX, afterY) == wall2 ||
-		m_map->GetMapChipParam(afterX , afterY) == stone)
+	if (mapchip  == terrain ||
+		mapchip == wall1 ||
+		mapchip == wall2 ||
+		mapchip == stone)
 	{
 		//ブロックの上に当たっていた場合
 		if (MoveY > 0.0f)
@@ -391,7 +392,7 @@ int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
 		if (MoveX > 0.0f)
 		{
 			//移動量を補正する
-			MoveX = blockLeftX - X - 1.0f - m_add.x;
+			MoveX = blockLeftX - X - 1.0f;
 			//左辺に当たったと返す
 			return 1;
 		}
@@ -399,7 +400,7 @@ int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
 		if (MoveX < 0.0f)
 		{
 			//移動量を補正する
-			MoveX = blockRightX - X + 1.0f + m_add.x;
+			MoveX = blockRightX - X + 1.0f;
 			//右辺に当たったと返す
 			return 2;
 		}
@@ -442,11 +443,14 @@ void GameplayingScene::PlayerCenter()
 	return;
 }
 
-int GameplayingScene::MoveMap(float MoveX, float MoveY)
+void GameplayingScene::MoveMap(float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float wsize = m_player->GetRect().GetSize().w * 0.5f;
 	float hsize = m_player->GetRect().GetSize().h * 0.5f;
+
+	MoveX *= -1.0f;
+	MoveY *= -1.0f;
 
 	// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
 	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
@@ -469,9 +473,10 @@ int GameplayingScene::MoveMap(float MoveX, float MoveY)
 	{
 		m_fallPlayerSpeed *= -1.0f;
 	}
-	m_map->Movement({ 0.0f,MoveY });
-	MoveY *= -1.0f;
+	
 	m_add += {0.0f, MoveY};
+	MoveY *= -1.0f;
+	m_map->Movement({ 0.0f,MoveY });
 
 	// 左下のチェック
 	MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
@@ -482,12 +487,12 @@ int GameplayingScene::MoveMap(float MoveX, float MoveY)
 	// 右上のチェック
 	MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
 
-	m_map->Movement({ MoveX,0.0f });
-	MoveX *= -1.0f;
 	m_add += { MoveX, 0.0f };
+	MoveX *= -1.0f;
+	m_map->Movement({ MoveX,0.0f });
 
 	//終了
-	return 0;
+	return;
 }
 
 void GameplayingScene::FadeInUpdat(const InputState& input)
@@ -511,17 +516,25 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//左に移動
 	if (input.IsPressed(InputType::left))
 	{
-		if (m_isPlayerCenterLR && m_map->GetPos().x < 0.0f)
+		if (input.IsTriggered(InputType::left))
 		{
-			//m_camera.x += kPlayerMoveSpeed;
-			MoveMap(kPlayerMoveSpeed, 0.0f);
+			m_player->SetLeft(true);
 		}
 		else
 		{
-			PlayerMoveX -= kPlayerMoveSpeed;
+			if (m_isPlayerCenterLR && m_map->GetPos().x < 0.0f)
+			{
+				//m_camera.x += kPlayerMoveSpeed;
+				MoveMap(kPlayerMoveSpeed, 0.0f);
+			}
+			else
+			{
+				PlayerMoveX -= kPlayerMoveSpeed;
+			}
 			m_player->SetLeft(true);
+			m_player->Action(ActionType::grah_walk);
 		}
-		m_player->Action(ActionType::grah_walk);
+		m_player->Action(ActionType::grah_idle);
 	}
 	//右に移動
 	else if (input.IsPressed(InputType::right))
@@ -531,22 +544,27 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			m_add.x = 0.0f;
 			m_map->SetPos({ 0.0f,0.0f });
 		}
-		float camera = m_map->GetPos().x + Game::kMapChipNumX * Game::ChipSize;
-		if (m_isPlayerCenterLR && camera > Game::kScreenWidth)
+		
+		if (input.IsTriggered(InputType::right))
 		{
-			//m_camera.x -= kPlayerMoveSpeed;
-			MoveMap(-kPlayerMoveSpeed, 0.0f);
+			m_player->SetLeft(false);
 		}
 		else
 		{
-			PlayerMoveX += kPlayerMoveSpeed;
+			float camera = m_map->GetPos().x + Game::kMapChipNumX * Game::ChipSize;
+			if (m_isPlayerCenterLR && camera > Game::kScreenWidth)
+			{
+				//m_camera.x -= kPlayerMoveSpeed;
+				MoveMap(-kPlayerMoveSpeed, 0.0f);
+			}
+			else
+			{
+				PlayerMoveX += kPlayerMoveSpeed;
+			}
 			m_player->SetLeft(false);
+			m_player->Action(ActionType::grah_walk);
 		}
-		m_player->Action(ActionType::grah_walk);
-	}
-	else
-	{
-		m_player->Action(ActionType::grah_walk);
+		m_player->Action(ActionType::grah_idle);
 	}
 
 	//プレイヤージャンプ処理
@@ -558,10 +576,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	}
 
 	float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
-	if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
+	/*if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
 	{
 		MoveMap(0.0f, kJumpAcc);
-	}
+	}*/
 
 	//プレイヤーがジャンプしていたら
 	if (m_player->IsJump())
@@ -571,7 +589,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
 		if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
 		{
-			MoveMap(0.0f, -0.4f);
+			MoveMap(0.0f, -m_fallPlayerSpeed);
 		}
 		else
 		{
@@ -580,20 +598,21 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 
-	//梯子移動　　プレイヤーの上下 の場所に梯子があるか
+	//梯子移動　　プレイヤーの上下 の場所に梯子があるか　プレイヤーの上に梯子１が時、プレイヤーの上下に梯子２があるとき
 	if ((m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+ kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) == ladder1)||
 		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x- m_player->GetRect().GetSize().w / 2+ kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) == ladder2) &&
 		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2- kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == ladder1) ||
 		(m_map->GetMapChipParam(m_add.x + m_player->GetRect().GetCenter().x+ m_player->GetRect().GetSize().w / 2- kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == ladder2))
 	{
-		DrawString(500, 40, L"梯子", 0xffffff);
+		DrawString(400, 40, L"梯子", 0xffffff);
 		//上キーで梯子を上がれる
 		if (input.IsPressed(InputType::up))
 		{
 			if (m_isPlayerCenterUD && m_map->GetPos().y < 0.0f)
 			{
-				m_map->Movement({ 0.0f,kPlayerMoveSpeed });
-				m_add += {0.0f, -kPlayerMoveSpeed};
+				/*m_map->Movement({ 0.0f,kPlayerMoveSpeed });
+				m_add += {0.0f, -kPlayerMoveSpeed};*/
+				MoveMap(0.0f, kPlayerMoveSpeed);
 			}
 			else
 			{
@@ -605,8 +624,9 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			if (m_isPlayerCenterUD && camera > Game::kScreenHeight)
 			{
-				m_map->Movement({ 0.0f,-kPlayerMoveSpeed });
-				m_add += {0.0f, kPlayerMoveSpeed};
+				//m_map->Movement({ 0.0f,-kPlayerMoveSpeed });
+				//m_add += {0.0f, kPlayerMoveSpeed};
+				MoveMap(0.0f, -kPlayerMoveSpeed);
 			}
 			else
 			{
@@ -614,10 +634,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			}
 		}
 	}
-	else if (m_player->IsJump() == false && m_isPlayerCenterUD && camera > Game::kScreenHeight)
+	/*else if (m_player->IsJump() == false && m_isPlayerCenterUD && camera > Game::kScreenHeight)
 	{
 		MoveMap( 0.0f,-0.4f );
-	}
+	}*/
 
 	// 移動量に基づいてキャラクタの座標を移動
 	MovePlayer(PlayerMoveX, PlayerMoveY);
