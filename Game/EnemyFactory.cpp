@@ -4,11 +4,11 @@
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
 #include "EnemyBase.h"
-#include "EnemyMoveSide.h"
+#include "EnemyMoveUpDown.h"
 
 EnemyFactory::EnemyFactory(std::shared_ptr<Player>player):m_player(player)
 {
-	m_handleMap[EnemyType::widthMove] = my::MyLoadGraph(L"Data/enemy1.png");
+	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -21,7 +21,7 @@ void EnemyFactory::Update()
 
 	if (m_frame % 180 == 0)
 	{
-		Create(EnemyType::widthMove, { Game::kScreenWidth,400.0f });
+		Create(EnemyType::MoveUpDown, { Game::kScreenWidth,400.0f });
 	}
 
 	//Ç¢Ç»Ç≠Ç»Ç¡ÇΩìGÇÕè¡Ç¶ÇÈ
@@ -61,10 +61,10 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 {
 	switch (type)
 	{
-	case EnemyType::widthMove:
+	case EnemyType::MoveUpDown:
 		m_enemies.push_back(
-			std::make_shared<MoveSide>(
-				m_player, pos, m_handleMap[EnemyType::widthMove]));
+			std::make_shared<MoveUpDown>(
+				m_player, pos, m_handleMap[EnemyType::MoveUpDown]));
 		break;
 	default:
 		break;

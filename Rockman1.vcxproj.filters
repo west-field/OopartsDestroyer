@@ -33,7 +33,7 @@
     <ClCompile Include="Game\EnemyFactory.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\EnemyMoveSide.cpp">
+    <ClCompile Include="Game\EnemyMoveUpDown.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\HpBar.cpp">
@@ -107,7 +107,7 @@
     <ClInclude Include="Game\EnemyFactory.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\EnemyMoveSide.h">
+    <ClInclude Include="Game\EnemyMoveUpDown.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\HpBar.h">

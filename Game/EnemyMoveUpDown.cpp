@@ -1,4 +1,4 @@
-#include "EnemyMoveSide.h"
+#include "EnemyMoveUpDown.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
@@ -11,18 +11,18 @@ namespace
 	constexpr float kDrawScall = 0.8f;
 }
 
-MoveSide::MoveSide(std::shared_ptr<Player>player, const Position2 pos, int handle):
+MoveUpDown::MoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle):
 	EnemyBase(player,pos),m_handle(handle)
 {
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 }
 
-MoveSide::~MoveSide()
+MoveUpDown::~MoveUpDown()
 {
 
 }
 
-void MoveSide::Update()
+void MoveUpDown::Update()
 {
 	if (m_rect.center.x < -kSize-20)
 	{
@@ -34,7 +34,7 @@ void MoveSide::Update()
 	}
 }
 
-void MoveSide::Draw()
+void MoveUpDown::Draw()
 {
 	int imgX = (m_idx / anim_frame_speed) * 29;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
@@ -44,7 +44,7 @@ void MoveSide::Draw()
 #endif
 }
 
-void MoveSide::Movement(Vector2 vec)
+void MoveUpDown::Movement(Vector2 vec)
 {
 	if (!m_isExist) return;
 	if (m_isLeft) vec *= 1.0f;
@@ -53,7 +53,7 @@ void MoveSide::Movement(Vector2 vec)
 	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
 }
 
-void MoveSide::Damage(int damage)
+void MoveUpDown::Damage(int damage)
 {
 	m_isExist = false;
 }

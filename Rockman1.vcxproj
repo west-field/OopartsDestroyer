@@ -145,7 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Game\EnemyBase.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
-    <ClCompile Include="Game\EnemyMoveSide.cpp" />
+    <ClCompile Include="Game\EnemyMoveUpDown.cpp" />
     <ClCompile Include="Game\HpBar.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="main.cpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="Game\EnemyBase.h" />
     <ClInclude Include="Game\EnemyFactory.h" />
-    <ClInclude Include="Game\EnemyMoveSide.h" />
+    <ClInclude Include="Game\EnemyMoveUpDown.h" />
     <ClInclude Include="Game\HpBar.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Map.h" />

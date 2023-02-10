@@ -2,11 +2,11 @@
 #include "EnemyBase.h"
 #include "../Util/Geometry.h"
 
-class MoveSide : public EnemyBase
+class MoveUpDown : public EnemyBase
 {
 public:
-	MoveSide(std::shared_ptr<Player>player, const Position2 pos,int handle);
-	virtual ~MoveSide();
+	MoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle);
+	virtual ~MoveUpDown();
 	virtual void Update();
 	virtual void Draw();
 	virtual void Movement(Vector2 vec);

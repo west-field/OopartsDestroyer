@@ -10,7 +10,7 @@ class EnemyBase;
 //“GŽí—Þ
 enum class EnemyType
 {
-	widthMove,//‰¡ˆÚ“®‚·‚é“G
+	MoveUpDown,//‰¡ˆÚ“®‚·‚é“G
 };
 
 class EnemyFactory
