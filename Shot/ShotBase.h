@@ -1,6 +1,14 @@
 #pragma once
 #include "../Util/Geometry.h"
 
+enum class ShotType
+{
+	RockBuster,
+};
+
+/// <summary>
+/// 弾基底クラス
+/// </summary>
 class ShotBase
 {
 public:
@@ -27,6 +35,8 @@ public:
 	virtual void Movement(Vector2 vec);
 	
 	virtual const Rect& GetRect()const;
+
+	virtual const int AttackPower()const = 0;
 protected:
 	
 	int m_handle;//グラフィックハンドル

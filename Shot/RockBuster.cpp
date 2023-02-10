@@ -6,6 +6,7 @@
 namespace
 {
 	constexpr float kShotSpeed = 8.0f;
+	constexpr int kAttackPower = 1;//ロックバスターの攻撃力
 }
 
 RockBuster::RockBuster()
@@ -39,4 +40,9 @@ void RockBuster::Draw()
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		0, 0, m_rect.size.w, m_rect.size.h, 1.0f, 0.0f, m_handle, true,m_isLeft);
 	m_rect.Draw(0xaa00ff);
+}
+
+const int RockBuster::AttackPower() const
+{
+	return kAttackPower;
 }

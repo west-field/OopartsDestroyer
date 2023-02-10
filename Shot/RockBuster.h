@@ -14,6 +14,7 @@ public:
 	virtual void Start(Position2 pos,bool left);
 	virtual void Update();
 	virtual void Draw();
+	virtual const int AttackPower()const;
 private:
 };
 
