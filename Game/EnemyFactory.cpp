@@ -15,7 +15,7 @@ namespace
 	constexpr int Y = 125;
 }
 
-EnemyFactory::EnemyFactory(std::shared_ptr<Player>player):m_player(player)
+EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory):m_player(player), m_shotFactory(sFactory)
 {
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
 	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/enemy1.png");
@@ -74,12 +74,12 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::MoveUpDown:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveUpDown>(
-				m_player, pos, m_handleMap[EnemyType::MoveUpDown]));
+				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory));
 		break;
 	case EnemyType::Battery:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::Battery]));
+				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
 		break;
 	default:
 		break;

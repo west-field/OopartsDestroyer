@@ -6,6 +6,7 @@
 
 class Player;
 class EnemyBase;
+class ShotFactory;
 
 /// ブンビーへりー　飛行しながら近付いて、プレイヤーの近くで上下に動き回る敵。HP1、攻撃力4
 /// ブラスター　壁にある赤い砲台。シャッターが開いたときに攻撃してくる。HP1、攻撃力（弾）2、（接触）1
@@ -20,7 +21,7 @@ enum class EnemyType
 class EnemyFactory
 {
 public:
-	EnemyFactory(std::shared_ptr<Player>player);
+	EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyFactory();
 
 	void Update();
@@ -38,6 +39,7 @@ public:
 private:
 	std::list<std::shared_ptr<EnemyBase>> m_enemies;
 	std::shared_ptr<Player> m_player;
+	std::shared_ptr<ShotFactory> m_shotFactory;
 
 	std::map<EnemyType, int>m_handleMap;//敵のハンドル
 	int m_frame = 0;

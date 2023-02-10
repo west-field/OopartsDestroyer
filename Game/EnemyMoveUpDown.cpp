@@ -14,8 +14,8 @@ namespace
 	constexpr float kDrawScall = 0.8f;
 }
 
-EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle):
-	EnemyBase(player,pos),m_handle(handle)
+EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
+	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	m_hp = std::make_shared<HpBar>();

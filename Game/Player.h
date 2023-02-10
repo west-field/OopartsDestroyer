@@ -35,7 +35,17 @@ public:
 	void SetJump(bool isJump) { m_isJump = isJump; }
 	//今どんな行動をしているのか
 	void Action(ActionType type);
+	//当たり判定対象か
+	bool isCollidable()const;
 private:
+	void NormalUpdate();
+	void NormalDraw();
+	void BurstUpdate();
+	void BurstDraw();
+
+	void (Player::* updateFunc_)();
+	void (Player::* drawFunc_)();
+
 	//プレイヤーの中心位置
 	Rect m_rect;
 	//プレイヤーのグラフィックハンドル
@@ -50,5 +60,6 @@ private:
 	//ジャンプをしているか
 	bool m_isJump = false;
 
+	int m_ultimateTimer = 0;
 };
 

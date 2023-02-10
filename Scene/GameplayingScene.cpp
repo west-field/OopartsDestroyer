@@ -13,6 +13,7 @@
 
 #include "../Game/Player.h"
 #include "../Game/EnemyFactory.h"
+#include "../Shot/ShotFactory.h"
 #include "../Game/EnemyBase.h"
 #include "../Game/HpBar.h"
 #include "../Map.h"
@@ -39,7 +40,9 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	m_map = std::make_shared<Map>();
 	
 	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - 6*Game::ChipSize)});//プレイヤーの初期位置
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player);//プレイヤーを渡す
+	
+	m_shotFactory = std::make_shared<ShotFactory>();
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットを渡す
 
 	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
 	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
@@ -86,6 +89,7 @@ GameplayingScene::Draw()
 			num++;
 		}
 	}
+	m_shotFactory->Draw();//ショット表示
 
 	m_hp[Object_Player]->Draw(true);//HPバーを表示
 
@@ -606,11 +610,11 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 	m_map->Update();		//	マップ更新
 	m_player->Update();		//	プレイヤー更新
-	
 	//エネミー
 	float MoveX = kEnemyMoveSpeed + m_correction.x, MoveY = m_correction.y;
 	MoveEnemy(MoveX, MoveY);
 	m_enemyFactory->Update();
+	m_shotFactory->Update();//ショット更新
 
 	//ショット
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る

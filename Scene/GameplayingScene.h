@@ -10,6 +10,7 @@
 class Player;
 class EnemyFactory;
 class ShotBase;
+class ShotFactory;
 class HpBar;
 class Map;
 
@@ -110,6 +111,8 @@ public:
     
     bool m_isMoveMap = false;//画面を移動させる場所に来たかどうか
 
+    std::shared_ptr <ShotFactory> m_shotFactory;  //ショット
+    
     std::shared_ptr <EnemyFactory> m_enemyFactory;  //エネミー
     float m_fallEnemySpeed = 0;                     //落ちていくスピード    
     
