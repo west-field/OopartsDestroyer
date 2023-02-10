@@ -8,6 +8,9 @@ public:
 	virtual ~HpBar();
 
 	void Init(int handle);
+	
+	void MaxHp(int maxHp);
+	
 	void Update();
 	void Draw(bool isPlayer);
 

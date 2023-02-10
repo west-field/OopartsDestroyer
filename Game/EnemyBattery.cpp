@@ -1,4 +1,4 @@
-#include "EnemyMoveUpDown.h"
+#include "EnemyBattery.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
@@ -6,7 +6,7 @@
 
 namespace
 {
-	constexpr int kUpDownTouchAttackPower = 4;//接触した時の攻撃力
+	constexpr int kBatteryTouchAttackPower = 1;//接触した時の攻撃力
 
 	constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
 	constexpr int anim_frame_num = 5;//アニメーション枚数
@@ -14,20 +14,20 @@ namespace
 	constexpr float kDrawScall = 0.8f;
 }
 
-EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle):
-	EnemyBase(player,pos),m_handle(handle)
+EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
+	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	m_hp = std::make_shared<HpBar>();
 	m_hp->MaxHp(1);
 }
 
-EnemyMoveUpDown::~EnemyMoveUpDown()
+EnemyBattery::~EnemyBattery()
 {
 
 }
 
-void EnemyMoveUpDown::Update()
+void EnemyBattery::Update()
 {
 	if (m_rect.center.x < -kSize-20)
 	{
@@ -39,7 +39,7 @@ void EnemyMoveUpDown::Update()
 	}
 }
 
-void EnemyMoveUpDown::Draw()
+void EnemyBattery::Draw()
 {
 	int imgX = (m_idx / anim_frame_speed) * 29;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
@@ -49,21 +49,20 @@ void EnemyMoveUpDown::Draw()
 #endif
 }
 
-void EnemyMoveUpDown::Movement(Vector2 vec)
+void EnemyBattery::Movement(Vector2 vec)
 {
 	if (!m_isExist) return;
-	if (m_isLeft) vec *= 1.0f;
-	m_rect.center += vec;
+	m_rect.center.y += vec.y;
 
 	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
 }
 
-int EnemyMoveUpDown::TouchAttackPower() const
+int EnemyBattery::TouchAttackPower() const
 {
-	return kUpDownTouchAttackPower;
+	return kBatteryTouchAttackPower;
 }
 
-void EnemyMoveUpDown::Damage(int damage)
+void EnemyBattery::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	if (m_hp->GetHp() == 0)

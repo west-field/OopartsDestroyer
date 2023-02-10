@@ -7,10 +7,14 @@
 class Player;
 class EnemyBase;
 
+/// ブンビーへりー　飛行しながら近付いて、プレイヤーの近くで上下に動き回る敵。HP1、攻撃力4
+/// ブラスター　壁にある赤い砲台。シャッターが開いたときに攻撃してくる。HP1、攻撃力（弾）2、（接触）1
+
 //敵種類
 enum class EnemyType
 {
 	MoveUpDown,//横移動する敵
+	Battery,//固定砲台
 };
 
 class EnemyFactory

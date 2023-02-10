@@ -3,6 +3,8 @@
 #include "../Util/Geometry.h"
 
 class Player;
+class HpBar;
+class ShotFactory;
 
 /// <summary>
 /// “GŠî’êƒNƒ‰ƒX
@@ -10,7 +12,7 @@ class Player;
 class EnemyBase
 {
 public:
-	EnemyBase(std::shared_ptr<Player>player,const Position2& pos);
+	EnemyBase(std::shared_ptr<Player>player,const Position2& pos,std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyBase();
 
 	virtual void Update() = 0;
@@ -21,6 +23,8 @@ public:
 
 	const Rect& GetRect() const;
 
+	//ÚG‚µ‚½‚ÌUŒ‚—Í
+	virtual int TouchAttackPower()const = 0;
 	//ƒ_ƒ[ƒW‚ğó‚¯‚½
 	virtual void Damage(int damage) = 0;
 	//‚±‚Ì“G‚Í¶‚«‚Ä‚¢‚é‚©
@@ -39,6 +43,9 @@ public:
 	void SetJump(bool isJump) { m_isJump = isJump; }
 protected:
 	std::shared_ptr<Player> m_player = nullptr;
+	std::shared_ptr<HpBar> m_hp = nullptr;
+	std::shared_ptr<ShotFactory> m_shotFactory = nullptr;
+
 	bool m_isExist = true;//‘¶İ‚·‚é‚©
 	Rect m_rect;//“G‚Ì‹éŒ`
 

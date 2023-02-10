@@ -32,6 +32,11 @@ void HpBar::Init(int handle)
 	m_MaxHp = m_Hp = kHpMax;
 }
 
+void HpBar::MaxHp(int maxHp)
+{
+	m_MaxHp = m_Hp = maxHp;
+}
+
 void HpBar::Update()
 {
 
