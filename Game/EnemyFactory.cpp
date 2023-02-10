@@ -17,6 +17,7 @@ namespace
 
 EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory):m_player(player), m_shotFactory(sFactory)
 {
+	//“G‚Ì‰æ‘œ‚ğƒ[ƒh‚·‚é
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
 	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/enemy1.png");
 }
@@ -28,7 +29,7 @@ EnemyFactory::~EnemyFactory()
 void EnemyFactory::Update()
 {
 	m_frame++;
-
+	//“G‚ğì¬‚·‚é
 	if (m_frame % 180 == 0)
 	{
 		Create(EnemyType::MoveUpDown, { Game::kScreenWidth,400.0f });
@@ -69,6 +70,7 @@ void EnemyFactory::Draw()
 
 std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 pos)
 {
+	//EnemyType‚É‚æ‚Á‚Äì‚é‚à‚Ì‚ğŒˆ‚ß‚é
 	switch (type)
 	{
 	case EnemyType::MoveUpDown:

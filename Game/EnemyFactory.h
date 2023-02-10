@@ -24,8 +24,8 @@ public:
 	EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyFactory();
 
-	void Update();
-	void Draw();
+	void Update();//更新
+	void Draw();//表示
 
 	/// <summary>
 	/// 敵オブジェクトの生成
@@ -35,13 +35,17 @@ public:
 	/// <returns>敵オブジェクト</returns>
 	std::shared_ptr<EnemyBase> Create(EnemyType type, const Position2 pos);
 
+	/// <summary>
+	/// エネミーをすべて取得
+	/// </summary>
+	/// <returns>エネミーすべて</returns>
 	std::list<std::shared_ptr<EnemyBase>>& GetEnemies();
 private:
-	std::list<std::shared_ptr<EnemyBase>> m_enemies;
-	std::shared_ptr<Player> m_player;
-	std::shared_ptr<ShotFactory> m_shotFactory;
+	std::list<std::shared_ptr<EnemyBase>> m_enemies;	//エネミーを作成
+	std::shared_ptr<Player> m_player;					//プレイヤー
+	std::shared_ptr<ShotFactory> m_shotFactory;			//ショット
 
-	std::map<EnemyType, int>m_handleMap;//敵のハンドル
-	int m_frame = 0;
+	std::map<EnemyType, int>m_handleMap;//敵の画像ハンドル
+	int m_frame = 0;//敵作成までのフレーム数
 };
 

@@ -10,8 +10,8 @@ class EnemyMoveUpDown : public EnemyBase
 public:
 	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyMoveUpDown();
-	virtual void Update();
-	virtual void Draw();
+	virtual void Update();//çXêV
+	virtual void Draw();//ï\é¶
 	virtual void Movement(Vector2 vec);
 	virtual int TouchAttackPower()const;
 	virtual void Damage(int damage);

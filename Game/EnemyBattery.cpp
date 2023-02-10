@@ -17,9 +17,11 @@ namespace
 EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
 	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
+	//矩形とサイズ
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
+	//HPバー
 	m_hp = std::make_shared<HpBar>();
-	m_hp->MaxHp(1);
+	m_hp->MaxHp(1);//この敵のマックスHP
 }
 
 EnemyBattery::~EnemyBattery()
@@ -29,6 +31,7 @@ EnemyBattery::~EnemyBattery()
 
 void EnemyBattery::Update()
 {
+	//画面の中から出ていたら存在しない
 	if (m_rect.center.x < -kSize-20)
 	{
 		m_isExist = false;
@@ -65,6 +68,7 @@ int EnemyBattery::TouchAttackPower() const
 void EnemyBattery::Damage(int damage)
 {
 	m_hp->Damage(damage);
+	//HPが0のとき、存在しない
 	if (m_hp->GetHp() == 0)
 	{ 
 		m_isExist = false; 
