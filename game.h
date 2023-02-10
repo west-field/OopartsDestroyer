@@ -34,6 +34,6 @@ namespace Game
 	 constexpr int kMapScreenBottomY = kMapScreenTopY + kMapNumY * ChipSize;
 
 	//ƒ}ƒbƒv‚Ì‘å‚«‚³
-	 constexpr int kMapChipNumX = 128+16+58+16;//219;
+	 constexpr int kMapChipNumX = 218;//219;
 	 constexpr int kMapChipNumY = 135;//135;
 };
