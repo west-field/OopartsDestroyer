@@ -89,6 +89,7 @@ private:
  
     virtual void FadeInUpdat(const InputState& input);
     virtual void NormalUpdat(const InputState& input);
+    virtual void MoveMapUpdat(const InputState& input);
     virtual void FadeOutUpdat(const InputState& input);
 public:
     int m_test;//画面を揺らせる(文字を回転させる)
@@ -106,6 +107,8 @@ public:
     float m_fallPlayerSpeed = 0;    //落ちていくスピード
     bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
     bool m_isPlayerCenterUD = false;//プレイヤーが画面の中心に居るか
+    
+    bool m_isMoveMap = false;//画面を移動させる場所に来たかどうか
 
     std::shared_ptr <EnemyFactory> m_enemyFactory;  //エネミー
     float m_fallEnemySpeed = 0;                     //落ちていくスピード    

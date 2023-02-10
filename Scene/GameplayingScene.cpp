@@ -16,7 +16,11 @@
 #include "../Game/EnemyBase.h"
 #include "../Game/HpBar.h"
 #include "../Map.h"
+/*
 
+スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
+マンブー　　　　丸い形をしていて空中をまっすぐ移動しつつ顔を出した瞬間に8方向に弾を発射する敵 HP1、攻撃力（弾）2、（接触）1
+*/
 namespace
 {
 	constexpr float kPlayerMoveSpeed = 5.0f;//プレイヤーの移動速度
@@ -134,6 +138,10 @@ GameplayingScene::Draw()
 
 	//表示したいマップ画面
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenRightX, Game::kMapScreenBottomY, 0xffffff, false);
+	DrawFormatString(Game::kMapScreenLeftX, Game::kMapScreenTopY, 0xffffff, L"%d", Game::kMapScreenLeftX);
+	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenTopY, 0xffffff, L"%d",Game::kMapScreenTopY);
+	DrawFormatString(Game::kMapScreenLeftX, Game::kMapScreenBottomY, 0xffffff, L"%d",Game::kMapScreenBottomY);
+	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenBottomY, 0xffffff, L"%d",Game::kMapScreenRightX);
 	//判定する範囲
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenRightX, Game::kMapScreenBottomY - 1.0f, 0xffaaaa, false);
 #endif
@@ -632,7 +640,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
 				shot->SetExist(false);
-				enemy->Damage(1);
+				enemy->Damage(shot->AttackPower());
 				break;
 			}
 		}
@@ -647,7 +655,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		if (shot->GetRect().IsHit(m_player->GetRect()))
 		{
 			shot->SetExist(false);
-			m_hp[Object_Player]->Damage(1);
+			m_hp[Object_Player]->Damage(shot->AttackPower());
 			m_player->Action(ActionType::grah_hit);
 			break;
 		}
@@ -660,8 +668,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		//敵とプレイヤーが当たった
 		if (enemy->GetRect().IsHit(m_player->GetRect()))
 		{
-			enemy->Damage(1);
-			m_hp[Object_Player]->Damage(1);
+			m_hp[Object_Player]->Damage(enemy->TouchAttackPower());
 			m_player->Action(ActionType::grah_hit);
 			break;
 		}
@@ -699,6 +706,33 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	{
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
+	}
+}
+
+void GameplayingScene::MoveMapUpdat(const InputState& input)
+{
+	//プレイヤーの画面上の上座標がマップを表示する画面の上座標と同じ、小さいとき 画面の大きさだけマップとプレイヤーを移動させる
+	int wsize = m_player->GetRect().GetSize().w / 2;
+	if (m_player->GetRect().GetCenter().y - wsize <= Game::kMapScreenTopY)
+	{
+		m_isMoveMap = true;
+	}
+
+	//プレイヤーには足して、プレイヤーの画面上の下座標が画面の下座標の位置になるように
+	//マップにはプレイヤーが↑になるまで同じ分だけ引く
+	//画面下に来たら
+	if (m_isMoveMap)
+	{
+		if (m_player->GetRect().GetCenter().y + wsize < Game::kMapScreenBottomY)
+		{
+			m_player->Movement({ 0.0f,kPlayerMoveSpeed });
+			m_map->Movement({ 0.0f,-kPlayerMoveSpeed });
+		}
+		else
+		{
+			m_isMoveMap = false;
+			m_updateFunc = &GameplayingScene::NormalUpdat;
+		}
 	}
 }
 

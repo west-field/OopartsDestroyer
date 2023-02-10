@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\EnemyBase.cpp" />
+    <ClCompile Include="Game\EnemyBattery.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
     <ClCompile Include="Game\EnemyMoveUpDown.cpp" />
     <ClCompile Include="Game\HpBar.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="Scene\Secne.cpp" />
     <ClCompile Include="Scene\ShotChangeScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
+    <ClCompile Include="Shot\ShotFactory.cpp" />
     <ClCompile Include="Shot\RockBuster.cpp" />
     <ClCompile Include="Shot\ShotBase.cpp" />
     <ClCompile Include="Util\DrawFunctions.cpp" />
@@ -171,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="game.h" />
     <ClInclude Include="Game\EnemyBase.h" />
+    <ClInclude Include="Game\EnemyBattery.h" />
     <ClInclude Include="Game\EnemyFactory.h" />
     <ClInclude Include="Game\EnemyMoveUpDown.h" />
     <ClInclude Include="Game\HpBar.h" />
@@ -187,6 +190,7 @@
     <ClInclude Include="Scene\Secne.h" />
     <ClInclude Include="Scene\ShotChangeScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
+    <ClInclude Include="Shot\ShotFactory.h" />
     <ClInclude Include="Shot\RockBuster.h" />
     <ClInclude Include="Shot\ShotBase.h" />
     <ClInclude Include="Util\DrawFunctions.h" />
