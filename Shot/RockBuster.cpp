@@ -9,7 +9,7 @@ namespace
 	constexpr int kAttackPower = 1;//ロックバスターの攻撃力
 }
 
-RockBuster::RockBuster()
+RockBuster::RockBuster(int handle) : ShotBase(handle)
 {
 	
 }

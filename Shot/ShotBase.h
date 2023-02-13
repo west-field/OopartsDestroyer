@@ -12,10 +12,9 @@ enum class ShotType
 class ShotBase
 {
 public:
-	ShotBase();
+	ShotBase(int handle);
 	virtual ~ShotBase();
 
-	void SetHandle(int handle);
 	//ショット開始
 	virtual void Start(Position2 pos, bool left) = 0;
 	//更新

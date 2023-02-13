@@ -9,7 +9,7 @@ namespace
 	constexpr float kScale = 1.0f;
 }
 
-HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1),m_pos(), m_size()
+HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1),m_pos(), m_size(), m_isHpGraph()
 {
 	for (auto& hp : m_isHpGraph)
 	{
@@ -44,8 +44,8 @@ void HpBar::Update()
 
 void HpBar::Draw(bool isPlayer)
 {
-	int x = static_cast<int>(m_pos.x);
-	int y = static_cast<int>(m_pos .y)+1;
+	int x = static_cast<int>(m_pos.x + m_size.w / 2);
+	int y = static_cast<int>(m_pos.y + m_size.h / 2);
 
 	//ÉvÉåÉCÉÑÅ[Ç∂Ç·Ç»Ç¢Ç∆Ç´â°Ç…Ç∏ÇÁÇ∑
 	if (!isPlayer)	x += m_size.w + 10;
@@ -70,7 +70,7 @@ void HpBar::Damage(int damage)
 
 	for (int i = 0; i < kHpMax; i++)
 	{
-		if (kHpMax - m_Hp - 1 == i)
+		if (kHpMax - m_Hp - 1 >= i)
 		{
 			m_isHpGraph[i] = false;
 		}

@@ -4,7 +4,7 @@
 
 ShotFactory::ShotFactory()
 {
-	m_shotHTable[ShotType::RockBuster] = my::MyLoadGraph(L"Data/game/shot.png");
+	m_shotHTable[ShotType::RockBuster] = my::MyLoadGraph(L"Data/rockBuster.png");
 }
 
 ShotFactory::~ShotFactory()
@@ -16,7 +16,7 @@ void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel
 	switch (type)
 	{
 	case ShotType::RockBuster:
-		m_shots.push_back(std::make_shared<RockBuster>());//m_shotHTable[ShotType::RockBuster]
+		m_shots.push_back(std::make_shared<RockBuster>(m_shotHTable[ShotType::RockBuster]));
 		m_shots.back()->Start(pos, isleft);
 		break;
 	default:

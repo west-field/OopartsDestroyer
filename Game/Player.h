@@ -1,5 +1,7 @@
 #pragma once
 #include "../Util/Geometry.h"
+#include <memory>
+class HpBar;
 
 enum class ActionType
 {
@@ -16,7 +18,7 @@ enum class ActionType
 class Player
 {
 public:
-	Player(Position2 pos);
+	Player(Position2 pos,std::shared_ptr<HpBar>hp);
 	virtual ~Player();
 	void Update();
 	void Draw();
@@ -36,30 +38,36 @@ public:
 	//今どんな行動をしているのか
 	void Action(ActionType type);
 	//当たり判定対象か
-	bool isCollidable()const;
+	bool IsCollidable()const;
+	//ダメージを受けたか
+	void Damage(int damage);
 private:
+	//普通のアップデート
 	void NormalUpdate();
+	//普通の描画
 	void NormalDraw();
+	//爆発のアップデート
 	void BurstUpdate();
+	//爆発の描画
 	void BurstDraw();
 
-	void (Player::* updateFunc_)();
-	void (Player::* drawFunc_)();
+	void (Player::* m_updateFunc)();//アップデートの遷移
+	void (Player::* m_drawFunc)();//描画の遷移
+	
+	Rect m_rect;//プレイヤーの矩形
+	
+	int m_handle = -1;//プレイヤーのグラフィックハンドル
+	int m_idxX = 0;//表示する描画位置X
+	int m_idxY = 2;//表示する描画位置Y
 
-	//プレイヤーの中心位置
-	Rect m_rect;
-	//プレイヤーのグラフィックハンドル
-	int m_handle = -1;
-	int m_idxX = 0;
-	int m_idxY = 2;
+	int m_frame = 0;//アニメーション時間
 
-	int m_frame = 0;
+	bool m_isLeft = false;//左を向いている
+	
+	bool m_isJump = false;//ジャンプをしているか
 
-	//左を向いている
-	bool m_isLeft = false;
-	//ジャンプをしているか
-	bool m_isJump = false;
+	int m_ultimateTimer = 0;//無敵時間
 
-	int m_ultimateTimer = 0;
+	std::shared_ptr<HpBar> m_hp;
 };
 

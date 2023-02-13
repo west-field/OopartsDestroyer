@@ -2,13 +2,10 @@
 #include "ShotBase.h"
 #include "../Util/Geometry.h"
 
-class Player;
-class EnemyBase;
-
 class RockBuster : public ShotBase
 {
 public:
-	RockBuster();
+	RockBuster(int handle);
 	virtual ~RockBuster();
 
 	virtual void Start(Position2 pos,bool left);

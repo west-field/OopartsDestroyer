@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
+#include "HpBar.h"
 
 namespace
 {
@@ -15,11 +16,14 @@ namespace
 	constexpr int kFrameNum = 2;		//そのほかのアニメーション枚数
 	constexpr int kFrameSpeed = 15;		//アニメーションスピード
 
-	constexpr int ultimate_frame = 180;//無敵時間
+	constexpr int kBurstFrameNum = 5;
+	constexpr int kBurstFrameSpeed = 5;
+
+	constexpr int ultimate_frame = 120;//無敵時間 2秒
 
 }
 
-Player::Player(Position2 pos):updateFunc_(&Player::NormalUpdate),drawFunc_(&Player::NormalDraw)
+Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::NormalUpdate),m_drawFunc(&Player::NormalDraw),m_hp(hp)
 {
 	m_rect.center = pos;
 	m_rect.size = { static_cast<int>(kGraphSizeWidth * kDrawScale - kSize) ,static_cast<int>(kGraphSizeHeight * kDrawScale - kSize)};
@@ -32,12 +36,12 @@ Player::~Player()
 
 void Player::Update()
 {
-	(this->*updateFunc_)();
+	(this->*m_updateFunc)();
 }
 
 void Player::Draw()
 {
-	(this->*drawFunc_)();
+	(this->*m_drawFunc)();
 }
 
 void Player::Movement(Vector2 vec)
@@ -81,9 +85,17 @@ void Player::Action(ActionType type)
 	}
 }
 
-bool Player::isCollidable() const
+bool Player::IsCollidable() const
 {
-	return (updateFunc_ == &Player::NormalUpdate) && m_ultimateTimer == 0;
+	return (m_updateFunc == &Player::NormalUpdate) && m_ultimateTimer == 0;
+}
+
+void Player::Damage(int damage)
+{
+	/*m_updateFunc = &Player::BurstUpdate;
+	m_drawFunc = &Player::BurstDraw;*/
+	m_ultimateTimer = ultimate_frame;
+	m_hp->Damage(damage);
 }
 
 void Player::NormalUpdate()
@@ -125,18 +137,31 @@ void Player::NormalUpdate()
 
 	//どちらか大きいほうを返す
 	//m_ultimateTimer = std::max(--m_ultimateTimer, 0);
+	if (--m_ultimateTimer <= 0)
+	{
+		m_ultimateTimer = 0;
+	}
 }
 
 void Player::NormalDraw()
 {
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffaa);
 
 	DrawFormatString(0, 0, 0xffffff, L"%d", m_idxX);
 	DrawFormatString(0, 20, 0xffffff, L"%d", m_idxY);
 #endif
+	//無敵時間の時は点滅させる
+	if (m_ultimateTimer > 0)
+	{
+		if ((m_ultimateTimer / 10) % 2 == 0)
+		{
+			return;
+		}
+	}
+	//プレイヤーを表示
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
 }
 
 void Player::BurstUpdate()

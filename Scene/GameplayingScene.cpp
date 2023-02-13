@@ -39,14 +39,6 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 
 	m_map = std::make_shared<Map>();
 	
-	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - 6*Game::ChipSize)});//プレイヤーの初期位置
-	
-	m_shotFactory = std::make_shared<ShotFactory>();
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットを渡す
-
-	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
-	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
-
 	for (auto& hp : m_hp)
 	{
 		hp = std::make_shared<HpBar>();
@@ -55,8 +47,17 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 
 	for (auto& shot : m_shots)
 	{
-		shot = std::make_shared<RockBuster>();
+		shot = std::make_shared<RockBuster>(my::MyLoadGraph(L"Data/rockBuster.bmp"));
 	}
+
+	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - 6*Game::ChipSize)},m_hp[Object_Player]);//プレイヤーの初期位置
+	
+	m_shotFactory = std::make_shared<ShotFactory>();
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットを渡す
+
+	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
+	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
+
 }
 
 GameplayingScene::~GameplayingScene()
@@ -161,7 +162,6 @@ bool GameplayingScene::createShot(Position2 pos, bool isPlayer, bool isLeft)
 		if (!shot->IsExist())
 		{
 			shot->Start(pos,isLeft);
-			shot->SetHandle(my::MyLoadGraph(L"Data/rockBuster.bmp"));
 			shot->PlayerShot(isPlayer);
 			shot->SetExist(true);
 			return true;
@@ -503,13 +503,13 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			//マップを表示する画面の左上、左下に何もない空間が来たときはマップを移動できない
 			//マップを表示する画面の左上、左下に何か表示できるものがあるときは移動できる
-			if (m_isPlayerCenterLR &&
+			/*if (m_isPlayerCenterLR &&
 				m_map->GetMapChipParam(m_add.x + Game::kMapScreenLeftX, m_add.y + Game::kMapScreenTopY) != no &&
 				m_map->GetMapChipParam(m_add.x + Game::kMapScreenLeftX, m_add.y + Game::kMapScreenBottomY - 1.0f) != no)
 			{
 				MoveMap(kPlayerMoveSpeed, 0.0f);
 			}
-			else
+			else*/
 			{
 				PlayerMoveX -= kPlayerMoveSpeed;
 			}
@@ -649,32 +649,34 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			}
 		}
 	}
-
 	//敵の弾と、プレイヤーの当たり判定
-	for (auto& shot : m_shots)
+	if (m_player->IsCollidable())
 	{
-		if (!shot->IsExist())	continue;
-		if (shot->GetPlayerShot())	continue;//プレイヤーが撃った弾だったら処理しない
-		
-		if (shot->GetRect().IsHit(m_player->GetRect()))
+		for (auto& shot : m_shots)
 		{
-			shot->SetExist(false);
-			m_hp[Object_Player]->Damage(shot->AttackPower());
-			m_player->Action(ActionType::grah_hit);
-			break;
+			if (!shot->IsExist())	continue;//ショットが存在しないときは処理しない
+			if (shot->GetPlayerShot())	continue;//プレイヤーが撃った弾だったら処理しない
+			//ショットとプレイヤーのあたり判定
+			if (shot->GetRect().IsHit(m_player->GetRect()))
+			{
+				shot->SetExist(false);
+				m_player->Damage(shot->AttackPower());//m_hp[Object_Player]->Damage(shot->AttackPower());
+				break;
+			}
 		}
 	}
-
 	//プレイヤーと、敵の当たり判定
-	for (auto& enemy : m_enemyFactory->GetEnemies())
+	if (m_player->IsCollidable())
 	{
-		if (!enemy->IsExist())	continue;
-		//敵とプレイヤーが当たった
-		if (enemy->GetRect().IsHit(m_player->GetRect()))
+		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
-			m_hp[Object_Player]->Damage(enemy->TouchAttackPower());
-			m_player->Action(ActionType::grah_hit);
-			break;
+			if (!enemy->IsExist())	continue;
+			//敵とプレイヤーが当たった
+			if (enemy->GetRect().IsHit(m_player->GetRect()))
+			{
+				m_player->Damage(enemy->TouchAttackPower());//m_hp[Object_Player]->Damage(enemy->TouchAttackPower());
+				break;
+			}
 		}
 	}
 
