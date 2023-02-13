@@ -32,6 +32,33 @@ void RockBuster::Start(Position2 pos,bool left)
 void RockBuster::Update()
 {
 	if (!m_isExist)	return;
+	//画面の外に出たら消える
+	float hsize, wsize;
+
+	// 半分のサイズを算出
+	wsize = m_rect.size.w * 0.5f;
+	hsize = m_rect.size.h * 0.5f;
+	//左端
+	if (m_rect.GetCenter().x + wsize < Game::kMapScreenLeftX - wsize * 2)
+	{
+		SetExist(false);
+	}
+	//右端
+	if (m_rect.GetCenter().x - wsize > Game::kMapScreenRightX + wsize * 2)
+	{
+		SetExist(false);
+	}
+	//上端
+	if (m_rect.center.y + hsize < Game::kMapScreenTopY - hsize * 2)
+	{
+		SetExist(false);
+	}
+	//下端
+	if (m_rect.center.y - hsize > Game::kMapScreenBottomY + hsize * 2)
+	{
+		SetExist(false);
+	}
+
 }
 
 void RockBuster::Draw()
@@ -39,7 +66,9 @@ void RockBuster::Draw()
 	if (!m_isExist)	return;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		0, 0, m_rect.size.w, m_rect.size.h, 1.0f, 0.0f, m_handle, true,m_isLeft);
+#ifdef _DEBUG
 	m_rect.Draw(0xaa00ff);
+#endif
 }
 
 const int RockBuster::AttackPower() const

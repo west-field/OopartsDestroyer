@@ -20,7 +20,7 @@ ShotBase::~ShotBase()
 
 void ShotBase::Movement(Vector2 vec)
 {
-	if (m_isLeft) vec *= 1.0f;
+	if (m_isLeft) vec *= -1.0f;
 	m_rect.center += vec;
 }
 

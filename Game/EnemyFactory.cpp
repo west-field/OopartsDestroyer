@@ -19,7 +19,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 {
 	//“G‚Ì‰æ‘œ‚ðƒ[ƒh‚·‚é
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
-	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/enemy1.png");
+	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/burst.png");
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -28,12 +28,12 @@ EnemyFactory::~EnemyFactory()
 
 void EnemyFactory::Update()
 {
-	m_frame++;
-	//“G‚ðì¬‚·‚é
-	if (m_frame % 180 == 0)
-	{
-		Create(EnemyType::MoveUpDown, { Game::kScreenWidth,400.0f });
-	}
+	//m_frame++;
+	////“G‚ðì¬‚·‚é
+	//if (m_frame % 60 == 0)
+	//{
+	//	Create(EnemyType::MoveUpDown, { Game::kScreenWidth,400.0f });
+	//}
 
 	//‚¢‚È‚­‚È‚Á‚½“G‚ÍÁ‚¦‚é
 	//ðŒ‚É“–‚Ä‚Í‚Ü‚é“G‚ðŒã‚ë‚É‚æ‚¯‚Ä‚¢‚é 
@@ -50,22 +50,41 @@ void EnemyFactory::Update()
 	//“G‘S•”XV
 	for (auto& enemy : m_enemies)
 	{
-		if (enemy->IsExist())
+		if (enemy->IsExist() && enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
 		{
 			enemy->Update();
 		}
 	}
+
+	/*for (auto& enemy : m_enemies)
+	{
+		if (enemy->IsExist())
+		{
+			enemy->Update();
+		}
+	}*/
 
 }
 void EnemyFactory::Draw()
 {
 	for (auto& enemy : m_enemies)
 	{
-		if (enemy->IsExist())
+		if (enemy->IsExist() && enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
 		{
 			enemy->Draw();
 		}
 	}
+#ifdef _DEBUG
+	DrawFormatString(0, 320, 0xffffff, L"%d", m_enemies.size());
+	/*for (auto& enemy : m_enemies)
+	{
+		if (enemy->IsExist())
+		{
+			enemy->Draw();
+		}
+	}*/
+#endif
+
 }
 
 std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 pos)

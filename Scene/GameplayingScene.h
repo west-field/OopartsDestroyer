@@ -26,6 +26,8 @@ enum MapChip
     stone,		//石         当たる
     thorn,		//とげ       当たる
 
+    move,
+
     max
 };
 
@@ -62,13 +64,6 @@ private:
     /// <param name="MoveY">移動量</param>
     void MoveEnemy(float MoveX, float MoveY);
     /// <summary>
-    /// 弾とマップの当たり判定
-    /// </summary>
-    /// <param name="i">何番目の弾</param>
-    /// <param name="MoveX">移動量</param>
-    /// <param name="MoveY">移動量</param>
-    void MoveShot(int i ,float MoveX, float MoveY);
-    /// <summary>
     /// マップとの当たり判定
     /// </summary>
     /// <param name="X">自身の位置X</param>
@@ -103,6 +98,7 @@ public:
     std::shared_ptr<Map> m_map; //マップ
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
     bool m_isMapJump = false;   //マップでジャンプをしたか
+    int m_framecolor = 0xc0c0c0;
 
     std::shared_ptr<Player> m_player;//プレイヤー
     float m_fallPlayerSpeed = 0;    //落ちていくスピード

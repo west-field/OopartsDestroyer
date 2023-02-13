@@ -51,3 +51,11 @@ void ShotFactory::Draw()
 		shot->Draw();
 	}
 }
+
+void ShotFactory::Movement(Vector2 vel)
+{
+	for (auto& shot : m_shots)
+	{
+		shot->Movement(vel);
+	}
+}

@@ -32,6 +32,7 @@ public:
 	const ShotList_t& GetShot()const;
 	void Update();
 	void Draw();
+	void Movement(Vector2 vel);
 private:
 	std::map<ShotType, int> m_shotHTable;//ロードする画像のテーブル
 	ShotList_t m_shots;//弾リスト
