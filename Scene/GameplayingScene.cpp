@@ -53,7 +53,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットを渡す
 
-	m_map = std::make_shared<Map>(m_enemyFactory);
+	m_map = std::make_shared<Map>(m_enemyFactory,0);
 
 	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
 	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
@@ -708,28 +708,11 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 void GameplayingScene::MoveMapUpdat(const InputState& input)
 {
 	////プレイヤーの画面上の上座標がマップを表示する画面の上座標と同じ、小さいとき 画面の大きさだけマップとプレイヤーを移動させる
-	//int wsize = m_player->GetRect().GetSize().w / 2;
-	//if (m_player->GetRect().GetCenter().y - wsize <= Game::kMapScreenTopY)
-	//{
-	//	m_isMoveMap = true;
-	//}
+
 
 	//プレイヤーには足して、プレイヤーの画面上の下座標が画面の下座標の位置になるように
 	//マップにはプレイヤーが↑になるまで同じ分だけ引く
 	//画面下に来たら
-	/*if (m_isMoveMap)
-	{
-		if (m_player->GetRect().GetCenter().y + wsize < Game::kMapScreenBottomY)
-		{
-			m_player->Movement({ 0.0f,kPlayerMoveSpeed });
-			m_map->Movement({ 0.0f,-kPlayerMoveSpeed });
-		}
-		else
-		{
-			m_isMoveMap = false;
-			m_updateFunc = &GameplayingScene::NormalUpdat;
-		}
-	}*/
 
 	//今いる場所が画面の下になるように移動させる
 
@@ -747,6 +730,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameplayingScene::NormalUpdat;
 	}
+	m_map->Update();
 }
 
 void GameplayingScene::FadeOutUpdat(const InputState& input)

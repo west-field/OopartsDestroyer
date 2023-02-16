@@ -3,6 +3,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
 #include "HpBar.h"
+#include "Player.h"
 
 namespace
 {
@@ -30,7 +31,8 @@ EnemyMoveUpDown::~EnemyMoveUpDown()
 
 void EnemyMoveUpDown::Update()
 {
-	
+	//ë∂ç›ÇµÇƒÇ¢Ç»Ç¢Ç∆Ç´ÇÕçXêVÇµÇ»Ç¢
+	if (!m_isExist) return;
 }
 
 void EnemyMoveUpDown::Draw()

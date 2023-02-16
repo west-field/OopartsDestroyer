@@ -75,7 +75,7 @@ void EnemyFactory::Draw()
 		}
 	}
 #ifdef _DEBUG
-	DrawFormatString(0, 320, 0xffffff, L"%d", m_enemies.size());
+	DrawFormatString(0, 320, 0xffffff, L"“G‚Ì”%d", m_enemies.size());
 	/*for (auto& enemy : m_enemies)
 	{
 		if (enemy->IsExist())

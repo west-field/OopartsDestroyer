@@ -68,7 +68,7 @@ void EnemyBattery::Draw()
 		imgX, 0, kSize, kSize, kDrawScall, 0.0f, m_handle, false, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
-	DrawFormatString(0, 360, 0xffffff, L"%d", m_idx / anim_frame_speed);
+	DrawFormatString(0, 360, 0xffffff, L"グラフィック切り替え%d", m_idx / anim_frame_speed);
 #endif
 }
 
