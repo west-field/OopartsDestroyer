@@ -3,9 +3,9 @@
 #include <algorithm>//remove_ifを使うためにインクルードする
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
-#include "EnemyBase.h"
-#include "EnemyMoveUpDown.h"
-#include "EnemyBattery.h"
+#include "../Enemy/EnemyBase.h"
+#include "../Enemy/EnemyMoveUpDown.h"
+#include "../Enemy/EnemyBattery.h"
 #include "Player.h"
 
 namespace
@@ -20,6 +20,8 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	//敵の画像をロードする
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
 	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/burst.png");
+	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
+	m_handleMap[EnemyType::MoveLeftRight] = my::MyLoadGraph(L"Data/move.png");
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -56,14 +58,6 @@ void EnemyFactory::Update()
 		}
 	}
 
-	/*for (auto& enemy : m_enemies)
-	{
-		if (enemy->IsExist())
-		{
-			enemy->Update();
-		}
-	}*/
-
 }
 void EnemyFactory::Draw()
 {
@@ -76,13 +70,6 @@ void EnemyFactory::Draw()
 	}
 #ifdef _DEBUG
 	DrawFormatString(0, 320, 0xffffff, L"敵の数%d", m_enemies.size());
-	/*for (auto& enemy : m_enemies)
-	{
-		if (enemy->IsExist())
-		{
-			enemy->Draw();
-		}
-	}*/
 #endif
 
 }
@@ -101,6 +88,12 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
 				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
+		break;
+	case EnemyType::Jump:
+		break;
+	case EnemyType::MoveLeftRight:
+		break;
+	case EnemyType::MoveShot:
 		break;
 	default:
 		break;

@@ -25,15 +25,12 @@
     <Filter Include="Util">
       <UniqueIdentifier>{cc30ee72-2de1-4f72-84de-fbedea4ba201}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Enemy">
+      <UniqueIdentifier>{b26fb93a-f7ba-4bba-ba03-9c5795d620ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game\EnemyBase.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\EnemyFactory.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\EnemyMoveUpDown.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\HpBar.cpp">
@@ -99,24 +96,24 @@
     <ClCompile Include="Map.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Game\EnemyBattery.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Shot\ShotFactory.cpp">
-      <Filter>Shot</Filter>
-    </ClCompile>
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Game\ShotFactory.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\EnemyBase.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\EnemyBattery.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\EnemyMoveUpDown.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\EnemyBase.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\EnemyFactory.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\EnemyMoveUpDown.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Game\HpBar.h">
@@ -182,14 +179,20 @@
     <ClInclude Include="game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Game\EnemyBattery.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Shot\ShotFactory.h">
-      <Filter>Shot</Filter>
-    </ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ShotFactory.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyBase.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyBattery.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyMoveUpDown.h">
+      <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

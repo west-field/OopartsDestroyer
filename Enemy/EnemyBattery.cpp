@@ -2,9 +2,9 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
-#include "HpBar.h"
-#include "../Shot/ShotFactory.h"
-#include "Player.h"
+#include "../Game/HpBar.h"
+#include "../Game/ShotFactory.h"
+#include "../Game/Player.h"
 
 namespace
 {
@@ -20,7 +20,7 @@ EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, i
 	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
 	//矩形とサイズ
-	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
+	m_rect = { pos, { static_cast<int>((kSize - kSize * 0.5)* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	//HPバー
 	m_hp = std::make_shared<HpBar>();
 	m_hp->MaxHp(1);//この敵のマックスHP
@@ -37,25 +37,12 @@ void EnemyBattery::Update()
 	if (!m_isExist) return;
 	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
 
-	//m_fireFrame--;
-	if (/*m_fireFrame <= 0 && */m_idx / anim_frame_speed == 2 && num == 0)
+	if ( m_idx / anim_frame_speed == 2 && num == 0)
 	{
-		//m_fireFrame = 60;// +GetRand(10 * 2) - 10;
-		/*auto vel = m_player->GetRect().GetCenter() - m_rect.center;
-
-		if (vel.SQLength() == 0.0f)
-		{
-			vel = { -2.0f, 0.0f };
-		}
-		else
-		{
-			vel.Normalize();
-			vel *= 2.0f;
-		}*/
 		num++;
 		m_shotFactory->Create(ShotType::RockBuster, m_rect.center, /*vel*/{0.0f,0.0f}, !m_isLeft);
 	}
-	else
+	else if(m_idx / anim_frame_speed == 0)
 	{
 		num = 0;
 	}

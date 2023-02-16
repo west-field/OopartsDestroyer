@@ -15,7 +15,7 @@ ShotBase::ShotBase(int handle) :m_handle(handle), m_rect({}, {}), m_vel(), m_isE
 
 ShotBase::~ShotBase()
 {
-	DeleteGraph(m_handle);
+	
 }
 
 void ShotBase::Movement(Vector2 vec)

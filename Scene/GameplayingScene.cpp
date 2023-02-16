@@ -13,7 +13,7 @@
 
 #include "../Game/Player.h"
 #include "../Game/EnemyFactory.h"
-#include "../Shot/ShotFactory.h"
+#include "../Game/ShotFactory.h"
 #include "../Game/EnemyBase.h"
 #include "../Game/HpBar.h"
 #include "../Map.h"
@@ -21,6 +21,8 @@
 
 スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
 マンブー　　　　丸い形をしていて空中をまっすぐ移動しつつ顔を出した瞬間に8方向に弾を発射する敵 HP1、攻撃力（弾）2、（接触）1
+スクリュードライバー　自機が近付くと、５方向同時に弾を二回発射する
+
 */
 namespace
 {
@@ -534,7 +536,9 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_ladder)||
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveD))
 	{
+#ifdef _DEBUG
 		DrawString(400, 40, L"梯子", 0xffffff);
+#endif
 		//上キーで梯子を上がれる
 		if (input.IsPressed(InputType::up))
 		{
@@ -647,7 +651,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 	
-	if (input.IsTriggered(InputType::next))
+	/*if (input.IsTriggered(InputType::next))
 	{
 		for (auto& shot : m_shots)
 		{
@@ -656,7 +660,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 		m_updateFunc = &GameplayingScene::FadeOutUpdat;
 		m_fadeColor = 0xff0000;
-	}
+	}*/
 	if (input.IsTriggered(InputType::pause))
 	{
 		m_manager.PushScene(new PauseScene(m_manager));

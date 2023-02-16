@@ -1,6 +1,6 @@
 #include "ShotFactory.h"
 #include "../Util/DrawFunctions.h"
-#include "RockBuster.h"
+#include "../Shot/RockBuster.h"
 
 ShotFactory::ShotFactory()
 {

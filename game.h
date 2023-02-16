@@ -33,7 +33,7 @@ namespace Game
 	 constexpr int kMapScreenRightX = kMapScreenLeftX + kMapNumX * ChipSize;
 	 constexpr int kMapScreenBottomY = kMapScreenTopY + kMapNumY * ChipSize;
 
-	//マップの大きさ
+	//マップの大きさ X218*Y135
 	 constexpr int kMapChipNumX = 218;//219;
 	 constexpr int kMapChipNumY = 135;//135;
 };

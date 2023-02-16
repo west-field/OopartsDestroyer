@@ -143,10 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game\EnemyBase.cpp" />
-    <ClCompile Include="Game\EnemyBattery.cpp" />
+    <ClCompile Include="Enemy\EnemyBase.cpp" />
+    <ClCompile Include="Enemy\EnemyBattery.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
-    <ClCompile Include="Game\EnemyMoveUpDown.cpp" />
+    <ClCompile Include="Enemy\EnemyMoveUpDown.cpp" />
     <ClCompile Include="Game\HpBar.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="main.cpp" />
@@ -162,7 +162,7 @@
     <ClCompile Include="Scene\Secne.cpp" />
     <ClCompile Include="Scene\ShotChangeScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
-    <ClCompile Include="Shot\ShotFactory.cpp" />
+    <ClCompile Include="Game\ShotFactory.cpp" />
     <ClCompile Include="Shot\RockBuster.cpp" />
     <ClCompile Include="Shot\ShotBase.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -173,10 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
-    <ClInclude Include="Game\EnemyBase.h" />
-    <ClInclude Include="Game\EnemyBattery.h" />
+    <ClInclude Include="Enemy\EnemyBase.h" />
+    <ClInclude Include="Enemy\EnemyBattery.h" />
     <ClInclude Include="Game\EnemyFactory.h" />
-    <ClInclude Include="Game\EnemyMoveUpDown.h" />
+    <ClInclude Include="Enemy\EnemyMoveUpDown.h" />
     <ClInclude Include="Game\HpBar.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Map.h" />
@@ -191,7 +191,7 @@
     <ClInclude Include="Scene\Secne.h" />
     <ClInclude Include="Scene\ShotChangeScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
-    <ClInclude Include="Shot\ShotFactory.h" />
+    <ClInclude Include="Game\ShotFactory.h" />
     <ClInclude Include="Shot\RockBuster.h" />
     <ClInclude Include="Shot\ShotBase.h" />
     <ClInclude Include="Stage.h" />

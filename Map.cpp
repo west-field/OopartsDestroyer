@@ -14,7 +14,7 @@ namespace
 Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :m_handle(-1),m_camera(),m_enemies(enemyFactory),m_stage(stage)
 {
 	m_stageMap = std::make_shared<Stage>();
-	m_stageMap->Load(L"Data/map.fmf");
+	m_stageMap->Load(L"Data/maptest.fmf");
 
 	m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
 	//m_camera.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f;
@@ -220,8 +220,10 @@ int Map::GetMapChipParam(float X, float Y)
 	x = (int)(X) / Game::ChipSize;
 	y = (int)(Y) / Game::ChipSize;
 
+	int mW, mH;
+	m_stageMap->GetMapSize(mW, mH);
 	// マップからはみ出ていたら 0 を返す
-	if (x >= Game::kMapChipNumX || y >= Game::kMapChipNumY || x < 0 || y < 0) return 0;
+	if (x >= mW || y >= mH || x < 0 || y < 0) return 0;
 
 	return m_stageMap->GetChipId(MapLayer_map + m_stage, x, y);
 }
@@ -234,8 +236,10 @@ int Map::GetMapEventParam(float X, float Y)
 	x = (int)(X) / Game::ChipSize;
 	y = (int)(Y) / Game::ChipSize;
 
+	int mW, mH;
+	m_stageMap->GetMapSize(mW, mH);
 	// マップからはみ出ていたら 0 を返す
-	if (x >= Game::kMapChipNumX || y >= Game::kMapChipNumY || x < 0 || y < 0) return 0;
+	if (x >= mW || y >= mH || x < 0 || y < 0) return 0;
 
 	return m_stageMap->GetChipId(MapLayer_event + m_stage, x, y);
 }

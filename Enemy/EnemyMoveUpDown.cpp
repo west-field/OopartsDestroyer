@@ -2,8 +2,8 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
-#include "HpBar.h"
-#include "Player.h"
+#include "../Game/HpBar.h"
+#include "../Game/Player.h"
 
 namespace
 {

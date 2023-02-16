@@ -1,6 +1,6 @@
 #pragma once
 #include "../Util/Geometry.h"
-#include "ShotBase.h"
+#include "../Shot/ShotBase.h"
 #include <map>
 #include <list>
 #include <memory>
