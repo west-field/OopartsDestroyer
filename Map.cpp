@@ -25,7 +25,7 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :m_handle(-1),m_c
 	{
 		for (int chipX = 0; chipX < mW; chipX++)
 		{
-			int chipId = m_stageMap->GetChipId(m_stage + 1, chipX, chipY);
+			int chipId = m_stageMap->GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
 			if (chipId == 0)
 			{
 				m_enemyPos.push_back(0);
@@ -62,28 +62,20 @@ void Map::Update()
 			if (pos.y < Game::kMapScreenTopY - Game::ChipSize)	continue;
 			if (pos.y > Game::kMapScreenBottomY + Game::ChipSize)continue;
 
-			auto chipId = m_stageMap->GetChipId(m_stage + 1, chipX, chipY);
+			auto chipId = m_stageMap->GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
 			//何もないときはループを抜ける
 			if (chipId == 0)	continue;
-			/*if ((59 * Game::ChipSize + Game::ChipSize / 2 /*- Game::ChipSize) + m_camera.x <= Game::kMapScreenRightX && num == 0)
-			{
-			DrawString(0, 300, L"出現", 0xffffff);
-			num++;
-
-			m_enemies->Create(EnemyType::MoveUpDown, { (59 * Game::ChipSize + Game::ChipSize / 2) + m_camera.x,((Game::kMapChipNumY - 9) * Game::ChipSize + Game::ChipSize / 2) + m_camera.y });
-			m_enemies->Create(EnemyType::Battery, { (59 * Game::ChipSize + Game::ChipSize / 2) + m_camera.x,((Game::kMapChipNumY - 9) * Game::ChipSize + Game::ChipSize / 2) + m_camera.y });
-			*/
 
 			//一度生成したら次は生成しない
-			//
 
 			//画面内に入った時生成
 			//mapXがGame::kMapScreenRightXからGame::kMapScreenRightX + Game::ChipSizeの中に入った時
 			auto address = chipY * mW + chipX;
-			DrawFormatString(10, 800, 0xffffff, L"%d,%d", chipId, m_enemyPos[address]);
-
+#ifdef _DEBUG
+			DrawFormatString(10, 800, 0xffffff, L"マップ%d,エネミー位置%d", chipId, m_enemyPos[address]);
+#endif
 			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] == 1 ||
-				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size)
+				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] == 1)
 			{
 				switch (chipId)
 				{
@@ -93,15 +85,15 @@ void Map::Update()
 				case 2:
 					m_enemies->Create(EnemyType::Battery, Position2(pos.x, pos.y));
 					break;
-					/*case 3:
-						m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
-						break;
-					case 4:
-						m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
-						break;
-					case 5:
-						m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
-						break;*/
+				/*case 3:
+					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
+					break;
+				case 4:
+					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
+					break;
+				case 5:
+					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
+					break;*/
 				default:
 					break;
 				}
@@ -181,7 +173,7 @@ void Map::Draw()
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, false, false);
 			}
 #if _DEBUG
-			auto enemyId = m_stageMap->GetChipId(m_stage + 1, chipX, chipY);
+			auto enemyId = m_stageMap->GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
 			if (enemyId != 0)
 			{
 				int size = Game::ChipSize / 2;
@@ -205,6 +197,13 @@ void Map::Draw()
 
 void Map::Movement(Vector2 vec)
 {
+	int mW, mH;
+	m_stageMap->GetMapSize(mW, mH);
+	int size = Game::ChipSize / 2;
+	int X = static_cast<int>((mW * Game::ChipSize + size) + m_camera.x);
+	int Y = static_cast<int>((mH * Game::ChipSize + size) + m_camera.y);
+	//画面外を表示しない
+	if (Y < Game::kMapScreenTopY - size)return;
 	m_camera += vec;
 }
 
@@ -224,5 +223,19 @@ int Map::GetMapChipParam(float X, float Y)
 	// マップからはみ出ていたら 0 を返す
 	if (x >= Game::kMapChipNumX || y >= Game::kMapChipNumY || x < 0 || y < 0) return 0;
 
-	return m_stageMap->GetChipId(0, x, y);
+	return m_stageMap->GetChipId(MapLayer_map + m_stage, x, y);
+}
+
+int Map::GetMapEventParam(float X, float Y)
+{
+	int x, y;
+
+	// 整数値へ変換
+	x = (int)(X) / Game::ChipSize;
+	y = (int)(Y) / Game::ChipSize;
+
+	// マップからはみ出ていたら 0 を返す
+	if (x >= Game::kMapChipNumX || y >= Game::kMapChipNumY || x < 0 || y < 0) return 0;
+
+	return m_stageMap->GetChipId(MapLayer_event + m_stage, x, y);
 }

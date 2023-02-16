@@ -14,21 +14,16 @@ class ShotFactory;
 class HpBar;
 class Map;
 
-enum MapChip
+enum MapEvent
 {
-    no,			//ない       当たらない
-    sky,		//空         当たらない
-    terrain,	//地面       当たる
-    wall1,		//壁1        当たる
-    wall2,		//壁2        当たる
-    ladder1,	//梯子1      当たらない
-    ladder2,	//梯子2      当たらない
-    stone,		//石         当たる
-    thorn,		//とげ       当たる
-
-    move,
-
-    max
+    MapEvent_no,//何もない
+    MapEvent_hit,//当たる
+    MapEvent_death,//死ぬ
+    MapEvent_screenMoveU,//画面上移動
+    MapEvent_screenMoveD,//画面下移動
+    MapEvent_screenMoveW,//画面横移動
+    MapEvent_ladder,//梯子
+    MapEvent_screen,//読み込める場所
 };
 
 /// <summary>
@@ -103,7 +98,8 @@ public:
     std::shared_ptr<Player> m_player;//プレイヤー
     float m_fallPlayerSpeed = 0;    //落ちていくスピード
     bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
-    bool m_isPlayerCenterUD = false;//プレイヤーが画面の中心に居るか
+    bool m_isPlayerMoveU = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
+    bool m_isPlayerMoveD = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
     
     bool m_isMoveMap = false;//画面を移動させる場所に来たかどうか
 

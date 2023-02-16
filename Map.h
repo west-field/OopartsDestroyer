@@ -7,6 +7,13 @@
 
 class EnemyFactory;
 
+enum MapLayer
+{
+	MapLayer_map,
+	MapLayer_enemy,
+	MapLayer_event
+};
+
 class Map
 {
 public:
@@ -22,6 +29,7 @@ public:
 
 	//マップチップの値を取得する関数
 	int GetMapChipParam(float X, float Y);
+	int GetMapEventParam(float X, float Y);
 private:
 
 	Position2 m_camera;
