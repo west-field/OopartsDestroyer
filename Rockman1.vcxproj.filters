@@ -111,6 +111,9 @@
     <ClCompile Include="Enemy\EnemyMoveUpDown.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy\EnemyMoveLeftRight.cpp">
+      <Filter>Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -192,6 +195,9 @@
       <Filter>Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Enemy\EnemyMoveUpDown.h">
+      <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyMoveLeftRight.h">
       <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>

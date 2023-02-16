@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy\EnemyMoveLeftRight.cpp" />
     <ClCompile Include="Enemy\EnemyBase.cpp" />
     <ClCompile Include="Enemy\EnemyBattery.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Util\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy\EnemyMoveLeftRight.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Enemy\EnemyBase.h" />
     <ClInclude Include="Enemy\EnemyBattery.h" />

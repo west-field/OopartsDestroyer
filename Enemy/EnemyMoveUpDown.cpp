@@ -37,7 +37,7 @@ void EnemyMoveUpDown::Update()
 
 void EnemyMoveUpDown::Draw()
 {
-	int imgX = (m_idx / anim_frame_speed) * 29;
+	int imgX = (m_idx / anim_frame_speed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, kSize, kSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG

@@ -87,11 +87,11 @@ void Map::Update()
 					break;
 				/*case 3:
 					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
-					break;
+					break;*/
 				case 4:
 					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
 					break;
-				case 5:
+				/*case 5:
 					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
 					break;*/
 				default:

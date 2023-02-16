@@ -14,7 +14,7 @@
 #include "../Game/Player.h"
 #include "../Game/EnemyFactory.h"
 #include "../Game/ShotFactory.h"
-#include "../Game/EnemyBase.h"
+#include "../Enemy/EnemyBase.h"
 #include "../Game/HpBar.h"
 #include "../Map.h"
 /*
