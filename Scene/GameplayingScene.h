@@ -23,7 +23,7 @@ enum MapEvent
     MapEvent_screenMoveD,//画面下移動
     MapEvent_screenMoveW,//画面横移動
     MapEvent_ladder,//梯子
-    MapEvent_screen,//読み込める場所
+    MapEvent_screen,//読み込める範囲
 };
 
 /// <summary>
@@ -83,44 +83,42 @@ private:
     virtual void MoveMapUpdat(const InputState& input);
     virtual void FadeOutUpdat(const InputState& input);
 public:
-    int m_test;//画面を揺らせる(文字を回転させる)
-
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
     //UpdateFuncの型
     using UpdateFunc_t = void (GameplayingScene::*)(const InputState& input);
     UpdateFunc_t m_updateFunc = nullptr;
 
-    std::shared_ptr<Map> m_map; //マップ
+    //マップ
+    std::shared_ptr<Map> m_map; 
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
-    bool m_isMapJump = false;   //マップでジャンプをしたか
-    int m_framecolor = 0xc0c0c0;
-
-    std::shared_ptr<Player> m_player;//プレイヤー
+    int m_framecolor = 0xc0c0c0;//灰色
+    
+    //プレイヤー
+    std::shared_ptr<Player> m_player;
     float m_fallPlayerSpeed = 0;    //落ちていくスピード
     bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
     bool m_isPlayerMoveU = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
     bool m_isPlayerMoveD = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
     
-    bool m_isMoveMap = false;//画面を移動させる場所に来たかどうか
-
-    std::shared_ptr <ShotFactory> m_shotFactory;  //ショット
+    //ショット
+    std::shared_ptr <ShotFactory> m_shotFactory;  
     
-    std::shared_ptr <EnemyFactory> m_enemyFactory;  //エネミー
-    float m_fallEnemySpeed = 0;                     //落ちていくスピード    
+    //エネミー
+    std::shared_ptr <EnemyFactory> m_enemyFactory;
     
-    enum
+    enum HPBAR
     {
         Object_Player,
         Object_Enemy,
 
         Object_Max
     };
-    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;    //HPバー
+    //HPバー
+    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;    
     
-    //自機
+    //自機ショット
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
-    int m_shotCount = 0;                                    //今存在しているショットの数
 
     Vector2 m_correction;//画面を動かしたとき位置を補正する
 };

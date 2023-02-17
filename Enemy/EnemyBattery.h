@@ -10,14 +10,12 @@ class EnemyBattery : public EnemyBase
 public:
 	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle,std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyBattery();
-	virtual void Update();		//更新
-	virtual void Draw();		//表示
+	virtual void Update()override;		//更新
+	virtual void Draw()override;		//表示
 	//移動させる
-	virtual void Movement(Vector2 vec);
+	virtual void Movement(Vector2 vec)override;
 	//接触した時の攻撃力
-	virtual int TouchAttackPower()const;
-	//ダメージを受けた
-	virtual void Damage(int damage);
+	virtual int TouchAttackPower()const override;
 private:
 	int m_idx = 0;		//表示する画像の場所
 	int m_handle = -1;	//画像ハンドル

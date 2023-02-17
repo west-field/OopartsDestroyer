@@ -78,9 +78,9 @@ void Map::Update()
 				case 2:
 					m_enemies->Create(EnemyType::Battery, Position2(pos.x, pos.y));
 					break;
-				/*case 3:
+				case 3:
 					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
-					break;*/
+					break;
 				case 4:
 					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
 					break;

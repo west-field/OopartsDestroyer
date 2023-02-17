@@ -3,8 +3,8 @@
 #include "Util/Geometry.h"
 #include <memory>
 #include <vector>
-#include "Stage.h"
 
+class Stage;
 class EnemyFactory;
 
 enum MapLayer

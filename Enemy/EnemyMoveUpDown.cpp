@@ -20,7 +20,7 @@ EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 
 	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
-	m_hp = std::make_shared<HpBar>();
+	
 	m_hp->MaxHp(1);
 }
 
@@ -58,13 +58,4 @@ void EnemyMoveUpDown::Movement(Vector2 vec)
 int EnemyMoveUpDown::TouchAttackPower() const
 {
 	return kUpDownTouchAttackPower;
-}
-
-void EnemyMoveUpDown::Damage(int damage)
-{
-	m_hp->Damage(damage);
-	if (m_hp->GetHp() == 0)
-	{ 
-		m_isExist = false; 
-	}
 }

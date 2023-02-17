@@ -19,7 +19,6 @@ namespace
 EnemyMoveLeftRight::EnemyMoveLeftRight(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory) :
 	EnemyBase(player, pos, sFactory), m_handle(handle)
 {
-	m_hp = std::make_shared<HpBar>();
 	m_hp->MaxHp(5);
 }
 
@@ -30,6 +29,7 @@ EnemyMoveLeftRight::~EnemyMoveLeftRight()
 void EnemyMoveLeftRight::Update()
 {
 	if (!m_isExist)	return;
+
 }
 
 void EnemyMoveLeftRight::Draw()
@@ -56,13 +56,4 @@ void EnemyMoveLeftRight::Movement(Vector2 vec)
 int EnemyMoveLeftRight::TouchAttackPower() const
 {
 	return kLeftRightTouchAttackPower;
-}
-
-void EnemyMoveLeftRight::Damage(int damage)
-{
-	m_hp->Damage(damage);
-	if (m_hp->GetHp() == 0)
-	{
-		m_isExist = false;
-	}
 }

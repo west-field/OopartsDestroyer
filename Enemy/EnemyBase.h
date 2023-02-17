@@ -32,7 +32,7 @@ public:
 	/// ダメージを受けた
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>
-	virtual void Damage(int damage) = 0;
+	void Damage(int damage);
 	/// <summary>
 	/// この敵は生きているか
 	/// </summary>

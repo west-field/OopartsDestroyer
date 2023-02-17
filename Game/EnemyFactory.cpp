@@ -6,7 +6,7 @@
 #include "../Enemy/EnemyBase.h"
 #include "../Enemy/EnemyMoveUpDown.h"
 #include "../Enemy/EnemyBattery.h"
-
+#include "../Enemy/EnemyJump.h"
 #include "../Enemy/EnemyMoveLeftRight.h"
 #include "Player.h"
 
@@ -92,6 +92,9 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
 		break;
 	case EnemyType::Jump:
+		m_enemies.push_back(
+			std::make_shared<EnemyJump>(
+				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
 		break;
 	case EnemyType::MoveLeftRight:
 		m_enemies.push_back(

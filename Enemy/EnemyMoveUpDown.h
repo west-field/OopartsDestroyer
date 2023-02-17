@@ -10,11 +10,10 @@ class EnemyMoveUpDown : public EnemyBase
 public:
 	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyMoveUpDown();
-	virtual void Update();//更新
-	virtual void Draw();//表示
-	virtual void Movement(Vector2 vec);
-	virtual int TouchAttackPower()const;
-	virtual void Damage(int damage);
+	virtual void Update()override;//更新
+	virtual void Draw()override;//表示
+	virtual void Movement(Vector2 vec)override;
+	virtual int TouchAttackPower()const override;
 private:
 	int m_idx = 0;
 	int m_handle = -1;

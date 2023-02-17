@@ -21,8 +21,7 @@ EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, i
 {
 	//矩形とサイズ
 	m_rect = { pos, { static_cast<int>((kSize - kSize * 0.5)* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
-	//HPバー
-	m_hp = std::make_shared<HpBar>();
+	
 	m_hp->MaxHp(1);//この敵のマックスHP
 }
 
@@ -69,14 +68,4 @@ void EnemyBattery::Movement(Vector2 vec)
 int EnemyBattery::TouchAttackPower() const
 {
 	return kBatteryTouchAttackPower;
-}
-
-void EnemyBattery::Damage(int damage)
-{
-	m_hp->Damage(damage);
-	//HPが0のとき、存在しない
-	if (m_hp->GetHp() == 0)
-	{ 
-		m_isExist = false; 
-	}
 }
