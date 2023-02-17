@@ -372,11 +372,7 @@ void GameplayingScene::PlayerCenter()
 	if (m_player->GetRect().GetCenter().x > fieldCenterLeftUp.x && m_player->GetRect().GetCenter().x < fieldCenterRightBottom.x)
 	{
 		m_isPlayerCenterLR = true;
-	}/*
-	if (m_player->GetRect().GetCenter().y > fieldCenterLeftUp.y && m_player->GetRect().GetCenter().y < fieldCenterRightBottom.y)
-	{
-		m_isPlayerCenterUD = true;
-	}*/
+	}
 
 	//上下移動させる
 	//プレイヤーの上座標がフィールドの上に当たっていたら移動できる
@@ -384,6 +380,17 @@ void GameplayingScene::PlayerCenter()
 	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_screenMoveU)&&
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveU))
 	{
+		//ショットを削除する
+		for (auto& shot : m_shots)
+		{
+			shot->SetExist(false);
+		}
+		for (auto& shot : m_shotFactory->GetShot())
+		{
+			if (!shot->IsExist())	continue;
+			shot->SetExist(false);
+		}
+		
 		m_isPlayerMoveU = true;
 	}
 	//プレイヤーの下座標が縦移動できる場所についたら移動させる
@@ -391,6 +398,17 @@ void GameplayingScene::PlayerCenter()
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_screenMoveD) &&
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveD))
 	{
+		//ショットを削除する
+		for (auto& shot : m_shots)
+		{
+			shot->SetExist(false);
+		}
+		for (auto& shot : m_shotFactory->GetShot())
+		{
+			if (!shot->IsExist())	continue;
+			shot->SetExist(false);
+		}
+
 		m_isPlayerMoveD = true;
 	}
 

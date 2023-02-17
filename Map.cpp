@@ -26,14 +26,7 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :m_handle(-1),m_c
 		for (int chipX = 0; chipX < mW; chipX++)
 		{
 			int chipId = m_stageMap->GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
-			if (chipId == 0)
-			{
-				m_enemyPos.push_back(0);
-			}
-			else
-			{
-				m_enemyPos.push_back(1);
-			}
+			m_enemyPos.push_back(chipId);
 		}
 	}
 }
@@ -74,8 +67,8 @@ void Map::Update()
 #ifdef _DEBUG
 			DrawFormatString(10, 800, 0xffffff, L"マップ%d,エネミー位置%d", chipId, m_enemyPos[address]);
 #endif
-			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] == 1 ||
-				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] == 1)
+			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] != 0 ||
+				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] != 0)
 			{
 				switch (chipId)
 				{
