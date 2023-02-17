@@ -19,7 +19,7 @@ public:
 private:
 	int m_idx = 0;		//•\¦‚·‚é‰æ‘œ‚ÌêŠ
 	int m_handle = -1;	//‰æ‘œƒnƒ“ƒhƒ‹
-	int m_fireFrame;
+	int m_fireFrame = 0;
 	int num = 0;
 };
 

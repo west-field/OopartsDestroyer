@@ -58,10 +58,12 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//•\Ž¦ˆÊ’u‚ðŽw’è
 	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
 
+	m_handle = my::MyLoadGraph(L"Data/Background.png");
 }
 
 GameplayingScene::~GameplayingScene()
 {
+	DeleteGraph(m_handle);
 	Sound::StopBgm(Sound::BgmMain);
 }
 
@@ -72,6 +74,8 @@ void GameplayingScene::Update(const InputState& input)
 
 void GameplayingScene::Draw()
 {
+	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_handle, false);
+	
 	m_map->Draw();
 
 	m_player->Draw();

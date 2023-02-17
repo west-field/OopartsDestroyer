@@ -88,6 +88,8 @@ public:
     using UpdateFunc_t = void (GameplayingScene::*)(const InputState& input);
     UpdateFunc_t m_updateFunc = nullptr;
 
+    int m_handle = -1;
+
     //マップ
     std::shared_ptr<Map> m_map; 
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
