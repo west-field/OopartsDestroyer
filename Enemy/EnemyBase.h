@@ -5,6 +5,7 @@
 class Player;			//プレイヤー
 class HpBar;			//HPバー
 class ShotFactory;		//ショット
+class Stage;
 
 /// <summary>
 /// 敵基底クラス
@@ -12,7 +13,7 @@ class ShotFactory;		//ショット
 class EnemyBase
 {
 public:
-	EnemyBase(std::shared_ptr<Player>player,const Position2& pos,std::shared_ptr<ShotFactory> sFactory);
+	EnemyBase(std::shared_ptr<Player>player,const Position2& pos,std::shared_ptr<ShotFactory> sFactory,std::shared_ptr<Stage> stage);
 	virtual ~EnemyBase();
 
 	virtual void Update() = 0;//更新
@@ -65,10 +66,13 @@ public:
 	/// </summary>
 	/// <param name="isJump">true:ジャンプしている　false:ジャンプしていない</param>
 	void SetJump(bool isJump) { m_isJump = isJump; }
+
+	void GetChip(int chipId) { m_chipId = chipId; }
 protected:
 	std::shared_ptr<Player> m_player = nullptr;				//プレイヤー
 	std::shared_ptr<HpBar> m_hp = nullptr;					//Hpバー
 	std::shared_ptr<ShotFactory> m_shotFactory = nullptr;	//ショット
+	std::shared_ptr<Stage> m_stage = nullptr;
 
 	bool m_isExist = true;	//存在するか
 	Rect m_rect;	//敵の矩形
@@ -76,5 +80,7 @@ protected:
 	bool m_isLeft = false;	//左を向いている
 
 	bool m_isJump = false;	//ジャンプをしているか
+
+	int m_chipId;
 };
 

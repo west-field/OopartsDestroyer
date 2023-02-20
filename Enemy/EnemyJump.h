@@ -7,7 +7,7 @@
 class EnemyJump : public EnemyBase
 {
 public:
-	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory);
+	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage);
 	virtual ~EnemyJump();
 
 	virtual void Update() override;
@@ -15,6 +15,11 @@ public:
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
 private:
+	void MoveUpdate();
+	void JumpUpdate();
+
+	void (EnemyJump::* m_updateFunc)();
+
 	int m_handle = -1;//画像ハンドル
 	int m_idx = 0;//画像変更
 	int m_frame = 0;//ジャンプするまでの時間

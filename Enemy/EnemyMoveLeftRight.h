@@ -10,7 +10,7 @@ class Stage;
 class EnemyMoveLeftRight : public EnemyBase
 {
 public:
-	EnemyMoveLeftRight(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory);
+	EnemyMoveLeftRight(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage);
 	virtual ~EnemyMoveLeftRight();
 
 	virtual void Update()override;
@@ -18,6 +18,13 @@ public:
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
 private:
+	void NormalUpdate();
+	void LeftUpdate();
+	void RightUpdate();
+
+	void (EnemyMoveLeftRight::* m_updateFunc)();
+
+	int m_frame = 0;
 	int m_idx = 0;
 	int m_handle = -1;
 };

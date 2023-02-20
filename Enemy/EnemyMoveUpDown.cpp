@@ -16,8 +16,8 @@ namespace
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 }
 
-EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_handle(handle)
+EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage):
+	EnemyBase(player,pos,sFactory,stage),m_handle(handle)
 {
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	

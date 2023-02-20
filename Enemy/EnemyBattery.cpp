@@ -16,8 +16,8 @@ namespace
 	constexpr float kDrawScall = 1.0f;
 }
 
-EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_handle(handle)
+EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage):
+	EnemyBase(player,pos,sFactory,stage),m_handle(handle)
 {
 	//矩形とサイズ
 	m_rect = { pos, { static_cast<int>((kSize - kSize * 0.5)* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
@@ -39,7 +39,17 @@ void EnemyBattery::Update()
 	if ( m_idx / anim_frame_speed == 2 && num == 0)
 	{
 		num++;
-		m_shotFactory->Create(ShotType::RockBuster, m_rect.center, /*vel*/{0.0f,0.0f}, !m_isLeft);
+		/*
+		角度	まっすぐ0.0f
+				縦　90度
+				斜め30度60度
+		*/
+		//m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, /*vel*/{0.0f,0.0f}, !m_isLeft);//まっすぐ
+		
+		Vector2 vel;
+		vel.x = cos(5.0);
+		vel.y = sin(5.0);
+		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, !m_isLeft);//斜め
 	}
 	else if(m_idx / anim_frame_speed == 0)
 	{
