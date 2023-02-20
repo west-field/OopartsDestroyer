@@ -49,7 +49,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 		shot = std::make_shared<RockBuster>(my::MyLoadGraph(L"Data/rockBuster.png"));
 	}
 
-	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - 6*Game::ChipSize)},m_hp[Object_Player]);//プレイヤーの初期位置
+	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - Game::ChipSize*5)},m_hp[Object_Player]);//プレイヤーの初期位置
 	
 	m_shotFactory = std::make_shared<ShotFactory>();
 	
@@ -229,8 +229,10 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 
 	// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
 	//キャラクタの左下と右下に地面がないとき
-	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_no)&&
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_no))
+	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_no)||
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_screenMoveD)&&
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_no)||
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_screenMoveD))
 	{
 		// 足場が無かったらジャンプ中にする
 		m_player->SetJump(true);
@@ -393,7 +395,7 @@ void GameplayingScene::PlayerCenter()
 		m_isPlayerMoveD = true;
 	}
 
-	if (m_isPlayerMoveU || m_isPlayerMoveD)
+	if (m_isPlayerMoveU || m_isPlayerMoveD || m_isPlayerMoveW)
 	{
 		//ショットを削除する
 		for (auto& shot : m_shots)
@@ -542,8 +544,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	// 梯子判定の場所にいるとき //プレイヤーの上下 の場所に梯子があるか
 	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) == MapEvent_ladder) ||
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) ==  MapEvent_screenMoveD)|| 
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_ladder)||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveD))
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.5f) == MapEvent_ladder)||
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.5f) == MapEvent_screenMoveD))
 	{
 #ifdef _DEBUG
 		DrawString(400, 40, L"梯子", 0xffffff);
@@ -649,14 +651,16 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
+			m_crea = 1;
 		}
 		//プレイヤーの上座標+10ぐらいが　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death) &&
-			(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death))
+		if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death) &&
+			(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death))
 		{
 			m_player->Action(ActionType::grah_hit);
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
+			m_crea = 1;
 		}
 	}
 	//ポーズ画面
@@ -747,8 +751,16 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new GamecreaScene(m_manager));
-		return;
+		switch (m_crea)
+		{
+		case 0:
+			m_manager.ChangeScene(new GamecreaScene(m_manager));
+			return;
+		case 1:
+			m_manager.ChangeScene(new GameoverScene(m_manager));
+		default:
+			return;
+		}
 	}
 }
 

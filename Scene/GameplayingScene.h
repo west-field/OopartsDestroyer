@@ -120,7 +120,7 @@ public:
     enum HPBAR
     {
         Object_Player,
-        Object_Enemy,
+        Object_EnemyBoss,
 
         Object_Max
     };
@@ -130,5 +130,8 @@ public:
     //自機ショット
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
+
+    //ゲームクリアかゲームオーバーか
+    int m_crea = 0;
 };
 
