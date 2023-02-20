@@ -35,7 +35,7 @@ void EnemyBattery::Update()
 {
 	//‘¶İ‚µ‚Ä‚¢‚È‚¢‚Æ‚«‚ÍXV‚µ‚È‚¢
 	if (!m_isExist) return;
-	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
+	m_idx = (m_idx + (GetRand(10) % 3) ) % (anim_frame_speed * anim_frame_num);
 
 	if ( m_idx / anim_frame_speed == 2 && num == 0)
 	{

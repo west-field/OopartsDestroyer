@@ -12,7 +12,7 @@ namespace
 	constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
 	constexpr int anim_frame_num = 5;//アニメーション枚数
 	constexpr int kSize = 29;
-	constexpr float kDrawScall = 0.8f;
+	constexpr float kDrawScall = 1.0f;
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 }
 

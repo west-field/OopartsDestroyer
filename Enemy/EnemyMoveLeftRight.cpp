@@ -40,7 +40,7 @@ void EnemyMoveLeftRight::Update()
 void EnemyMoveLeftRight::Draw()
 {
 	if (!m_isExist)	return;
-	int img = (m_idx / anim_frame_speed) * kLeftRightSize;
+	int img = m_idx * kLeftRightSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
@@ -62,12 +62,14 @@ int EnemyMoveLeftRight::TouchAttackPower() const
 
 void EnemyMoveLeftRight::NormalUpdate()
 {
-	m_idx = 0;
-	//移動したところが壁かどうか
+	//2秒間ぐらい止まる
 	if (m_frame++ >= 120)
 	{
+		//半目
 		m_idx = 1;
+		//フレームカウントをゼロにする
 		m_frame = 0;
+		//どっちを向いているかどうか
 		if (m_isLeft)
 		{
 			m_updateFunc = &EnemyMoveLeftRight::LeftUpdate;
@@ -77,16 +79,27 @@ void EnemyMoveLeftRight::NormalUpdate()
 			m_updateFunc = &EnemyMoveLeftRight::RightUpdate;
 		}
 	}
+	//止まっている間は目を閉じた画像を表示させる
+	else
+	{
+		m_idx = 0;
+	}
 }
 
 void EnemyMoveLeftRight::LeftUpdate()
 {
+	//目が開いている画像
 	m_idx = 2;
+	//左に移動する
 	m_rect.center.x -= kEnemyMoveSpeed;
+	//壁にぶつかった時
 	if (m_chipId == 1)
 	{
+		//半目
 		m_idx = 1;
+		//向きを逆に
 		m_isLeft = false;
+		//通常の更新に切り替える
 		m_updateFunc = &EnemyMoveLeftRight::NormalUpdate;
 	}
 }
@@ -94,6 +107,7 @@ void EnemyMoveLeftRight::LeftUpdate()
 void EnemyMoveLeftRight::RightUpdate()
 {
 	m_idx = 2;
+	//右に移動
 	m_rect.center.x += kEnemyMoveSpeed;
 	if (m_chipId == 1)
 	{
