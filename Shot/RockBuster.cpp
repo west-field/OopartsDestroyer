@@ -19,7 +19,7 @@ RockBuster::~RockBuster()
 	
 }
 
-void RockBuster::Start(Position2 pos,bool left)
+void RockBuster::Start(Position2 pos, Vector2 vel,bool left)
 {
 	m_isExist = true;
 	m_isLeft = left;

@@ -13,6 +13,7 @@ class ShotBase;
 class ShotFactory;
 class HpBar;
 class Map;
+class Stage;
 
 enum MapEvent
 {
@@ -95,18 +96,22 @@ public:
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
     int m_framecolor = 0xc0c0c0;//灰色
     
+    std::shared_ptr<Stage> m_stage;
+
     //プレイヤー
     std::shared_ptr<Player> m_player;
     float m_fallPlayerSpeed = 0;    //落ちていくスピード
     bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
     bool m_isPlayerMoveU = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
     bool m_isPlayerMoveD = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
-    
+    bool m_isPlayerMoveW = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
+
     //ショット
     std::shared_ptr <ShotFactory> m_shotFactory;  
     
     //エネミー
     std::shared_ptr <EnemyFactory> m_enemyFactory;
+    Vector2 m_correction;//画面を動かしたとき位置を補正する
     
     enum HPBAR
     {
@@ -121,7 +126,5 @@ public:
     //自機ショット
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
-
-    Vector2 m_correction;//画面を動かしたとき位置を補正する
 };
 

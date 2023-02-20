@@ -9,6 +9,7 @@
 #include "PauseScene.h"
 #include "GameStartCountScene.h"
 #include "GameoverScene.h"
+#include "GamecreaScene.h"
 #include "../Shot/RockBuster.h"
 
 #include "../Game/Player.h"
@@ -17,6 +18,7 @@
 #include "../Enemy/EnemyBase.h"
 #include "../Game/HpBar.h"
 #include "../Map.h"
+#include "../Stage.h"
 /*
 
 スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
@@ -51,9 +53,12 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	
 	m_shotFactory = std::make_shared<ShotFactory>();
 	
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットを渡す
+	m_stage = std::make_shared<Stage>();
+	m_stage->Load(L"Data/maptest.fmf");
 
-	m_map = std::make_shared<Map>(m_enemyFactory,0);
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_stage);//プレイヤーとショットを渡す
+
+	m_map = std::make_shared<Map>(m_enemyFactory,m_stage,0);
 
 	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
 	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
@@ -159,7 +164,7 @@ bool GameplayingScene::createShot(Position2 pos, bool isPlayer, bool isLeft)
 	{
 		if (!shot->IsExist())
 		{
-			shot->Start(pos,isLeft);
+			shot->Start(pos, {0.0f,0.0f}, isLeft);
 			shot->PlayerShot(isPlayer);
 			shot->SetExist(true);
 			return true;
@@ -244,6 +249,7 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
+	float moveX = 4.0f;
 
 	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
@@ -254,6 +260,14 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		
 		//移動させる
 		enemy->Movement({ MoveX,MoveY });
+		if (enemy->IsLeft())
+		{
+			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x-wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - 2.0f));
+		}
+		else
+		{
+			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x+wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - 2.0f));
+		}
 
 		//画面の左端に消えたら
 		if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
@@ -353,23 +367,27 @@ void GameplayingScene::PlayerCenter()
 	m_isPlayerCenterLR = false;
 	m_isPlayerMoveU = false;
 	m_isPlayerMoveD = false;
-
-	//縦移動できる場所についたら移動させる
+	m_isPlayerMoveW = false;
 
 	if (m_player->GetRect().GetCenter().x > fieldCenterLeftUp.x && m_player->GetRect().GetCenter().x < fieldCenterRightBottom.x)
 	{
 		m_isPlayerCenterLR = true;
 	}
-
+	//縦移動できる場所についたら移動させる 右側の下と上
+	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveW) &&
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveW))
+	{
+		m_isPlayerMoveW = true;
+	}
 	//プレイヤーの上座標がフィールドの上に当たっていたら移動できる	
-	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_screenMoveU)&&
+	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU)&&
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveU))
 	{
 		m_isPlayerMoveU = true;
 	}
 	//プレイヤーの下座標が縦移動できる場所についたら移動させる
 	if (!m_isPlayerMoveU &&
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h * 0.5f - 1.0f) == MapEvent_screenMoveD) &&
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == MapEvent_screenMoveD) &&
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) == MapEvent_screenMoveD))
 	{
 		m_isPlayerMoveD = true;
@@ -542,7 +560,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 
-	if (m_isPlayerMoveU || m_isPlayerMoveD)
+	if (m_isPlayerMoveU || m_isPlayerMoveD || m_isPlayerMoveW)
 	{
 		m_updateFunc = &GameplayingScene::MoveMapUpdat;
 	}
@@ -660,7 +678,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	m_map->Update();
 	
 	float moveY = (Game::kMapNumY * Game::ChipSize) / 120.0f;
-	
+	float moveX = ((Game::kMapNumX * Game::ChipSize) / 120.0f) * -1.0f;
+
 	//上に移動するとき
 	if (m_isPlayerMoveU)
 	{
@@ -702,6 +721,25 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			return;
 		}
 	}
+	else if (m_isPlayerMoveW)
+	{
+		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
+		if (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 > Game::kMapScreenLeftX)
+		{
+			m_map->Movement({ moveX,0.0f });
+			MoveEnemy(moveX, 0.0f);
+			m_player->Movement({ moveX,0.0f });
+			m_correction.x += moveX;
+			moveX *= -1.0f;
+			m_add.x += moveX;
+		}
+		else
+		{
+			m_updateFunc = &GameplayingScene::FadeOutUpdat;
+			m_isPlayerMoveW = false;
+			return;
+		}
+	}
 }
 
 void GameplayingScene::FadeOutUpdat(const InputState& input)
@@ -709,7 +747,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if(++m_fadeTimer == kFadeInterval)
 	{
-		m_manager.ChangeScene(new GameoverScene(m_manager));
+		m_manager.ChangeScene(new GamecreaScene(m_manager));
 		return;
 	}
 }

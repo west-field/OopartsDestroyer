@@ -17,7 +17,8 @@ namespace
 	constexpr int Y = 125;
 }
 
-EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory):m_player(player), m_shotFactory(sFactory)
+EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage):
+	m_player(player), m_shotFactory(sFactory),m_stage(stage)
 {
 	//“G‚Ì‰æ‘œ‚ðƒ[ƒh‚·‚é
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
@@ -32,13 +33,6 @@ EnemyFactory::~EnemyFactory()
 
 void EnemyFactory::Update()
 {
-	//m_frame++;
-	////“G‚ðì¬‚·‚é
-	//if (m_frame % 60 == 0)
-	//{
-	//	Create(EnemyType::MoveUpDown, { Game::kScreenWidth,400.0f });
-	//}
-
 	//‚¢‚È‚­‚È‚Á‚½“G‚ÍÁ‚¦‚é
 	//ðŒ‚É“–‚Ä‚Í‚Ü‚é“G‚ðŒã‚ë‚É‚æ‚¯‚Ä‚¢‚é 
 	//remove_ifðŒ‚É‡’v‚µ‚½‚à‚Ì‚ðÁ‚· begin,end ‘ÎÛ‚Íenemise_‚ÌÅ‰‚©‚çÅŒã‚Ü‚Å Á‚¦‚Ä‚à‚ç‚¤ðŒ‚ð•\‚·ƒ‰ƒ€ƒ_Ž® trueÁ‚¦‚éfalse‚¾‚ÆÁ‚¦‚È‚¢
@@ -65,7 +59,7 @@ void EnemyFactory::Draw()
 {
 	for (auto& enemy : m_enemies)
 	{
-		if (enemy->IsExist() && enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
+		if (enemy->IsExist())//&& enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
 		{
 			enemy->Draw();
 		}
@@ -84,22 +78,22 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::MoveUpDown:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveUpDown>(
-				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory, m_stage));
 		break;
 	case EnemyType::Battery:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory, m_stage));
 		break;
 	case EnemyType::Jump:
 		m_enemies.push_back(
 			std::make_shared<EnemyJump>(
-				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Jump], m_shotFactory, m_stage));
 		break;
 	case EnemyType::MoveLeftRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLeftRight>(
-				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory, m_stage));
 		break;
 	case EnemyType::MoveShot:
 		break;

@@ -117,6 +117,12 @@
     <ClCompile Include="Enemy\EnemyJump.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\GamecreaScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="Shot\ShotBattery.cpp">
+      <Filter>Shot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -205,6 +211,12 @@
     </ClInclude>
     <ClInclude Include="Enemy\EnemyJump.h">
       <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GamecreaScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Shot\ShotBattery.h">
+      <Filter>Shot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

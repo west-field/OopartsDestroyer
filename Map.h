@@ -18,7 +18,7 @@ class Map
 {
 public:
 
-	Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage);
+	Map(std::shared_ptr<EnemyFactory> enemyFactory, std::shared_ptr<Stage> stageMap,int stage);
 	virtual ~Map();
 	void Update();
 	void Draw();

@@ -11,14 +11,10 @@ namespace
 	constexpr float kScale = 1.0f;
 }
 
-Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :m_handle(-1),m_camera(),m_enemies(enemyFactory),m_stage(stage)
+Map::Map(std::shared_ptr<EnemyFactory> enemyFactory, std::shared_ptr<Stage> stageMap,int stage) :m_handle(-1),m_camera(),m_enemies(enemyFactory), m_stageMap(stageMap),m_stage(stage)
 {
-	m_stageMap = std::make_shared<Stage>();
-	m_stageMap->Load(L"Data/maptest.fmf");
-
 	m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
-	//m_camera.y = ((Game::kMapChipNumY * Game::ChipSize) - (Game::kNumY * Game::ChipSize)) * -1.0f;
-
+	
 	int mW, mH;
 	m_stageMap->GetMapSize(mW, mH);
 	for (int chipY = 0; chipY < mH; chipY++)
@@ -144,7 +140,6 @@ void Map::Draw()
 {
 	int mW, mH;
 	m_stageMap->GetMapSize(mW, mH);
-	const auto& mapData = m_stageMap->GetMapData();
 	for (int chipY = 0; chipY < mH; chipY++)
 	{
 		for (int chipX = 0; chipX < mW; chipX++)

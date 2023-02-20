@@ -8,7 +8,7 @@ public:
 	RockBuster(int handle);
 	virtual ~RockBuster();
 
-	virtual void Start(Position2 pos,bool left);
+	virtual void Start(Position2 pos, Vector2 vel,bool left);
 	virtual void Update();
 	virtual void Draw();
 	virtual const int AttackPower()const;

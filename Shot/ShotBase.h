@@ -4,6 +4,7 @@
 enum class ShotType
 {
 	RockBuster,
+	ShotBattery
 };
 
 /// <summary>
@@ -16,7 +17,7 @@ public:
 	virtual ~ShotBase();
 
 	//ショット開始
-	virtual void Start(Position2 pos, bool left) = 0;
+	virtual void Start(Position2 pos, Vector2 vel, bool left) = 0;
 	//更新
 	virtual void Update() = 0;
 	//描画
@@ -40,7 +41,7 @@ protected:
 	
 	int m_handle;//グラフィックハンドル
 	
-	Rect m_rect;
+	Rect m_rect;//矩形
 
 	Vector2 m_vel;	//弾のスピード
 	
