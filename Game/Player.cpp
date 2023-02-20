@@ -135,8 +135,7 @@ void Player::NormalUpdate()
 		m_frame = 0;
 	}
 
-	//‚Ç‚¿‚ç‚©‘å‚«‚¢‚Ù‚¤‚ğ•Ô‚·
-	//m_ultimateTimer = std::max(--m_ultimateTimer, 0);
+	//0‚æ‚è‚à¬‚³‚©‚Á‚½‚ç0‚ğ•Ô‚·
 	if (--m_ultimateTimer <= 0)
 	{
 		m_ultimateTimer = 0;
