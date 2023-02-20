@@ -164,7 +164,7 @@ void Map::Draw()
 
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, false, false);
 			}
-#if _DEBUG
+#ifdef _DEBUG
 			auto enemyId = m_stageMap->GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
 			if (enemyId != 0)
 			{
