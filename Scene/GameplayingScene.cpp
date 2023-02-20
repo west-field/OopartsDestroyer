@@ -54,7 +54,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	m_shotFactory = std::make_shared<ShotFactory>();
 	
 	m_stage = std::make_shared<Stage>();
-	m_stage->Load(L"Data/maptest.fmf");
+	m_stage->Load(L"Data/map.fmf");
 
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_stage);//プレイヤーとショットを渡す
 
@@ -687,8 +687,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		if (m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 < Game::kMapScreenBottomY)
 		{
 			m_map->Movement({ 0.0f,moveY });
-			MoveEnemy(0.0f, moveY);
 			m_player->Movement({ 0.0f,moveY});
+			MoveEnemy(0.0f, moveY);
 			m_correction.y += moveY;
 			moveY *= -1.0f;
 			m_add.y += moveY;

@@ -7,13 +7,13 @@
 #include <memory>//スマートポインタをつかうため
 #include <array>//配列用
 
-class Player;
-class EnemyFactory;
-class ShotBase;
-class ShotFactory;
-class HpBar;
-class Map;
-class Stage;
+class Player;               //プレイヤー
+class EnemyFactory;         //エネミーを生成
+class ShotBase;             //弾基底クラス
+class ShotFactory;          //弾を生成
+class HpBar;                //Hpバー
+class Map;                  //マップ
+class Stage;                //ステージ
 
 enum MapEvent
 {
@@ -79,9 +79,13 @@ private:
     /// <param name="MoveY">移動量</param>
     void MoveMap(float MoveX, float MoveY);
  
+    //画面のフェードイン
     virtual void FadeInUpdat(const InputState& input);
+    //通常更新
     virtual void NormalUpdat(const InputState& input);
+    //画面移動の更新
     virtual void MoveMapUpdat(const InputState& input);
+    //画面のフェードアウト
     virtual void FadeOutUpdat(const InputState& input);
 public:
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
@@ -94,7 +98,7 @@ public:
     //マップ
     std::shared_ptr<Map> m_map; 
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
-    int m_framecolor = 0xc0c0c0;//灰色
+    int m_framecolor = 0xc0c0c0;//灰色　マップの枠の色
     
     std::shared_ptr<Stage> m_stage;
 

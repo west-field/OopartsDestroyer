@@ -20,7 +20,7 @@ EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, i
 	EnemyBase(player,pos,sFactory,stage),m_handle(handle)
 {
 	//矩形とサイズ
-	m_rect = { pos, { static_cast<int>((kSize - kSize * 0.5)* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
+	m_rect = { pos, { static_cast<int>(kSize * kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	
 	m_hp->MaxHp(1);//この敵のマックスHP
 	m_isLeft = isLeft;
@@ -50,7 +50,7 @@ void EnemyBattery::Update()
 		Vector2 vel;
 		vel.x = cos(5.0);
 		vel.y = sin(5.0);
-		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, !m_isLeft);//斜め
+		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft);//斜め
 	}
 	else if(m_idx / anim_frame_speed == 0)
 	{

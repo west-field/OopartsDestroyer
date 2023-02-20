@@ -43,6 +43,7 @@ void Map::Update()
 		{
 			//表示する位置
 			int size = Game::ChipSize / 2;
+			//右座標、下座標
 			Vector2 pos = { ((chipX * Game::ChipSize + size) + m_camera.x) ,((chipY * Game::ChipSize + size) + m_camera.y) };
 
 			//表示画面内にいないときは生成しない

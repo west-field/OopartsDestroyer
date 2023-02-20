@@ -83,12 +83,12 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::BatteryRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,true));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,false));
 		break;
 	case EnemyType::BatteryLeft:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,false));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,true));
 		break;
 	case EnemyType::Jump:
 		m_enemies.push_back(
