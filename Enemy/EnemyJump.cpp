@@ -79,6 +79,20 @@ void EnemyJump::MoveUpdate()
 
 void EnemyJump::JumpUpdate()
 {
+	if (m_player->GetRect().GetCenter().x > m_rect.center.x)
+	{
+		m_rect.center.x += 1.0f;
+	}
+	else
+	{
+		m_rect.center.x -= 1.0f;
+	}
+
+	m_updateFunc = &EnemyJump::DownUpdate;
+}
+
+void EnemyJump::DownUpdate()
+{
 	m_rect.center.y += kGrap;
 
 	if (m_player->GetRect().GetCenter().x > m_rect.center.x)

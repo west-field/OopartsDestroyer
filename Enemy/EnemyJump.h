@@ -17,6 +17,7 @@ public:
 private:
 	void MoveUpdate();
 	void JumpUpdate();
+	void DownUpdate();
 
 	void (EnemyJump::* m_updateFunc)();
 
