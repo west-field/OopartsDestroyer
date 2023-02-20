@@ -22,7 +22,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 {
 	//“G‚Ì‰æ‘œ‚ðƒ[ƒh‚·‚é
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
-	m_handleMap[EnemyType::Battery] = my::MyLoadGraph(L"Data/burst.png");
+	m_handleMap[EnemyType::BatteryRight] = my::MyLoadGraph(L"Data/burst.png");
 	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
 	m_handleMap[EnemyType::MoveLeftRight] = my::MyLoadGraph(L"Data/move.png");
 }
@@ -80,10 +80,15 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 			std::make_shared<EnemyMoveUpDown>(
 				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory, m_stage));
 		break;
-	case EnemyType::Battery:
+	case EnemyType::BatteryRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::Battery], m_shotFactory, m_stage));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,true));
+		break;
+	case EnemyType::BatteryLeft:
+		m_enemies.push_back(
+			std::make_shared<EnemyBattery>(
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,false));
 		break;
 	case EnemyType::Jump:
 		m_enemies.push_back(

@@ -19,7 +19,8 @@ class Stage;
 enum class EnemyType
 {
 	MoveUpDown,//©‹@‚ÆX²‚ª“¯‚¶‚Æ‚«ã‰º‚ÉˆÚ“®‚·‚é“G
-	Battery,//ŒÅ’è–C‘ä
+	BatteryRight,//ŒÅ’è–C‘ä
+	BatteryLeft,//ŒÅ’è–C‘ä
 	Jump,//ƒWƒƒƒ“ƒv‚·‚é“G
 	MoveLeftRight,//‰¡ˆÚ“®‚·‚élŠp‚¢“G
 	MoveShot,//ˆÚ“®‚µ‚È‚ª‚ç8•ûŒü‚ÉŒ‚‚Â“G

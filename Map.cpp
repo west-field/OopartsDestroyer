@@ -72,15 +72,18 @@ void Map::Update()
 					m_enemies->Create(EnemyType::MoveUpDown, Position2(pos.x, pos.y));
 					break;
 				case 2:
-					m_enemies->Create(EnemyType::Battery, Position2(pos.x, pos.y));
+					m_enemies->Create(EnemyType::BatteryRight, Position2(pos.x, pos.y));
 					break;
 				case 3:
-					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
+					m_enemies->Create(EnemyType::BatteryLeft, Position2(pos.x, pos.y));
 					break;
 				case 4:
+					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
+					break;
+				case 5:
 					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
 					break;
-				/*case 5:
+				/*case 6:
 					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
 					break;*/
 				default:
