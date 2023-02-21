@@ -39,22 +39,22 @@ void RockBuster::Update()
 	wsize = m_rect.size.w * 0.5f;
 	hsize = m_rect.size.h * 0.5f;
 	//左端
-	if (m_rect.GetCenter().x + wsize < Game::kMapScreenLeftX - wsize * 2)
+	if (m_rect.GetCenter().x + wsize < Game::kMapScreenLeftX)
 	{
 		SetExist(false);
 	}
 	//右端
-	if (m_rect.GetCenter().x - wsize > Game::kMapScreenRightX + wsize * 2)
+	if (m_rect.GetCenter().x - wsize > Game::kMapScreenRightX)
 	{
 		SetExist(false);
 	}
 	//上端
-	if (m_rect.center.y + hsize < Game::kMapScreenTopY - hsize * 2)
+	if (m_rect.center.y + hsize < Game::kMapScreenTopY)
 	{
 		SetExist(false);
 	}
 	//下端
-	if (m_rect.center.y - hsize > Game::kMapScreenBottomY + hsize * 2)
+	if (m_rect.center.y - hsize > Game::kMapScreenBottomY)
 	{
 		SetExist(false);
 	}
