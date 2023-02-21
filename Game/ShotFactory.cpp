@@ -24,6 +24,7 @@ void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel
 	case ShotType::ShotBattery:
 		m_shots.push_back(std::make_shared<ShotBattery>(m_shotHTable[ShotType::ShotBattery]));
 		m_shots.back()->Start(pos, vel,isleft);
+		break;
 	default:
 		break;
 	}

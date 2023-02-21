@@ -10,7 +10,7 @@ class Stage;
 class EnemyMoveLeftRight : public EnemyBase
 {
 public:
-	EnemyMoveLeftRight(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage);
+	EnemyMoveLeftRight(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyMoveLeftRight();
 
 	virtual void Update()override;

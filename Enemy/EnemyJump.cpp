@@ -2,7 +2,6 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
-#include "../Stage.h"
 #include "../game.h"
 #include "../Game/Player.h"
 
@@ -23,8 +22,8 @@ namespace
 	constexpr float kGrap = 2.0f;
 }
 
-EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage):
-	EnemyBase(player,pos,sFactory,stage),m_handle(handle),m_updateFunc(&EnemyJump::MoveUpdate)
+EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
+	EnemyBase(player,pos,sFactory),m_handle(handle),m_updateFunc(&EnemyJump::MoveUpdate)
 {
 	m_rect = { pos,{static_cast<int>(kJumpSize * kDrawScall),static_cast<int>(kJumpSize * kDrawScall)} };
 	m_hp->MaxHp(1);

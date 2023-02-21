@@ -8,7 +8,7 @@
 class EnemyMoveUpDown : public EnemyBase
 {
 public:
-	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage);
+	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyMoveUpDown();
 	virtual void Update()override;//çXêV
 	virtual void Draw()override;//ï\é¶

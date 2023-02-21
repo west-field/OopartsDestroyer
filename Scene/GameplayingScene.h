@@ -78,7 +78,7 @@ private:
     /// <param name="MoveX">移動量</param>
     /// <param name="MoveY">移動量</param>
     void MoveMap(float MoveX, float MoveY);
- 
+
     //画面のフェードイン
     virtual void FadeInUpdat(const InputState& input);
     //通常更新
@@ -100,7 +100,6 @@ public:
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
     int m_framecolor = 0xc0c0c0;//灰色　マップの枠の色
     
-    std::shared_ptr<Stage> m_stage;
 
     //プレイヤー
     std::shared_ptr<Player> m_player;

@@ -16,8 +16,8 @@ namespace
 	constexpr float kDrawScall = 1.0f;
 }
 
-EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage,bool isLeft):
-	EnemyBase(player,pos,sFactory,stage),m_handle(handle)
+EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory,bool isLeft):
+	EnemyBase(player,pos,sFactory),m_handle(handle)
 {
 	//矩形とサイズ
 	m_rect = { pos, { static_cast<int>(kSize * kDrawScall),static_cast<int>(kSize* kDrawScall) } };

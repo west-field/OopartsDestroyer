@@ -7,7 +7,7 @@
 class EnemyJump : public EnemyBase
 {
 public:
-	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage);
+	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyJump();
 
 	virtual void Update() override;

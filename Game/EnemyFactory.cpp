@@ -17,8 +17,8 @@ namespace
 	constexpr int Y = 125;
 }
 
-EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<Stage> stage):
-	m_player(player), m_shotFactory(sFactory),m_stage(stage)
+EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory):
+	m_player(player), m_shotFactory(sFactory)
 {
 	//敵の画像をロードする
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
@@ -45,9 +45,9 @@ void EnemyFactory::Update()
 	//実際に範囲を指定して消している
 	m_enemies.erase(rmIt, m_enemies.end());
 
-	//敵全部更新
 	for (auto& enemy : m_enemies)
 	{
+		//敵全部更新
 		if (enemy->IsExist() && enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
 		{
 			enemy->Update();
@@ -78,27 +78,27 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::MoveUpDown:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveUpDown>(
-				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory, m_stage));
+				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_shotFactory));
 		break;
 	case EnemyType::BatteryRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,false));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory,false));
 		break;
 	case EnemyType::BatteryLeft:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory, m_stage,true));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_shotFactory,true));
 		break;
 	case EnemyType::Jump:
 		m_enemies.push_back(
 			std::make_shared<EnemyJump>(
-				m_player, pos, m_handleMap[EnemyType::Jump], m_shotFactory, m_stage));
+				m_player, pos, m_handleMap[EnemyType::Jump], m_shotFactory));
 		break;
 	case EnemyType::MoveLeftRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLeftRight>(
-				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory, m_stage));
+				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory));
 		break;
 	case EnemyType::MoveShot:
 		break;

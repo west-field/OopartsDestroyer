@@ -153,7 +153,7 @@
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Scene\GamecreaScene.cpp" />
+    <ClCompile Include="Scene\GameclearScene.cpp" />
     <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Scene\GameplayingScene.cpp" />
     <ClCompile Include="Scene\GameStartCountScene .cpp" />
@@ -169,7 +169,6 @@
     <ClCompile Include="Shot\ShotBattery.cpp" />
     <ClCompile Include="Shot\RockBuster.cpp" />
     <ClCompile Include="Shot\ShotBase.cpp" />
-    <ClCompile Include="Stage.cpp" />
     <ClCompile Include="Util\DrawFunctions.cpp" />
     <ClCompile Include="Util\Geometry.cpp" />
     <ClCompile Include="Util\InputState.cpp" />
@@ -186,7 +185,7 @@
     <ClInclude Include="Game\HpBar.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Scene\GamecreaScene.h" />
+    <ClInclude Include="Scene\GameclearScene.h" />
     <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Scene\GameplayingScene.h" />
     <ClInclude Include="Scene\GameStartCountScene.h" />
@@ -202,7 +201,6 @@
     <ClInclude Include="Shot\ShotBattery.h" />
     <ClInclude Include="Shot\RockBuster.h" />
     <ClInclude Include="Shot\ShotBase.h" />
-    <ClInclude Include="Stage.h" />
     <ClInclude Include="Util\DrawFunctions.h" />
     <ClInclude Include="Util\Geometry.h" />
     <ClInclude Include="Util\InputState.h" />
