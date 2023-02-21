@@ -1,4 +1,4 @@
-#include "GamecreaScene.h"
+#include "GameclearScene.h"
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
@@ -7,27 +7,27 @@
 #include "SceneManager.h"
 #include "TitleScene.h"
 
-void GamecreaScene::FadeInUpdat(const InputState& input)
+void GameclearScene::FadeInUpdat(const InputState& input)
 {
 	//ž‚Ç‚ñ‚Ç‚ñ–¾‚é‚­‚È‚é
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if (--m_fadeTimer == 0)
 	{
-		m_updateFunc = &GamecreaScene::NormalUpdat;
+		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
 	}
 }
 
-void GamecreaScene::NormalUpdat(const InputState& input)
+void GameclearScene::NormalUpdat(const InputState& input)
 {
 	if (input.IsTriggered(InputType::next))
 	{
-		m_updateFunc = &GamecreaScene::FadeOutUpdat;
+		m_updateFunc = &GameclearScene::FadeOutUpdat;
 		m_fadeColor = 0x000000;
 	}
 }
 
-void GamecreaScene::FadeOutUpdat(const InputState& input)
+void GameclearScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if (++m_fadeTimer == kFadeInterval)
@@ -37,25 +37,23 @@ void GamecreaScene::FadeOutUpdat(const InputState& input)
 	}
 }
 
-GamecreaScene::GamecreaScene(SceneManager& manager) : Scene(manager) , m_updateFunc(&GamecreaScene::FadeInUpdat) {
+GameclearScene::GameclearScene(SceneManager& manager) : Scene(manager) , m_updateFunc(&GameclearScene::FadeInUpdat) {
 	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
 	Sound::StartBgm(Sound::BgmGameover);
 }
 
-GamecreaScene::~GamecreaScene()
+GameclearScene::~GameclearScene()
 {
 	//DeleteGraph(m_gameoverH);
 	Sound::StopBgm(Sound::BgmGameover);
 }
 
-void
-GamecreaScene::Update(const InputState& input)
+void GameclearScene::Update(const InputState& input)
 {
 	(this->*m_updateFunc)(input);
 }
 
-void
-GamecreaScene::Draw()
+void GameclearScene::Draw()
 {
 	//DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, m_gameoverH, true);
 
@@ -64,6 +62,6 @@ GamecreaScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetFontSize(50);
-	DrawString(Game::kScreenWidth / 3, Game::kScreenHeight / 3, L"Gamecrea", 0xffffff);
+	DrawString(Game::kScreenWidth / 3, Game::kScreenHeight / 3, L"Gameclear", 0xffffff);
 	SetFontSize(0);
 }
