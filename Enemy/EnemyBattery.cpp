@@ -48,8 +48,6 @@ void EnemyBattery::Update()
 		//m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, /*vel*/{0.0f,0.0f}, !m_isLeft);//‚Ü‚Á‚·‚®
 		
 		Vector2 vel;
-		vel.x = cos(5.0);
-		vel.y = sin(5.0);
 		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft);//ŽÎ‚ß
 	}
 	else if(m_idx / anim_frame_speed == 0)
