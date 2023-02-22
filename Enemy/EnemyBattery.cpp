@@ -25,6 +25,11 @@ EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, i
 	
 	m_hp->MaxHp(1);//この敵のマックスHP
 	m_isLeft = isLeft;
+
+	for (int i = 0; i < kShotNum; i++)
+	{
+		m_shot[i].angle = i * 0.01f;
+	}
 }
 
 EnemyBattery::~EnemyBattery()
@@ -40,16 +45,13 @@ void EnemyBattery::Update()
 
 	if ( m_idx / anim_frame_speed == 2 && num == 0)
 	{
-		num++;
-		/*
-		角度	まっすぐ0.0f
-				縦　90度
-				斜め30度60度
-		*/
-		//m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, /*vel*/{0.0f,0.0f}, !m_isLeft);//まっすぐ
-		
-		Vector2 vel;
+		/*m_shot[num].vel.x = -2.0f;
+		m_shot[num].vel.y = -sin(m_shot[num].angle);
+		m_shot[num].vel.Normalize();
+		Vector2 vel =  m_shot[num].vel;*/
+		Vector2 vel = { 0.0f,0.0f };
 		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft);//斜め
+		num++;
 	}
 	else if(m_idx / anim_frame_speed == 0)
 	{

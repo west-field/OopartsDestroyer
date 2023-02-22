@@ -77,6 +77,9 @@ void Map::Update()
 				/*case 6:
 					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
 					break;*/
+				case 7:
+					m_enemies->Create(EnemyType::Boss, Position2(pos.x, pos.y));
+					break;
 				default:
 					break;
 				}

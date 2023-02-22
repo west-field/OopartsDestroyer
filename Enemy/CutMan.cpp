@@ -23,6 +23,7 @@ namespace
 CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle,std::shared_ptr<ShotFactory> sFactory):
 	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate), m_frame(0)
 {
+	m_isLeft = true;
 	m_handle = handle;
 	m_rect = { pos,{kSizeX,kSizeY} };
 }
@@ -52,6 +53,8 @@ void CutMan::OnDamage(int damage)
 
 void CutMan::Movement(Vector2 vec)
 {
+	if (!m_isExist)	return;
+	m_rect.center += vec;
 }
 
 int CutMan::TouchAttackPower() const
@@ -115,7 +118,7 @@ void CutMan::JumpUpdate()
 void CutMan::OneShotUpdate()
 {
 	//自機狙い弾を作る　自機狙いベクトル=終点(プレイヤー座標)　-　始点(敵機自身の座標)
-	auto vel = m_player->GetRect().GetCenter()/*GetPosition()*/ - m_rect.center;
+	auto vel = m_player->GetRect().GetCenter() - m_rect.center;
 
 	if (vel.SQLength() == 0.0f)
 	{
@@ -137,7 +140,7 @@ void CutMan::OneShotUpdate()
 void CutMan::TwoShotUpdate()
 {
 	//自機狙い弾を作る　自機狙いベクトル=終点(プレイヤー座標)　-　始点(敵機自身の座標)
-	auto vel = m_player->GetRect().GetCenter()/*GetPosition()*/ - m_rect.center;
+	auto vel = m_player->GetRect().GetCenter() - m_rect.center;
 
 	if (vel.SQLength() == 0.0f)
 	{

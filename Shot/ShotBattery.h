@@ -11,6 +11,6 @@ public:
 	virtual void Draw()override;
 	virtual const int AttackPower()const override;
 private:
-
+	
 };
 

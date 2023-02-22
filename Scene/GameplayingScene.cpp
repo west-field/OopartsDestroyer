@@ -21,8 +21,7 @@
 #include "../Shot/RockBuster.h"
 /*
 スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
-マンブー　　　　丸い形をしていて空中をまっすぐ移動しつつ顔を出した瞬間に8方向に弾を発射する敵 HP1、攻撃力（弾）2、（接触）1
-スクリュードライバー　自機が近付くと、５方向同時に弾を二回発射する
+スクリュードライバー　自機が近付くと、地面から出てきて、５方向同時に弾を二回発射する
 */
 namespace
 {
@@ -56,8 +55,9 @@ GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_up
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
 	m_map->Load(L"Data/map.fmf");
 
-	m_map->Movement({ Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f });//表示位置を指定
-	m_add = { -Game::kMapScreenLeftX ,(Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY};
+	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	m_map->Movement(pos);
+	m_add = pos * -1.0f;
 
 	m_handle = my::MyLoadGraph(L"Data/Background.png");
 }
@@ -247,6 +247,7 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 	float Dummy = 0.0f;
 	float hsize, wsize;
 	float moveX = 4.0f;
+	float moveY = 1.0f;
 
 	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
@@ -259,14 +260,12 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 
 		if (enemy->IsLeft())
 		{
-			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x-wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - 2.0f));
+			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x-wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize + moveY));
 		}
 		else
 		{
-			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x+wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - 2.0f));
+			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x+wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize + moveY));
 		}
-		//移動させる
-		//enemy->Movement({ MoveX,0.0f });
 
 		//画面の左端に消えたら
 		if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
@@ -544,7 +543,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//上キーで梯子を上がれる　上が梯子または下が梯子
 	if (input.IsPressed(InputType::up))
 	{
-		if (
+		if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU)||
 			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
 		{
 			PlayerMoveY -= kPlayerMoveSpeed;
@@ -695,7 +694,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ 0.0f,moveY });//mapを移動させる
 			MoveEnemy( 0.0f,moveY);//エネミーを移動させる
-			MovePlayer(0.0f, moveY);//プレイヤーを移動させる
+			MovePlayer(0.0f, moveY - 0.1f);//プレイヤーを移動させる
 			m_correction.y += moveY;//どのくらいマップが移動したか
 			moveY *= -1.0f;
 			m_add.y += moveY;//どのくらいプレイヤーが移動したか
@@ -716,7 +715,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ 0.0f,moveY });
 			MoveEnemy(0.0f, moveY);
-			m_player->Movement({ 0.0f,moveY });
+			m_player->Movement({ 0.0f,moveY + 0.1f });
 			moveY *= -1.0f;
 			m_add.y += moveY;
 		}
@@ -735,7 +734,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ moveX,0.0f });
 			MoveEnemy(moveX, 0.0f);
-			m_player->Movement({ moveX,0.0f });
+			m_player->Movement({ moveX + 0.1f,0.0f });
 			moveX *= -1.0f;
 			m_add.x += moveX;
 		}
