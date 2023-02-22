@@ -8,6 +8,7 @@
 #include "../Enemy/EnemyBattery.h"
 #include "../Enemy/EnemyJump.h"
 #include "../Enemy/EnemyMoveLeftRight.h"
+#include "../Enemy/CutMan.h"
 #include "Player.h"
 
 namespace
@@ -25,6 +26,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	m_handleMap[EnemyType::BatteryRight] = my::MyLoadGraph(L"Data/burst.png");
 	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
 	m_handleMap[EnemyType::MoveLeftRight] = my::MyLoadGraph(L"Data/move.png");
+	m_handleMap[EnemyType::Boss] = my::MyLoadGraph(L"Data/move.png");
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -104,8 +106,8 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		break;
 	case EnemyType::Boss:
 		m_enemies.push_back(
-			std::make_shared<EnemyMoveLeftRight>(
-				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory));
+			std::make_shared<CutMan>(
+				m_player, pos, m_handleMap[EnemyType::Boss], m_shotFactory));
 		break;
 	default:
 		break;
