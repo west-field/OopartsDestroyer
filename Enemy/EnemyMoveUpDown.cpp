@@ -17,8 +17,9 @@ namespace
 }
 
 EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_handle(handle)
+	EnemyBase(player,pos,sFactory)
 {
+	m_handle = handle;
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
 	
 	m_hp->MaxHp(1);

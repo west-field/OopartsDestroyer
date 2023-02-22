@@ -23,8 +23,9 @@ namespace
 }
 
 EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_handle(handle),m_updateFunc(&EnemyJump::MoveUpdate)
+	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyJump::MoveUpdate)
 {
+	m_handle = handle;
 	m_rect = { pos,{static_cast<int>(kJumpSize * kDrawScall),static_cast<int>(kJumpSize * kDrawScall)} };
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);

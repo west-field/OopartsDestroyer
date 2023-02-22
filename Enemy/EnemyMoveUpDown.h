@@ -16,6 +16,5 @@ public:
 	virtual int TouchAttackPower()const override;
 private:
 	int m_idx = 0;
-	int m_handle = -1;
 };
 

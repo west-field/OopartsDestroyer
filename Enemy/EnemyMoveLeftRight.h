@@ -26,6 +26,5 @@ private:
 
 	int m_frame = 0;
 	int m_idx = 0;
-	int m_handle = -1;
 };
 

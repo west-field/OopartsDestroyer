@@ -79,6 +79,8 @@ protected:
 	bool m_isExist = true;	//‘¶İ‚·‚é‚©
 	Rect m_rect;	//“G‚Ì‹éŒ`
 
+	int m_handle = -1;
+
 	bool m_isLeft = false;	//¶‚ğŒü‚¢‚Ä‚¢‚é
 
 	bool m_isJump = false;	//ƒWƒƒƒ“ƒv‚ğ‚µ‚Ä‚¢‚é‚©

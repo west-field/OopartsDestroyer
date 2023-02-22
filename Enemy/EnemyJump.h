@@ -21,7 +21,6 @@ private:
 
 	void (EnemyJump::* m_updateFunc)();
 
-	int m_handle = -1;//画像ハンドル
 	int m_idx = 0;//画像変更
 	int m_frame = 0;//ジャンプするまでの時間
 };

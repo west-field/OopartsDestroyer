@@ -17,11 +17,10 @@ namespace
 }
 
 EnemyMoveLeftRight::EnemyMoveLeftRight(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), m_handle(handle),m_updateFunc(&EnemyMoveLeftRight::NormalUpdate)
+	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveLeftRight::NormalUpdate)
 {
-	int X, Y;
-	GetGraphSize(m_handle, &X, &Y);
-	m_rect = { pos,{X/anim_frame_num,Y} };
+	m_handle = handle;
+	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
 	m_hp->MaxHp(5);
 }
 
