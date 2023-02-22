@@ -23,6 +23,8 @@ enum class EnemyType
 	Jump,//ジャンプする敵
 	MoveLeftRight,//横移動する四角い敵
 	MoveShot,//移動しながら8方向に撃つ敵
+
+	Boss,//ボス
 };
 
 class EnemyFactory

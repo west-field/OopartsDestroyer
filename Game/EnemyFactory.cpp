@@ -102,6 +102,11 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		break;
 	case EnemyType::MoveShot:
 		break;
+	case EnemyType::Boss:
+		m_enemies.push_back(
+			std::make_shared<EnemyMoveLeftRight>(
+				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_shotFactory));
+		break;
 	default:
 		break;
 	}
