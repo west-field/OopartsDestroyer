@@ -85,6 +85,8 @@ private:
     virtual void NormalUpdat(const InputState& input);
     //画面移動の更新
     virtual void MoveMapUpdat(const InputState& input);
+
+    virtual void BossUpdate(const InputState& input);
     //画面のフェードアウト
     virtual void FadeOutUpdat(const InputState& input);
 public:

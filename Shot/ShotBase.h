@@ -4,7 +4,7 @@
 enum class ShotType
 {
 	RockBuster,
-	ShotBattery
+	ShotBattery,
 };
 
 /// <summary>
