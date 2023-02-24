@@ -6,15 +6,26 @@ namespace Sound
 	enum SoundId
 	{
 		//BGM
+		BgmTitle,		//タイトルBGM
 		BgmMain,		//メインBGM
-		BgmGameover,	//終わった時のBGM
+		//BgmGameclear,	//ゲームクリアBGM
+		//BgmGameover,	//ゲームオーバーBGM
+		
 		//効果音
 		Cursor,			//カーソル移動音
 		Determinant,	//決定ボタン
-		Count,			//カウント音
-		BlockMove,		//ブロック移動音
-		BlockPlacing,	//ブロックを置く音
-		Blocking,		//ブロックを壊した音
+		BlockMove,		//ブロック接触音
+		MenuOpen,		//メニューを開く時の音
+		PlayerJump,		//プレイヤージャンプ音
+		EnemyJump,		//エネミージャンプ音
+		//ItemGet,		//アイテムゲット音 itemGet.wav
+		//Recovery,		//回復音
+
+		//攻撃音
+		PlayeyShot,		//プレイヤーの弾発射音
+		PlayeyShotHit,	//プレイヤーの弾が敵にヒット
+
+		EnemyShot,		//敵の弾発射音
 
 		Max
 	};

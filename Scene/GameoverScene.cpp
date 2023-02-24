@@ -39,13 +39,13 @@ void GameoverScene::FadeOutUpdat(const InputState& input)
 
 GameoverScene::GameoverScene(SceneManager& manager) : Scene(manager) , m_updateFunc(&GameoverScene::FadeInUpdat) {
 	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
-	Sound::StartBgm(Sound::BgmGameover);
+	/*Sound::StartBgm(Sound::BgmGameover);*/
 }
 
 GameoverScene::~GameoverScene()
 {
 	//DeleteGraph(m_gameoverH);
-	Sound::StopBgm(Sound::BgmGameover);
+	/*Sound::StopBgm(Sound::BgmGameover);*/
 }
 
 void

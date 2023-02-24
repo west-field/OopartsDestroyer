@@ -49,7 +49,15 @@ void EnemyBattery::Update()
 		m_shot[num].vel.y = -sin(m_shot[num].angle);
 		m_shot[num].vel.Normalize();
 		Vector2 vel =  m_shot[num].vel;*/
+
 		Vector2 vel = { 0.0f,0.0f };
+		//ƒ‰ƒ“ƒ_ƒ€‚É•ûŒü‚Æ‘¬“x‚ðŒˆ’è‚·‚é
+		vel.x = -1.0f;
+		vel.y = static_cast<float>(GetRand(100) - 50) / 50.0f;
+		vel.Normalize();
+		float speed = static_cast<float>(GetRand(60) + 20) / 20.0f;
+		vel *= speed;
+
 		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft);//ŽÎ‚ß
 		num++;
 	}

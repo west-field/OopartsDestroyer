@@ -9,7 +9,7 @@
 
 GameStartCountScene::GameStartCountScene(SceneManager& manager) : Scene(manager), m_updateFunc(&GameStartCountScene::CountDownUpdat)
 {
-	Sound::Play(Sound::Count);
+	/*Sound::Play(Sound::Count);*/
 }
 
 GameStartCountScene::~GameStartCountScene()

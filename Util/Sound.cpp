@@ -10,15 +10,20 @@ namespace
 	//サウンドファイル名
 	const TCHAR* const kFileName[Sound::Max] =
 	{
-		L"Sound/sekibaku.mp3",//メインBGM
-		L"Sound/mistake.mp3",//終わった時のBGM
+		L"Sound/noranekonokuchibue.mp3",//タイトルBGM
+		L"Sound/retroparty.mp3",	//メインBGM
+		
+		L"Sound/Cursor.mp3",		//カーソル
+		L"Sound/pushbotan.mp3",		//決定ボタン
+		L"Sound/blockMove.mp3",		//ブロック接触音
+		L"Sound/menuOpen.mp3",		//メニューを開く時の音
+		L"Sound/playerJump.wav",	//プレイヤージャンプ音
+		L"Sound/enemyJump.wav",		//敵ジャンプ音
 
-		L"Sound/paperRoll.mp3",//カーソル移動音
-		L"Sound/decisionPressing.mp3",//決定ボタン
-		L"Sound/count.mp3",//カウント音
-		L"Sound/blockMove.mp3",//ブロック移動音
-		L"Sound/blockPlace.mp3",//ブロックを置く音
-		L"Sound/blockBreak.mp3"//ブロックを壊した音
+
+		L"Sound/playerShot.wav",	//プレイヤー弾発射音
+		L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
+		L"Sound/enemyShot.wav",	//敵弾発射音
 	};
 }
 

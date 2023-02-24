@@ -1,6 +1,7 @@
 #include "EnemyJump.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
+#include "../Util/Sound.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
 #include "../Game/Player.h"
@@ -73,6 +74,7 @@ void EnemyJump::MoveUpdate()
 		m_idx = 1;
 		m_rect.center.y -= Game::ChipSize * 2;
 		m_rect.center.x -= 5.0f;
+		Sound::Play(Sound::EnemyJump);
 		m_updateFunc = &EnemyJump::JumpUpdate;
 	}
 }

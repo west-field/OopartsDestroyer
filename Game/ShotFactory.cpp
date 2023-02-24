@@ -1,5 +1,7 @@
 #include "ShotFactory.h"
 #include "../Util/DrawFunctions.h"
+#include "../Util/Sound.h"
+
 #include "../Shot/RockBuster.h"
 #include "../Shot/ShotBattery.h"
 
@@ -15,6 +17,7 @@ ShotFactory::~ShotFactory()
 
 void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel,bool isleft)
 {
+	Sound::Play(Sound::EnemyShot);
 	switch (type)
 	{
 	case ShotType::RockBuster:

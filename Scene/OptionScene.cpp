@@ -5,6 +5,7 @@
 #include "TitleScene.h"
 #include "KeyConfigScene.h"
 #include "OperateScene.h"
+#include "../Util/Sound.h"
 
 OptionScene::OptionScene(SceneManager& manager) : Scene(manager), m_updateFunc(&OptionScene::FadeInUpdat)
 {
@@ -69,6 +70,7 @@ void OptionScene::NormalUpdat(const InputState& input)
 
 	if (isPress)
 	{
+		Sound::Play(Sound::Cursor);
 		for (int i = 0; i < configMax; i++)
 		{
 			if (i == m_selectNum)
@@ -80,6 +82,7 @@ void OptionScene::NormalUpdat(const InputState& input)
 
 	if (input.IsTriggered(InputType::next))
 	{
+		Sound::Play(Sound::Determinant);
 		switch (m_selectNum)
 		{
 		case configOperate:

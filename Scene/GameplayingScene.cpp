@@ -225,12 +225,18 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	m_player->Movement({ MoveX,0.0f });
 
 	// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
+	//当たり判定のある場所に来たら音を鳴らして足場がある判定にする
 	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit) ||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_ladder) ||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit)||
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit))
+	{
+		if (m_player->IsJump())	Sound::Play(Sound::BlockMove);
+		//足場があったら設置中にする
+		m_player->SetJump(false);
+	}
+	//梯子があったら足場がある判定にする
+	else if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_ladder)||
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_ladder))
 	{
-		//足場があったら設置中にする
 		m_player->SetJump(false);
 	}
 	else
@@ -518,32 +524,16 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 
-	//プレイヤージャンプ処理
-	if (m_player->IsJump() == false && input.IsTriggered(InputType::junp))
-	{
-		m_fallPlayerSpeed = -kJumpAcc;
-		m_player->Action(ActionType::grah_jump);
-		m_player->SetJump(true);
-	}
-
-	//プレイヤーがジャンプしていたら
-	if (m_player->IsJump())
-	{
-		// 落下処理
-		m_fallPlayerSpeed += 0.4f;
-		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
-		// 落下速度を移動量に加える
-		PlayerMoveY = m_fallPlayerSpeed;
-	}
-
-
 	float posX = m_add.x + m_player->GetRect().GetCenter().x;
 	float posY = m_add.y + m_player->GetRect().GetCenter().y;
 	//梯子移動
 	//上キーで梯子を上がれる　上が梯子または下が梯子
 	if (input.IsPressed(InputType::up))
 	{
-		if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU)||
+		m_player->SetJump(false);
+		m_fallPlayerSpeed = 0.0f;
+		PlayerMoveY = 0.0f;
+		if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU) ||
 			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
 		{
 			PlayerMoveY -= kPlayerMoveSpeed;
@@ -555,13 +545,33 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 	//下キーで梯子を下がれる　下が梯子
-	if (input.IsPressed(InputType::down))
+	else if (input.IsPressed(InputType::down))
 	{
+		m_player->SetJump(false);
+		m_fallPlayerSpeed = 0.0f;
+		PlayerMoveY = 0.0f;
 		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w / 2 + kPullPos, posY - m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_ladder) ||
 			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.5f) == MapEvent_ladder))
 		{
 			PlayerMoveY += kPlayerMoveSpeed;
 		}
+	}
+	//プレイヤージャンプ処理
+	else if (m_player->IsJump() == false && input.IsTriggered(InputType::junp))
+	{
+		m_fallPlayerSpeed = -kJumpAcc;
+		m_player->Action(ActionType::grah_jump);
+		m_player->SetJump(true);
+		Sound::Play(Sound::PlayerJump);
+	}
+
+	//プレイヤーがジャンプしていたら
+	if (m_player->IsJump())
+	{
+		// 落下処理
+		m_fallPlayerSpeed += 0.4f;
+		// 落下速度を移動量に加える
+		PlayerMoveY = m_fallPlayerSpeed;
 	}
 
 	if (m_isPlayerMoveU || m_isPlayerMoveD || m_isPlayerMoveW)
@@ -585,6 +595,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
+		Sound::Play(Sound::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
 
@@ -611,6 +622,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				break;
 			}
 		}
@@ -627,6 +639,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				return;
 			}
 		}
@@ -641,6 +654,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{
 				m_player->Damage(enemy->TouchAttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				break;
 			}
 		}
@@ -668,6 +682,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
+		Sound::Play(Sound::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
 	}
@@ -799,6 +814,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		m_fallPlayerSpeed = -kJumpAcc;
 		m_player->Action(ActionType::grah_jump);
 		m_player->SetJump(true);
+		Sound::Play(Sound::PlayerJump);
 	}
 	//プレイヤーがジャンプしていたら
 	if (m_player->IsJump())
@@ -819,6 +835,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
+		Sound::Play(Sound::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
 	for (int i = 0; i < kShot; i++)
@@ -897,6 +914,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
+		Sound::Play(Sound::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
 	}

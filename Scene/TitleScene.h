@@ -1,6 +1,8 @@
 #pragma once
 #include "Secne.h"
 #include "../game.h"
+#include <array>
+#include "../Util/Geometry.h"
 
 //メニュー項目
 enum MenuItem
@@ -50,6 +52,16 @@ private:
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd}
 	};
+
+	struct BackImg
+	{
+		int handle;//画像のハンドル
+		float scrollSpeed;//スクロールスピード
+		Size imgSize;
+	};
+	//背景
+	std::array<BackImg, 3> m_bgImgs;
+	int m_scroll = 0;
 
 public:
 	TitleScene(SceneManager& manager);

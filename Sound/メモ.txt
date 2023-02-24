@@ -1,0 +1,27 @@
+ダウンロードしたサイト
+効果音ラボ　甘茶の音楽工房　FC音工場
+
+noranekonokuchibue　開始時音楽
+retroparty　ゲーム中音楽
+
+blockMove　ジャンプした後地面についた音
+Cursor　カーソル移動
+pushbotan　決定音
+
+playerJump　プレイヤージャンプ音
+enemyJump　エネミージャンプ音
+itemGet　アイテムゲット音
+recovery　回復音
+menuOpen　メニューを開く
+
+playerShot.wav　プレイヤーショット
+playerShotHit 　プレイヤーショット命中(敵被弾音)
+enemyShot.wav　エネミーショット
+
+
+SHW.
+ノスタルジア
+騒音のない世界
+音楽の卵
+DOVA-SYNDROME.
+MusMus.

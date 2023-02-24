@@ -1,5 +1,6 @@
 #include "EnemyBase.h"
 #include "../Game/HpBar.h"
+#include "../Util/Sound.h"
 
 EnemyBase::EnemyBase(std::shared_ptr<Player>player, const Position2& pos, std::shared_ptr<ShotFactory> sFactory):
     m_player(player), m_rect(pos, {}),m_shotFactory(sFactory)
