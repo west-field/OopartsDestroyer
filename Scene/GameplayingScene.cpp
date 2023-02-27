@@ -32,8 +32,10 @@ namespace
 	constexpr float kPullPos = 10.0f;
 }
 
-GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat)
-, m_add(), m_correction()
+GameplayingScene::GameplayingScene(SceneManager& manager) :
+	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),
+	m_drawFunc(&GameplayingScene::NormalDraw),
+	m_add(), m_correction()
 {
 	for (auto& hp : m_hp)
 	{
@@ -92,7 +94,7 @@ void GameplayingScene::Draw()
 	}
 	m_shotFactory->Draw();//ショット表示
 
-	m_hp[Object_Player]->Draw(true);//HPバーを表示
+	(this->*m_drawFunc)();
 
 	//枠を作る
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
@@ -758,6 +760,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			//ボス戦に移動する前にエネミーをすべて消す
 
 			m_updateFunc = &GameplayingScene::BossUpdate;
+			m_drawFunc = &GameplayingScene::BossDraw;
 			m_isPlayerMoveW = false;
 			return;
 		}
@@ -859,7 +862,8 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
 				shot->SetExist(false);
-				enemy->Damage(shot->AttackPower());
+				//enemy->Damage(shot->AttackPower());
+				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
 				break;
 			}
 		}
@@ -936,5 +940,17 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 			return;
 		}
 	}
+}
+
+void GameplayingScene::NormalDraw()
+{
+	m_hp[Object_Player]->Draw(true);//HPバーを表示
+}
+
+void GameplayingScene::BossDraw()
+{
+	//HPバーを表示
+	m_hp[Object_Player]->Draw(true);
+	m_hp[Object_EnemyBoss]->Draw(false);
 }
 

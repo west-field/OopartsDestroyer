@@ -80,20 +80,25 @@ private:
     void MoveMap(float MoveX, float MoveY);
 
     //画面のフェードイン
-    virtual void FadeInUpdat(const InputState& input);
+     void FadeInUpdat(const InputState& input);
     //通常更新
-    virtual void NormalUpdat(const InputState& input);
+     void NormalUpdat(const InputState& input);
     //画面移動の更新
-    virtual void MoveMapUpdat(const InputState& input);
-
-    virtual void BossUpdate(const InputState& input);
+     void MoveMapUpdat(const InputState& input);
+     //ボス戦
+     void BossUpdate(const InputState& input);
     //画面のフェードアウト
-    virtual void FadeOutUpdat(const InputState& input);
+     void FadeOutUpdat(const InputState& input);
+
+     //通常表示
+     void NormalDraw();
+     //ボス戦表示
+     void BossDraw();
 public:
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
-    //UpdateFuncの型
-    using UpdateFunc_t = void (GameplayingScene::*)(const InputState& input);
-    UpdateFunc_t m_updateFunc = nullptr;
+    
+    void (GameplayingScene::* m_updateFunc)(const InputState& input);
+    void (GameplayingScene::* m_drawFunc)();
 
     int m_handle = -1;
 
