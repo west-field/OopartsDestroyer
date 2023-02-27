@@ -1,9 +1,9 @@
 #include "CutMan.h"
 #include <DxLib.h>
-//#include "../Scene/GameplayingScene.h"
 #include "../Util/DrawFunctions.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/Player.h"
+#include "../Game/HpBar.h"
 
 namespace
 {
@@ -110,6 +110,15 @@ void CutMan::JumpUpdate()
 	}
 	else
 	{
+		//プレイヤーの方向にジャンプ
+		if (m_player->GetRect().GetCenter().x > m_rect.center.x)
+		{
+			m_isLeft = false;
+		}
+		else
+		{
+			m_isLeft = true;
+		}
 		updateFunc = &CutMan::StopUpdate;
 		return;
 	}
