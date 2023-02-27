@@ -15,7 +15,7 @@ public:
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
 private:
-	void MoveUpdate();
+	void NormalUpdate();
 	void JumpUpdate();
 	void DownUpdate();
 
@@ -23,5 +23,7 @@ private:
 
 	int m_idx = 0;//‰æ‘œ•ÏX
 	int m_frame = 0;//ƒWƒƒƒ“ƒv‚·‚é‚Ü‚Å‚ÌŠÔ
+
+	float m_vecTemp = 0.0f;
 };
 

@@ -14,7 +14,7 @@ namespace
 	constexpr float kDrawScale = 2.0f;		//拡大率
 	constexpr int kMoveFrameNum = 4;	//歩く時のアニメーション枚数
 	constexpr int kFrameNum = 2;		//そのほかのアニメーション枚数
-	constexpr int kFrameSpeed = 15;		//アニメーションスピード
+	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 
 	constexpr int kBurstFrameNum = 5;
 	constexpr int kBurstFrameSpeed = 5;

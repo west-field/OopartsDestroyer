@@ -21,10 +21,11 @@ namespace
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 
 	constexpr float kGrap = 2.0f;
+	constexpr float kJumpA = 5.0f;
 }
 
 EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyJump::MoveUpdate)
+	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyJump::NormalUpdate)
 {
 	m_handle = handle;
 	m_rect = { pos,{static_cast<int>(kJumpSize * kDrawScall),static_cast<int>(kJumpSize * kDrawScall)} };
@@ -65,51 +66,50 @@ int EnemyJump::TouchAttackPower() const
 	return kJumpTouchAttackPower;
 }
 
-void EnemyJump::MoveUpdate()
+void EnemyJump::NormalUpdate()
 {
 	//ランダムな時にジャンプさせる
 	if (m_frame-- <= 0)
 	{
 		m_frame = GetRand(kRand) * anim_frame_speed + 60;
 		m_idx = 1;
-		m_rect.center.y -= Game::ChipSize * 2;
-		m_rect.center.x -= 5.0f;
 		Sound::Play(Sound::EnemyJump);
+		m_vecTemp =  m_rect.center.y - Game::ChipSize * 3;
+
+		if (m_player->GetRect().GetCenter().x > m_rect.center.x)
+		{
+			m_vec = { 1.0f,-kJumpA };
+		}
+		else
+		{
+			m_vec = { -1.0f,-kJumpA };
+		}
+
 		m_updateFunc = &EnemyJump::JumpUpdate;
+		return;
 	}
 }
 
 void EnemyJump::JumpUpdate()
 {
-	if (m_player->GetRect().GetCenter().x > m_rect.center.x)
-	{
-		m_rect.center.x += 1.0f;
-	}
-	else
-	{
-		m_rect.center.x -= 1.0f;
-	}
+	m_rect.center += m_vec;
 
-	m_updateFunc = &EnemyJump::DownUpdate;
+	if (m_rect.center.y <= m_vecTemp)
+	{
+		m_updateFunc = &EnemyJump::DownUpdate;
+	}
 }
 
 void EnemyJump::DownUpdate()
 {
 	m_rect.center.y += kGrap;
 
-	if (m_player->GetRect().GetCenter().x > m_rect.center.x)
-	{
-		m_rect.center.x += 1.0f;
-	}
-	else
-	{
-		m_rect.center.x -= 1.0f;
-	}
+	m_rect.center.x += m_vec.x;
 
 	if (m_chipId == 1)
 	{
 		m_idx = 0;
 		m_rect.center.y -= kGrap;
-		m_updateFunc = &EnemyJump::MoveUpdate;
+		m_updateFunc = &EnemyJump::NormalUpdate;
 	}
 }

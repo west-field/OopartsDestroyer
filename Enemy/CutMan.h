@@ -13,8 +13,6 @@ public :
 	virtual void Update();
 	virtual void Draw();
 
-	virtual void OnDamage(int damage);
-
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
 private:
@@ -25,9 +23,8 @@ private:
 	virtual void TwoShotUpdate();//ボスが2回弾を撃つ
 	void (CutMan::* updateFunc)();
 
-	bool m_isOnDamage = false;
 	int m_idx = 0;//画像の表示範囲
-	int m_frame;//次の行動まで
-	Vector2 m_vec;//移動速度
+	int m_shotFrame;//次の弾を撃つまで
+	int m_JumpFrame;//次のジャンプまで
 };
 

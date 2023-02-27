@@ -21,7 +21,7 @@ namespace
 }
 
 CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle,std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate), m_frame(0)
+	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate), m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
 	m_isLeft = true;
 	m_handle = handle;
@@ -45,16 +45,14 @@ void CutMan::Draw()
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kSizeX, kSizeY, 1.0f, 0.0f, m_handle, true, m_isLeft);
 }
 
-void CutMan::OnDamage(int damage)
-{
-	EnemyBase::Damage(damage);
-	m_isOnDamage = true;
-}
-
 void CutMan::Movement(Vector2 vec)
 {
 	if (!m_isExist)	return;
-	m_rect.center += vec;
+	m_rect.center.y += vec.y;
+	if (m_isJump)
+	{
+		m_rect.center.x += vec.x;
+	}
 }
 
 int CutMan::TouchAttackPower() const
@@ -84,28 +82,38 @@ void CutMan::StopUpdate()
 		{
 		case 0:
 			updateFunc = &CutMan::OneShotUpdate;
+			m_isOnDamage = false;
 			return;
 		case 1:
 			updateFunc = &CutMan::TwoShotUpdate;
+			m_isOnDamage = false;
 			return;
 		default:
 			break;
 		}
 	}
 	//弾を打たないときは移動する
-	else
+	else if(m_JumpFrame++ >= kJumpInterval)
 	{
-		updateFunc = &CutMan::MoveUpdate;
+		m_JumpFrame = 0;
+		//updateFunc = &CutMan::MoveUpdate;
+		//移動速度をもとに戻す
+		m_vec = { kSpeed, 0.0f };
+		//左を向いていたら方向を変える
+		if (m_isLeft) m_vec *= -1.0f;
+		//ジャンプさせる
+		m_vec.y = kJumpAcc - (GetRand(100) % 5);
+		updateFunc = &CutMan::JumpUpdate;
 		return;
 	}
 }
 
 void CutMan::JumpUpdate()
 {
-	//ジャンプした位置が壁の時は移動しない
-	if (m_chipId == 0)
+	//ジャンプしているとき
+	if (m_isJump)
 	{
-		m_rect.center += m_vec;//プレイヤーを移動
+		//m_rect.center += m_vec;//プレイヤーを移動
 		m_vec.y += kGravity;//下に落ちる
 	}
 	else
@@ -142,6 +150,7 @@ void CutMan::OneShotUpdate()
 	m_shotFactory->Create(ShotType::RockBuster, m_rect.center, vel, m_isLeft);
 
 	//次の指示を待つ
+	m_JumpFrame = 0;
 	updateFunc = &CutMan::StopUpdate;
 	return;
 }
@@ -161,15 +170,16 @@ void CutMan::TwoShotUpdate()
 		vel *= 2.0f;
 	}
 	//ショットを二回打つ
-	if (m_frame-- % 10 == 0)
+	if (m_shotFrame-- % 10 == 0)
 	{
 		m_shotFactory->Create(ShotType::RockBuster, m_rect.center, vel, m_isLeft);
 	}
 
-	if (m_frame == 0)
+	if (m_shotFrame == 0)
 	{
-		m_frame = 20;
+		m_shotFrame = 20;
 		//次の指示を待つ
+		m_JumpFrame = 0;
 		updateFunc = &CutMan::StopUpdate;
 		return;
 	}

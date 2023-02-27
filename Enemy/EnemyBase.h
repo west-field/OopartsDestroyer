@@ -66,6 +66,10 @@ public:
 	/// <param name="isJump">true:ジャンプしている　false:ジャンプしていない</param>
 	void SetJump(bool isJump) { m_isJump = isJump; }
 
+	Vector2 GetVec()const { return m_vec; }
+
+	void OnDamage();
+
 	/// <summary>
 	/// マップチップを入手する
 	/// </summary>
@@ -79,6 +83,8 @@ protected:
 	bool m_isExist = true;	//存在するか
 	Rect m_rect;	//敵の矩形
 
+	Vector2 m_vec;//移動速度
+
 	int m_handle = -1;
 
 	bool m_isLeft = false;	//左を向いている
@@ -86,5 +92,6 @@ protected:
 	bool m_isJump = false;	//ジャンプをしているか
 
 	int m_chipId;//マップチップ
+	bool m_isOnDamage = false;//ダメージを受けたかどうか
 };
 

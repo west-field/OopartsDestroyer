@@ -30,3 +30,8 @@ bool EnemyBase::IsExist() const
 {
     return m_isExist;
 }
+
+void EnemyBase::OnDamage()
+{
+    m_isOnDamage = true;
+}
