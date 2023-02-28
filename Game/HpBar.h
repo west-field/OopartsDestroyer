@@ -16,7 +16,8 @@ public:
 
 	//HPを取得する
 	int GetHp() const { return m_Hp; }
-
+	//最大HPを取得する
+	int GetMaxHp()const { return m_MaxHp; }
 	//ダメージ計算
 	void Damage(int damage);
 	//回復計算

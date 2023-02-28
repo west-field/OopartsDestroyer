@@ -58,6 +58,11 @@ int EnemyMoveLeftRight::TouchAttackPower() const
 	return kLeftRightTouchAttackPower;
 }
 
+bool EnemyMoveLeftRight::IsCollidable() const
+{
+	return true;
+}
+
 void EnemyMoveLeftRight::NormalUpdate()
 {
 	//2ïbä‘ÇÆÇÁÇ¢é~Ç‹ÇÈ

@@ -150,13 +150,17 @@ void Player::NormalDraw()
 	DrawFormatString(0, 0, 0xffffff, L"%d", m_idxX);
 	DrawFormatString(0, 20, 0xffffff, L"%d", m_idxY);
 #endif
-	//無敵時間の時は点滅させる
-	if (m_ultimateTimer > 0)
+	////無敵時間の時は点滅させる
+	//if (m_ultimateTimer > 0)
+	//{
+	//	if ((m_ultimateTimer / 10) % 2 == 0)
+	//	{
+	//		return;
+	//	}
+	//}
+	if ((m_ultimateTimer / 10) % 2 == 1)
 	{
-		if ((m_ultimateTimer / 10) % 2 == 0)
-		{
-			return;
-		}
+		return;
 	}
 	//プレイヤーを表示
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),

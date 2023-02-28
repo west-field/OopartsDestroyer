@@ -16,6 +16,7 @@ public:
 	virtual void Movement(Vector2 vec)override;
 	//ÚG‚µ‚½‚ÌUŒ‚—Í
 	virtual int TouchAttackPower()const override;
+	virtual bool IsCollidable()const override;
 private:
 	int m_idx = 0;		//•\¦‚·‚é‰æ‘œ‚ÌêŠ
 	int m_fireFrame = 0;

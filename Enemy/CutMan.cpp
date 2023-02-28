@@ -26,6 +26,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle,s
 	m_isLeft = true;
 	m_handle = handle;
 	m_rect = { pos,{kSizeX,kSizeY} };
+	//m_vec = { kSpeed, kJumpAcc };
 }
 
 CutMan::~CutMan()
@@ -35,12 +36,20 @@ CutMan::~CutMan()
 void CutMan::Update()
 {
 	if (!m_isExist)return;
+	if (--m_ultimateTimer <= 0)
+	{
+		m_ultimateTimer = 0;
+	}
 	(this->*updateFunc)();
 }
 
 void CutMan::Draw()
 {
 	if (!m_isExist)return;
+	
+	//無敵時間点滅させる
+	if ((m_ultimateTimer / 10) % 2 == 1)	return;
+	
 	int img = m_idx * kSizeX;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kSizeX, kSizeY, 1.0f, 0.0f, m_handle, true, m_isLeft);
 }
@@ -48,6 +57,14 @@ void CutMan::Draw()
 void CutMan::Movement(Vector2 vec)
 {
 	if (!m_isExist)	return;
+	//画面と一緒に移動
+	m_rect.center += vec;
+}
+
+void CutMan::EnemyMovement(Vector2 vec)
+{
+	if (!m_isExist)	return;
+	//ジャンプしているとき
 	m_rect.center.y += vec.y;
 	if (m_isJump)
 	{
@@ -60,12 +77,15 @@ int CutMan::TouchAttackPower() const
 	return kCutManTouchAttackPower;
 }
 
+bool CutMan::IsCollidable() const
+{
+	return /*(updateFunc == &CutMan::MoveUpdate) &&*/ m_ultimateTimer == 0;
+}
+
 void CutMan::MoveUpdate()
 {
-	//移動速度をもとに戻す
-	m_vec = { kSpeed, 0.0f };
 	//左を向いていたら方向を変える
-	if (m_isLeft) m_vec *= -1.0f;
+	if (m_isLeft) m_vec.x *= -1.0f;
 	//ジャンプさせる
 	m_vec.y = kJumpAcc - (GetRand(100) % 5);
 	updateFunc = &CutMan::JumpUpdate;
@@ -74,35 +94,34 @@ void CutMan::MoveUpdate()
 
 void CutMan::StopUpdate()
 {
+	return;
+
 	//ダメージを受けたら弾を打つ
 	if (m_isOnDamage)
 	{
-		int rand = GetRand(10) % 2;
-		switch (rand)
+		if (m_hp->GetHp() <= m_hp->GetMaxHp() / 2)
 		{
-		case 0:
-			updateFunc = &CutMan::OneShotUpdate;
-			m_isOnDamage = false;
-			return;
-		case 1:
 			updateFunc = &CutMan::TwoShotUpdate;
 			m_isOnDamage = false;
 			return;
-		default:
-			break;
+		}
+		else
+		{
+			updateFunc = &CutMan::OneShotUpdate;
+			m_isOnDamage = false;
+			return;
 		}
 	}
 	//弾を打たないときは移動する
 	else if(m_JumpFrame++ >= kJumpInterval)
 	{
 		m_JumpFrame = 0;
-		//updateFunc = &CutMan::MoveUpdate;
-		//移動速度をもとに戻す
-		m_vec = { kSpeed, 0.0f };
+		
 		//左を向いていたら方向を変える
-		if (m_isLeft) m_vec *= -1.0f;
+		if (m_isLeft) m_vec.x *= -1.0f;
 		//ジャンプさせる
-		m_vec.y = kJumpAcc - (GetRand(100) % 5);
+		//m_vec.y = kJumpAcc - (GetRand(100) % 5);
+		m_posTemp = m_rect.center.y + ( kJumpAcc - (GetRand(100) % 5));
 		updateFunc = &CutMan::JumpUpdate;
 		return;
 	}
@@ -110,13 +129,22 @@ void CutMan::StopUpdate()
 
 void CutMan::JumpUpdate()
 {
-	//ジャンプしているとき
-	if (m_isJump)
+	m_rect.center.y += m_vec.y;
+
+	if (m_rect.center.y <= m_posTemp) 
 	{
-		//m_rect.center += m_vec;//プレイヤーを移動
-		m_vec.y += kGravity;//下に落ちる
+		updateFunc = &CutMan::DownUpdate;
+		return;
 	}
-	else
+}
+
+void CutMan::DownUpdate()
+{
+	m_vec.y += kGravity;//下に落ちる
+
+	m_rect.center.x += m_vec.x;
+
+	if(!m_isJump)
 	{
 		//プレイヤーの方向にジャンプ
 		if (m_player->GetRect().GetCenter().x > m_rect.center.x)

@@ -2,13 +2,22 @@
 #include "../Game/HpBar.h"
 #include "../Util/Sound.h"
 
+namespace
+{
+    constexpr int kUltimateFrame = 60;//1•b
+}
+
 EnemyBase::EnemyBase(std::shared_ptr<Player>player, const Position2& pos, std::shared_ptr<ShotFactory> sFactory):
-    m_player(player), m_rect(pos, {}),m_shotFactory(sFactory)
+    m_player(player), m_rect(pos, {}), m_vec(), m_shotFactory(sFactory)
 {
     m_hp = std::make_shared<HpBar>();
 }
 
 EnemyBase::~EnemyBase()
+{
+}
+
+void EnemyBase::EnemyMovement(Vector2 vec)
 {
 }
 
@@ -20,6 +29,7 @@ const Rect& EnemyBase::GetRect() const
 void EnemyBase::Damage(int damage)
 {
     m_hp->Damage(damage);
+    m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
     if (m_hp->GetHp() == 0)
     {
         m_isExist = false;
@@ -34,4 +44,9 @@ bool EnemyBase::IsExist() const
 void EnemyBase::OnDamage()
 {
     m_isOnDamage = true;
+}
+
+int EnemyBase::GetHp() const
+{
+    return m_hp->GetHp();
 }

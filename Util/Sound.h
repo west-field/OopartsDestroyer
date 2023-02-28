@@ -8,9 +8,10 @@ namespace Sound
 		//BGM
 		BgmTitle,		//タイトルBGM
 		BgmMain,		//メインBGM
-		//BgmGameclear,	//ゲームクリアBGM
-		//BgmGameover,	//ゲームオーバーBGM
-		
+		Gameclear,	//ゲームクリアBGM
+		Gameover,	//ゲームオーバーBGM
+		//BgmBoss,	//ボス戦BGM
+
 		//効果音
 		Cursor,			//カーソル移動音
 		Determinant,	//決定ボタン

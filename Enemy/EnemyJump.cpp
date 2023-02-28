@@ -49,7 +49,7 @@ void EnemyJump::Draw()
 	if (!m_isExist)	return;
 	int img = m_idx * kJumpSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kJumpSize, kJumpSize, kDrawScall, 0.0f, m_handle, false, m_isLeft);
+		img, 0, kJumpSize, kJumpSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 #endif
@@ -66,6 +66,11 @@ int EnemyJump::TouchAttackPower() const
 	return kJumpTouchAttackPower;
 }
 
+bool EnemyJump::IsCollidable() const
+{
+	return true;
+}
+
 void EnemyJump::NormalUpdate()
 {
 	//ƒ‰ƒ“ƒ_ƒ€‚ÈŽž‚ÉƒWƒƒƒ“ƒv‚³‚¹‚é
@@ -74,7 +79,7 @@ void EnemyJump::NormalUpdate()
 		m_frame = GetRand(kRand) * anim_frame_speed + 60;
 		m_idx = 1;
 		Sound::Play(Sound::EnemyJump);
-		m_vecTemp =  m_rect.center.y - Game::ChipSize * 3;
+		m_posTemp =  m_rect.center.y - Game::ChipSize * 3;
 
 		if (m_player->GetRect().GetCenter().x > m_rect.center.x)
 		{
@@ -94,7 +99,7 @@ void EnemyJump::JumpUpdate()
 {
 	m_rect.center += m_vec;
 
-	if (m_rect.center.y <= m_vecTemp)
+	if (m_rect.center.y <= m_posTemp)
 	{
 		m_updateFunc = &EnemyJump::DownUpdate;
 	}

@@ -24,7 +24,6 @@ Map::~Map()
 
 void Map::Update()
 {
-#if true
 	for (int chipY = 0; chipY < m_mapHeight; chipY++)
 	{
 		for (int chipX = 0; chipX < m_mapWidth; chipX++)
@@ -51,7 +50,7 @@ void Map::Update()
 			
 			auto address = chipY * m_mapWidth + chipX;
 #ifdef _DEBUG
-			DrawFormatString(10, 800, 0xffffff, L"マップ%d,エネミー位置%d", chipId, m_enemyPos[address]);
+			DrawFormatString(10, 800, 0x000000, L"マップ%d,エネミー位置%d", chipId, m_enemyPos[address]);
 #endif
 			//画面に入ったら一度だけ生成
 			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] != 0 ||
@@ -88,49 +87,6 @@ void Map::Update()
 			}
 		}
 	}
-#else
-	for (int chipY = 0; chipY < mH; chipY++)
-	{
-		for (int chipX = 0; chipX < mW; chipX++)
-		{
-			if (m_enemyPos[chipY * mH + chipX] == 0)	continue;
-			//表示する位置
-			int size = Game::ChipSize / 2;
-			Vector2 pos = { ((chipX * Game::ChipSize + size) + m_camera.x) ,((chipY * Game::ChipSize + size) + m_camera.y) };
-			//表示画面内にいないときは生成しない
-			if (pos.x < Game::kMapScreenLeftX - Game::ChipSize)	continue;
-			if (pos.x > Game::kMapScreenRightX + Game::ChipSize)	continue;
-			if (pos.y < Game::kMapScreenTopY - Game::ChipSize)	continue;
-			if (pos.y > Game::kMapScreenBottomY + Game::ChipSize)continue;
-
-			auto chipId = m_enemyPos[chipY * mH + chipX];
-			switch (chipId)
-			{
-			case 1:
-				DrawString(0, 300, L"出現", 0xffffff);
-				m_enemies->Create(EnemyType::MoveUpDown, Position2(pos.x, pos.y));
-				break;
-			case 2:
-				DrawString(0, 300, L"出現", 0xffffff);
-				m_enemies->Create(EnemyType::Battery, Position2(pos.x, pos.y));
-				break;
-				/*case 3:
-					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
-					break;
-				case 4:
-					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
-					break;
-				case 5:
-					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
-					break;*/
-			default:
-				break;
-			}
-			m_enemyPos[chipY * mH + chipX] = 0;
-		}
-	}
-
-#endif
 }
 
 void Map::Draw()
@@ -167,14 +123,14 @@ void Map::Draw()
 				if (Y < Game::kMapScreenTopY - size)continue;
 				if (X > Game::kMapScreenRightX + size) continue;
 				if (Y > Game::kMapScreenBottomY + size) continue;
-				DrawFormatString(X, Y, 0xffffff, L"%d", enemyId);
+				DrawFormatString(X, Y, 0x000000, L"%d", enemyId);
 			}
 #endif
 		}
 	}
 
 #ifdef _DEBUG
-	DrawFormatString(0,140, 0xffffff, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
+	DrawFormatString(0,140, 0x000000, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
 #endif
 }
 

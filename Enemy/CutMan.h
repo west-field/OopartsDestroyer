@@ -14,17 +14,24 @@ public :
 	virtual void Draw();
 
 	virtual void Movement(Vector2 vec)override;
+	virtual void EnemyMovement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
+	virtual bool IsCollidable()const override;
 private:
-	virtual void MoveUpdate();//ボスを移動させる
-	virtual void StopUpdate();//次の指示を決める
-	virtual void JumpUpdate();//ボスをジャンプさせる
-	virtual void OneShotUpdate();//ボスが1回弾を撃つ
-	virtual void TwoShotUpdate();//ボスが2回弾を撃つ
+	void MoveUpdate();//ボスを移動させる
+	void StopUpdate();//次の指示を決める
+	void JumpUpdate();//ボスをジャンプさせる
+	void DownUpdate();//ボスをジャンプさせる
+	void OneShotUpdate();//ボスが1回弾を撃つ
+	void TwoShotUpdate();//ボスが2回弾を撃つ
+	
 	void (CutMan::* updateFunc)();
 
 	int m_idx = 0;//画像の表示範囲
 	int m_shotFrame;//次の弾を撃つまで
 	int m_JumpFrame;//次のジャンプまで
+
+	float m_posTemp = 0.0f;//仮入れ
+
 };
 

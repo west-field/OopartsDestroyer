@@ -14,6 +14,7 @@ public:
 	virtual void Draw()override;
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
+	virtual bool IsCollidable()const override;
 private:
 	void NormalUpdate();
 	void JumpUpdate();
@@ -24,6 +25,6 @@ private:
 	int m_idx = 0;//‰æ‘œ•ÏX
 	int m_frame = 0;//ƒWƒƒƒ“ƒv‚·‚é‚Ü‚Å‚ÌŠÔ
 
-	float m_vecTemp = 0.0f;
+	float m_posTemp = 0.0f;
 };
 

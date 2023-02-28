@@ -71,7 +71,7 @@ void EnemyBattery::Draw()
 {
 	int imgX = (m_idx / anim_frame_speed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, kSize, kSize, kDrawScall, 0.0f, m_handle, false, m_isLeft);
+		imgX, 0, kSize, kSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 	DrawFormatString(0, 360, 0xffffff, L"グラフィック切り替え%d", m_idx / anim_frame_speed);
@@ -88,4 +88,9 @@ void EnemyBattery::Movement(Vector2 vec)
 int EnemyBattery::TouchAttackPower() const
 {
 	return kBatteryTouchAttackPower;
+}
+
+bool EnemyBattery::IsCollidable() const
+{
+	return true;
 }

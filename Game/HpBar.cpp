@@ -15,7 +15,8 @@ HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1),m_pos(), m_size(), m_isHpGraph(
 	{
 		hp = true;
 	}
-	m_pos = { Game::kMapScreenLeftX + 10,Game::kMapScreenTopY };
+	//m_pos = { Game::kMapScreenLeftX + 10,Game::kMapScreenTopY };
+	m_pos = { Game::kScreenWidth /5 ,Game::kMapScreenTopY };
 }
 
 HpBar::~HpBar()

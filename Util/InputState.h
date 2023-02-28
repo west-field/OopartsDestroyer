@@ -50,7 +50,15 @@ class InputState
 {
 	friend KeyConfigScene;//KeyConfigSceneにだけ、すべてを見せる。
 private:
-	std::map<InputType,std::vector<InputInfo>> m_inputMapTable;
+	//仮想入力情報と、実際の入力テーブルを作る
+	//キー(first)=InputType
+	//値(second)=std::vector<InputInfo>
+	using InputMap_t = std::map<InputType, std::vector<InputInfo>>;
+
+	InputMap_t m_inputMapTable;//実際の入力とゲームボタンの対応テーブル
+
+	InputMap_t tempMapTable_;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
+	InputMap_t defaultMapTable_;//リセット用キーマップテーブル
 
 	//入力
 	std::map<InputType, std::wstring> m_inputNameTable;
@@ -88,5 +96,27 @@ public:
 	/// <param name="cat">入力カテゴリ</param>
 	/// <param name="id">実際の入力</param>
 	void RewriteInputInfo(InputType type,InputCategory cat,int id);
+
+	/// <summary>
+	/// 現在編集中のキーコンフィグを確定する
+	/// </summary>
+	void CommitChangedInputInfo();
+
+	/// <summary>
+	/// 現在編集中のキーコンフィグ設定をなかったことにする
+	/// </summary>
+	void RollbackChangedInputInfo();
+
+	/// <summary>
+	/// キーマップをデフォルトにリセットする
+	/// </summary>
+	void ResetInputInfo();
+
+	/// <summary>
+	/// キーマップをファイルに保存する
+	/// </summary>
+	void SaveKeyInfo()const;
+
+	void LoadKeyInfo();
 };
 

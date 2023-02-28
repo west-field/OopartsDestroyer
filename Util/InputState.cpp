@@ -1,5 +1,6 @@
 #include "InputState.h"
 #include<DxLib.h>
+#include <assert.h>
 
 //PAD_INPUT_Z 右ショルダー
 //PAD_INPUT_1 A
@@ -42,6 +43,10 @@ InputState::InputState()
 	m_inputMapTable[InputType::rapidFire] = { {InputCategory::keybd , KEY_INPUT_X},
 											{InputCategory::pad , PAD_INPUT_X} };//Y
 	
+	//m_inputMapTable = defaultMapTable_;
+	LoadKeyInfo();
+	//一時マップテーブルにコピー
+	tempMapTable_ = m_inputMapTable;
 
 	//入力タイプの名前テーブルを作る
 	m_inputNameTable[InputType::next] = L"next";
@@ -129,4 +134,76 @@ void InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
 	}
 }
 
+void
+InputState::CommitChangedInputInfo()
+{
+	m_inputMapTable = tempMapTable_;
+}
 
+void
+InputState::RollbackChangedInputInfo()
+{
+	tempMapTable_ = m_inputMapTable;
+}
+
+void InputState::ResetInputInfo()
+{
+	m_inputMapTable = defaultMapTable_;
+	tempMapTable_ = defaultMapTable_;
+}
+
+void InputState::SaveKeyInfo()const
+{
+	FILE* fp = nullptr;
+
+	auto err = fopen_s(&fp, "key.info", "wb");
+	if (fp == nullptr)
+	{
+		assert(0);
+		return;
+	}
+
+	//仮想キータイプの数を書き込む
+	int keytypeNum = m_inputMapTable.size();
+	fwrite(&keytypeNum, sizeof(keytypeNum), 1, fp);
+	//仮想キータイプ(next,prevなど)のループ
+	for (const auto& key : m_inputMapTable)
+	{
+		int keytype = static_cast<int> (key.first);
+		//仮想キー番号
+		fwrite(&keytype, sizeof(keytype), 1, fp);
+		int dataSize = key.second.size();
+		//いくつ実入力データがあるのか
+		fwrite(&dataSize, sizeof(dataSize), 1, fp);
+
+		//vector型のdata()は先頭のアドレスを返す　一気にその入力のデータを書き込む
+		fwrite(key.second.data(), dataSize * sizeof(InputInfo), 1, fp);
+	}
+	fclose(fp);
+}
+
+void InputState::LoadKeyInfo()
+{
+	int handle = FileRead_open(L"key.info");
+	if (handle == 0)
+	{
+		return;
+	}
+	int keyTypeNum = 0;
+	FileRead_read(&keyTypeNum, sizeof(keyTypeNum), handle);
+	m_inputMapTable.clear();
+	for (int i = 0; i < keyTypeNum; i++)
+	{
+		int inputType = 0;
+		FileRead_read(&inputType, sizeof(inputType), handle);
+
+		int dataSize = 0;
+		FileRead_read(&dataSize, sizeof(dataSize), handle);
+
+		std::vector<InputInfo> inputInfoes(dataSize);
+		FileRead_read(inputInfoes.data(), sizeof(InputInfo) * dataSize, handle);
+		m_inputMapTable[static_cast<InputType>(inputType)] = inputInfoes;
+	}
+	tempMapTable_ = m_inputMapTable;
+	FileRead_close(handle);
+}

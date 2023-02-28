@@ -123,6 +123,9 @@
     <ClCompile Include="Enemy\CutMan.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Util\Font.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -217,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="Enemy\CutMan.h">
       <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\Font.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

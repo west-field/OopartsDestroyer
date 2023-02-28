@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "game.h"
 #include "Util/Sound.h"
+#include "Util/Font.h"
 #include "Util/InputState.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
@@ -25,10 +26,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		return -1;
 	}
+	Sound::Load();
+	Font::Load();
+	Font::FontChange(Font::NormalFont);
 
 	SetDrawScreen(DX_SCREEN_BACK);
-
-	Sound::Load();
 
 	InputState input;
 	SceneManager sceneManeger;
@@ -55,6 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		while (GetNowHiPerformanceCount() - time < 16667){}
 	}
 	Sound::Unload();
+	Font::Unload();
 	DxLib_End();
 
 	return 0;

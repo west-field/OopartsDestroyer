@@ -61,3 +61,8 @@ int EnemyMoveUpDown::TouchAttackPower() const
 {
 	return kUpDownTouchAttackPower;
 }
+
+bool EnemyMoveUpDown::IsCollidable() const
+{
+	return true;
+}

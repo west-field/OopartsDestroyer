@@ -11,7 +11,10 @@ namespace
 	const TCHAR* const kFileName[Sound::Max] =
 	{
 		L"Sound/noranekonokuchibue.mp3",//タイトルBGM
-		L"Sound/retroparty.mp3",	//メインBGM
+		L"Sound/Disital_Delta.mp3",	//メインBGM
+		//L"Sound/retroparty.mp3",	//メインBGM
+		L"Sound/gameclear.mp3",	//ゲームクリア
+		L"Sound/gameover.mp3",	//ゲームオーバー
 		
 		L"Sound/Cursor.mp3",		//カーソル
 		L"Sound/pushbotan.mp3",		//決定ボタン
@@ -51,7 +54,7 @@ namespace Sound
 	//BGMの再生
 	void StartBgm(SoundId id, int volume)
 	{
-		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_BACK, true);
+		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_LOOP, true);//ループ再生させる
 		SetVolume(id, volume);
 	}
 	void StopBgm(SoundId id)

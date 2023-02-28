@@ -20,8 +20,11 @@ public:
 
 	//エネミー移動
 	virtual void Movement(Vector2 vec) = 0;
+	virtual void EnemyMovement(Vector2 vec);
 	//矩形を取得
 	const Rect& GetRect() const;
+	//当たり判定対象か
+	virtual bool IsCollidable()const = 0;
 
 	/// <summary>
 	/// 接触した時の攻撃
@@ -64,11 +67,13 @@ public:
 	/// ジャンプをしているかしていないかを決める
 	/// </summary>
 	/// <param name="isJump">true:ジャンプしている　false:ジャンプしていない</param>
-	void SetJump(bool isJump) { m_isJump = isJump; }
+	void SetJump(bool isJump) { m_isJump = isJump; m_vec = {}; }
 
 	Vector2 GetVec()const { return m_vec; }
 
 	void OnDamage();
+
+	int GetHp() const;
 
 	/// <summary>
 	/// マップチップを入手する
@@ -90,6 +95,8 @@ protected:
 	bool m_isLeft = false;	//左を向いている
 
 	bool m_isJump = false;	//ジャンプをしているか
+
+	int m_ultimateTimer = 0;//無敵時間
 
 	int m_chipId;//マップチップ
 	bool m_isOnDamage = false;//ダメージを受けたかどうか

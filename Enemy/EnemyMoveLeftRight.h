@@ -17,6 +17,7 @@ public:
 	virtual void Draw()override;
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
+	virtual bool IsCollidable()const override;
 private:
 	void NormalUpdate();
 	void LeftUpdate();
