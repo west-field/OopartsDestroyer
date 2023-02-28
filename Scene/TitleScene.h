@@ -22,6 +22,7 @@ struct MenuElement
 
 namespace
 {
+	constexpr int kTitleFontSize = 60;//タイトルのサイズ
 	constexpr int kMenuFontSize = 50;//文字のサイズ
 	constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize;    //メニュー文字のx位置
 	constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize;    //メニュー文字のy位置
@@ -60,8 +61,10 @@ private:
 		Size imgSize;
 	};
 	//背景
-	std::array<BackImg, 3> m_bgImgs;
+	static constexpr int bgNum = 5;
+	std::array<BackImg, bgNum> m_bgImgs;
 	int m_scroll = 0;
+	float bg_scale;
 
 public:
 	TitleScene(SceneManager& manager);

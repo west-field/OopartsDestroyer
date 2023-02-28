@@ -4,6 +4,7 @@
 #include "../game.h"
 
 #include "../Util/Sound.h"
+#include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
 
@@ -13,7 +14,7 @@
 
 namespace
 {
-	constexpr float bg_scale = 4.0f;//背景拡大率
+	//constexpr float bg_scale = 1.0f;//背景拡大率
 }
 
 void TitleScene::FadeInUpdat(const InputState& input)
@@ -92,14 +93,40 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	/*m_titleH = my::MyLoadGraph(L"Data/title.png");
 	m_bgH = my::MyLoadGraph(L"Data/bg.png");*/
 	
-	m_bgImgs[0].handle = my::MyLoadGraph(L"Data/Background.png");//bg.jpg
-	//m_bgImgs[1].handle = my::MyLoadGraph(L"Data/Background.png");
-	//m_bgImgs[2].handle = my::MyLoadGraph(L"Data/Background.png");
+	//m_bgImgs[0].handle = my::MyLoadGraph(L"Data/Background.png");//bg.jpg
+#if false
+	bg_scale = 1.0f;
+	//山
+	m_bgImgs[0].handle = my::MyLoadGraph(L"Data/bg1/sky.png");
+	m_bgImgs[1].handle = my::MyLoadGraph(L"Data/bg1/clouds_1.png");
+	m_bgImgs[2].handle = my::MyLoadGraph(L"Data/bg1/clouds_2.png");
+	m_bgImgs[3].handle = my::MyLoadGraph(L"Data/bg1/rocks_1.png");
+	m_bgImgs[4].handle = my::MyLoadGraph(L"Data/bg1/clouds_3.png");
+	m_bgImgs[5].handle = my::MyLoadGraph(L"Data/bg1/rocks_2.png");
+	m_bgImgs[6].handle = my::MyLoadGraph(L"Data/bg1/clouds_4.png");
 
 	m_bgImgs[0].scrollSpeed = 0.5f;	//一番遠い
-	m_bgImgs[1].scrollSpeed = 0.75f;//中間
-	m_bgImgs[2].scrollSpeed = 1.0f;	//一番手前
+	m_bgImgs[1].scrollSpeed = 0.5f;	//一番遠い
+	m_bgImgs[2].scrollSpeed = 0.75f;//中間
+	m_bgImgs[3].scrollSpeed = 0.75f;//中間
+	m_bgImgs[4].scrollSpeed = 1.0f;	//一番手前
+	m_bgImgs[5].scrollSpeed = 1.0f;	//一番手前
+	m_bgImgs[6].scrollSpeed = 1.0f;	//一番手前
+#else
+	bg_scale = 3.0f;
+	//廃墟
+	m_bgImgs[0].handle = my::MyLoadGraph(L"Data/bg2/1.png");
+	m_bgImgs[1].handle = my::MyLoadGraph(L"Data/bg2/2.png");
+	m_bgImgs[2].handle = my::MyLoadGraph(L"Data/bg2/3.png");
+	m_bgImgs[3].handle = my::MyLoadGraph(L"Data/bg2/4.png");
+	m_bgImgs[4].handle = my::MyLoadGraph(L"Data/bg2/5.png");
 
+	m_bgImgs[0].scrollSpeed = 0.5f;	//一番遠い
+	m_bgImgs[1].scrollSpeed = 0.6f;	//一番遠い
+	m_bgImgs[2].scrollSpeed = 0.75f;//中間
+	m_bgImgs[3].scrollSpeed = 0.8f;//中間
+	m_bgImgs[4].scrollSpeed = 1.0f;	//一番手前
+#endif
 	for (auto& bg : m_bgImgs)
 	{
 		GetGraphSize(bg.handle, &bg.imgSize.w, &bg.imgSize.h);
@@ -112,6 +139,10 @@ TitleScene::~TitleScene()
 {
 	/*DeleteGraph(m_titleH);
 	DeleteGraph(m_bgH);*/
+	for (auto& bg : m_bgImgs)
+	{
+		DeleteGraph(bg.handle);
+	}
 	Sound::StopBgm(Sound::BgmTitle);
 }
 
@@ -125,10 +156,6 @@ TitleScene::Update(const InputState& input)
 void
 TitleScene::Draw()
 {
-	//DrawExtendGraph(0, 0, Game::kScreenWidth - 1, Game::kScreenHeight - 1, m_bgH, true);
-	/*DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x87CEEB, true);
-	DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 3, 6.0, 0.0, m_titleH, true, false);*/
-	
 	//背景
 	for (auto& bg : m_bgImgs)
 	{
@@ -145,15 +172,16 @@ TitleScene::Draw()
 			bg_scale, 
 			0.0f, 
 			bg.handle, true, false, false);
-		break;
 	}
 
 	//メニュー項目を描画
-	SetFontSize(kMenuFontSize);
-	DrawFormatString(SelectMenu[menuGameStart].x, SelectMenu[menuGameStart].y, 0xffffff, L"ゲームスタート");
-	DrawFormatString(SelectMenu[menuConfig].x, SelectMenu[menuConfig].y, 0xffffff, L"設定");
-	DrawFormatString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, 0xffffff, L"ゲーム終了");
-	SetFontSize(0);
+	Font::ChangeFontSize(kTitleFontSize);
+	DrawFormatString(Game::kScreenWidth / 3, Game::kScreenHeight / 2 - kTitleFontSize, 0xaaffaa, L"オーパーツディフェンダー");
+	Font::ChangeFontSize(kMenuFontSize);
+	DrawFormatString(SelectMenu[menuGameStart].x, SelectMenu[menuGameStart].y, 0xaaffaa, L"ゲームスタート");
+	DrawFormatString(SelectMenu[menuConfig].x, SelectMenu[menuConfig].y, 0xaaffaa, L"せってい");
+	DrawFormatString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, 0xaaffaa, L"おわり");
+	Font::ChangeFontSize(0);
 
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);

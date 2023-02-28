@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
+#include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
@@ -39,13 +40,13 @@ void GameoverScene::FadeOutUpdat(const InputState& input)
 
 GameoverScene::GameoverScene(SceneManager& manager) : Scene(manager) , m_updateFunc(&GameoverScene::FadeInUpdat) {
 	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
-	/*Sound::StartBgm(Sound::BgmGameover);*/
+	Sound::Play(Sound::Gameover);
 }
 
 GameoverScene::~GameoverScene()
 {
 	//DeleteGraph(m_gameoverH);
-	/*Sound::StopBgm(Sound::BgmGameover);*/
+	Sound::StopBgm(Sound::Gameover);
 }
 
 void
@@ -63,7 +64,7 @@ GameoverScene::Draw()
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	SetFontSize(50);
+	Font::ChangeFontSize(50);
 	DrawString(Game::kScreenWidth / 3, Game::kScreenHeight / 3, L"Gameover", 0xffffff);
-	SetFontSize(0);
+	Font::ChangeFontSize(0);
 }

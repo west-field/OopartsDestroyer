@@ -85,6 +85,11 @@ private:
     /// <param name="MoveY">移動量</param>
     void MoveMap(float MoveX, float MoveY);
 
+    /// <summary>
+    /// 梯子移動
+    /// </summary>
+    void Ladder(const InputState& input);
+
     //画面のフェードイン
      void FadeInUpdat(const InputState& input);
     //通常更新
@@ -143,6 +148,8 @@ public:
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
 
+    //梯子を上っているとき
+    bool m_isLadder = false;
     //ゲームクリアかゲームオーバーか
     int m_crea = 0;
     //一回だけエネミーを削除
