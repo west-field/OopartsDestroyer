@@ -258,10 +258,11 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit) ||
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit))
 	{
-		if (m_player->IsJump())
+		/*if (m_player->IsJump())
 		{
 			Sound::Play(Sound::BlockMove);
-		}
+		}*/
+
 		//‘«ê‚ª‚ ‚Á‚½‚çÝ’u’†‚É‚·‚é
 		m_fallPlayerSpeed = 0.0f;
 		m_player->SetJump(false);
