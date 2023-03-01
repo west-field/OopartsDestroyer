@@ -9,8 +9,8 @@ namespace
 	constexpr int kSize = 5;
 
 	//プレイヤーグラフィック
-	constexpr int kGraphSizeWidth = 16;		//サイズ
-	constexpr int kGraphSizeHeight = 16;	//サイズ
+	constexpr int kGraphSizeWidth = 32;		//サイズ
+	constexpr int kGraphSizeHeight = 32;	//サイズ
 	constexpr float kDrawScale = 2.0f;		//拡大率
 	constexpr int kMoveFrameNum = 4;	//歩く時のアニメーション枚数
 	constexpr int kFrameNum = 2;		//そのほかのアニメーション枚数
@@ -26,8 +26,9 @@ namespace
 Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::NormalUpdate),m_drawFunc(&Player::NormalDraw),m_hp(hp)
 {
 	m_rect.center = pos;
-	m_rect.size = { static_cast<int>(kGraphSizeWidth * kDrawScale - kSize) ,static_cast<int>(kGraphSizeHeight * kDrawScale - kSize)};
-	m_handle = my::MyLoadGraph(L"Data/Retro-Lines-Player-transparent.png");
+	m_rect.size = { static_cast<int>(kGraphSizeWidth /** kDrawScale*/ - kSize) ,static_cast<int>(kGraphSizeHeight /** kDrawScale*/ - kSize)};
+	//m_handle = my::MyLoadGraph(L"Data/Retro-Lines-Player-transparent.png");
+	m_handle = my::MyLoadGraph(L"Data/players blue x1.png");
 }
 
 Player::~Player()
@@ -56,33 +57,31 @@ const Rect& Player::GetRect() const
 
 void Player::Action(ActionType type)
 {
-	switch (type)
+	if (m_idxX == 0 || m_idxY == 0 || m_idxY == 1)
 	{
-	case ActionType::grah_no:
-		m_idxY = 0;
-		break;
-	case ActionType::grah_walk:
-		m_idxY = 1;
-		break;
-	case ActionType::grah_idle:
-		m_idxY = 2;
-		break;
-	case ActionType::grah_attack:
-		m_idxY = 3;
-		break;
-	case ActionType::grah_jump:
-		m_idxY = 4;
-		break;
-	case ActionType::grah_hit:
-		m_idxY = 5;
-		break;
-	case ActionType::grah_max:
-		m_idxY = 6;
-		break;
-	default:
-		m_idxY = 2;
-		break;
+		switch (type)
+		{
+		case ActionType::grah_idle:
+			m_idxY = 0;
+			break;
+		case ActionType::grah_walk:
+			m_idxY = 1;
+			break;
+		case ActionType::grah_jump:
+			m_idxY = 2;
+			break;
+		case ActionType::grah_attack:
+			m_idxY = 3;
+			break;
+		case ActionType::grah_death:
+			m_idxY = 4;
+			break;
+		default:
+			m_idxY = 0;
+			break;
+		}
 	}
+	
 }
 
 bool Player::IsCollidable() const
@@ -124,14 +123,29 @@ void Player::NormalUpdate()
 
 	if (m_frame++ > kFrameSpeed)
 	{
-		if (m_idxY == 1)
+		switch (m_idxY)
 		{
-			m_idxX = (m_idxX + 1) % (kMoveFrameNum);
+		case 0:
+			m_idxX = (m_idxX + 1) % (1);
+			break;
+		case 1:
+			m_idxX = (m_idxX + 1) % (2);
+			break;
+		case  2:
+			m_idxX = (m_idxX + 1) % (4);
+			break;
+		case  3:
+			m_idxX = (m_idxX + 1) % (4);
+			break;
+		case  4:
+			m_idxX = (m_idxX + 1) % (6);
+			break;
 		}
-		else
+		if (m_idxX == 0)
 		{
-			m_idxX = (m_idxX + 1) % (kFrameNum);
+			m_idxY = 0;
 		}
+		
 		m_frame = 0;
 	}
 
@@ -144,27 +158,19 @@ void Player::NormalUpdate()
 
 void Player::NormalDraw()
 {
-#ifdef _DEBUG
-	m_rect.Draw(0xaaffaa);
-
-	DrawFormatString(0, 0, 0xffffff, L"%d", m_idxX);
-	DrawFormatString(0, 20, 0xffffff, L"%d", m_idxY);
-#endif
-	////無敵時間の時は点滅させる
-	//if (m_ultimateTimer > 0)
-	//{
-	//	if ((m_ultimateTimer / 10) % 2 == 0)
-	//	{
-	//		return;
-	//	}
-	//}
 	if ((m_ultimateTimer / 10) % 2 == 1)
 	{
 		return;
 	}
 	//プレイヤーを表示
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y- kGraphSizeHeight/2),
 		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+#ifdef _DEBUG
+	m_rect.Draw(0xaaffaa);
+
+	DrawFormatString(0, 0, 0xaaaaaa, L"X%d", m_idxX);
+	DrawFormatString(0, 20, 0xaaaaaa, L"Y%d", m_idxY);
+#endif
 }
 
 void Player::BurstUpdate()

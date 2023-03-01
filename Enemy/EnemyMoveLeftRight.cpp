@@ -58,6 +58,16 @@ int EnemyMoveLeftRight::TouchAttackPower() const
 	return kLeftRightTouchAttackPower;
 }
 
+void EnemyMoveLeftRight::Damage(int damage)
+{
+	m_hp->Damage(damage);
+	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
+	if (m_hp->GetHp() == 0)
+	{
+		m_isExist = false;
+	}
+}
+
 bool EnemyMoveLeftRight::IsCollidable() const
 {
 	return true;

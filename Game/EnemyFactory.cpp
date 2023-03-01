@@ -26,7 +26,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	m_handleMap[EnemyType::BatteryRight] = my::MyLoadGraph(L"Data/burst.png");
 	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
 	m_handleMap[EnemyType::MoveLeftRight] = my::MyLoadGraph(L"Data/move.png");
-	m_handleMap[EnemyType::Boss] = my::MyLoadGraph(L"Data/move.png");
+	m_handleMap[EnemyType::Boss] = my::MyLoadGraph(L"Data/FlyingObelisk.png");
 }
 EnemyFactory::~EnemyFactory()
 {

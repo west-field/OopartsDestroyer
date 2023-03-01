@@ -55,11 +55,13 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットと敵を倒した数を渡す
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
-	m_map->Load(L"Data/map.fmf");
-	//m_map->Load(L"Data/maptest.fmf");
+	//m_map->Load(L"Data/map.fmf");
+	//m_map->Load(L"Data/map/mapkari.fmf");
+	m_map->Load(L"Data/map/maphai.fmf");
+
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -5451.0f,-1235.0f };//ボス戦前
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { -5451.0f,-1235.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -661,7 +663,7 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
 	PlayerCenter();//プレイヤーがセンターに居るかどうか
-	m_player->Action(ActionType::grah_idle);
+	
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = {0.0f,0.0f};
 	//左に移動
@@ -834,7 +836,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death) &&
 			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death))
 		{
-			m_player->Action(ActionType::grah_hit);
+			//m_player->Action(ActionType::grah_hit);
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
 			m_crea = 1;
@@ -922,11 +924,6 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		}
 		else
 		{
-			//終了
-			/*m_updateFunc = &GameplayingScene::FadeOutUpdat;
-			m_fadeColor = 0x000aff;
-			m_crea = 0;
-			return;*/
 			//ボス戦
 			m_updateFunc = &GameplayingScene::BossUpdate;
 			m_drawFunc = &GameplayingScene::BossDraw;
@@ -940,7 +937,6 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 
 void GameplayingScene::BossUpdate(const InputState& input)
 {
-	m_player->Action(ActionType::grah_idle);
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = { 0.0f,0.0f };
 	//左に移動

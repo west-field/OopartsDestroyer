@@ -90,6 +90,16 @@ int EnemyBattery::TouchAttackPower() const
 	return kBatteryTouchAttackPower;
 }
 
+void EnemyBattery::Damage(int damage)
+{
+	m_hp->Damage(damage);
+	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
+	if (m_hp->GetHp() == 0)
+	{
+		m_isExist = false;
+	}
+}
+
 bool EnemyBattery::IsCollidable() const
 {
 	return true;

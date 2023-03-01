@@ -14,7 +14,8 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
 	m_handle(-1),m_camera(),m_enemies(enemyFactory),m_stage(stage),
 	m_mapWidth(0),m_mapHeight(0)
 {
-	m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
+	//m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
+	m_handle = my::MyLoadGraph(L"Data/map/mapkarichip.png");
 }
 
 Map::~Map()
@@ -95,7 +96,27 @@ void Map::Draw()
 	{
 		for (int chipX = 0; chipX < m_mapWidth; chipX++)
 		{
-			auto chipId = GetChipId(m_stage, chipX, chipY);
+#if true
+			//背景
+			auto chipngId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
+			if (chipngId != 0)
+			{
+				int size = Game::ChipSize / 2;
+
+				int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
+				int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
+
+				//画面外を表示しない
+				if (X < Game::kMapScreenLeftX - size) continue;
+				if (Y < Game::kMapScreenTopY - size)continue;
+				if (X > Game::kMapScreenRightX + size) continue;
+				if (Y > Game::kMapScreenBottomY + size) continue;
+
+				//マップチップ表示
+				my::MyDrawRectRotaGraph(X, Y, (chipngId % 16) * Game::ChipSize, (chipngId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
+			}
+#endif
+			auto chipId = GetChipId(static_cast<int>(MapLayer_map+m_stage), chipX, chipY);
 			if (chipId != 0)
 			{
 				int size = Game::ChipSize / 2;
@@ -109,10 +130,12 @@ void Map::Draw()
 				if (X > Game::kMapScreenRightX + size) continue;
 				if (Y > Game::kMapScreenBottomY + size) continue;
 
-				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, false, false);
+				//マップチップ表示
+				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
 			}
+			
 #ifdef _DEBUG
-			auto enemyId = GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
+			auto enemyId = GetChipId(static_cast<int>(MapLayer_enemy + m_stage), chipX, chipY);
 			if (enemyId != 0)
 			{
 				int size = Game::ChipSize / 2;
@@ -123,6 +146,7 @@ void Map::Draw()
 				if (Y < Game::kMapScreenTopY - size)continue;
 				if (X > Game::kMapScreenRightX + size) continue;
 				if (Y > Game::kMapScreenBottomY + size) continue;
+				//敵の位置に敵の番号を表示
 				DrawFormatString(X, Y, 0x000000, L"%d", enemyId);
 			}
 #endif
@@ -221,7 +245,7 @@ int Map::GetMapChipParam(float X, float Y)
 	// マップからはみ出ていたら 0 を返す
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0) return 0;
 
-	return GetChipId(MapLayer_map + m_stage, x, y);
+	return GetChipId(static_cast<int>(MapLayer_map + m_stage), x, y);
 }
 
 int Map::GetMapEventParam(float X, float Y)
@@ -235,5 +259,5 @@ int Map::GetMapEventParam(float X, float Y)
 	// マップからはみ出ていたら 0 を返す
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0) return 0;
 
-	return GetChipId(MapLayer_event + m_stage, x, y);
+	return GetChipId(static_cast<int>(MapLayer_event + m_stage), x, y);
 }

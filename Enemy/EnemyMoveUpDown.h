@@ -14,6 +14,7 @@ public:
 	virtual void Draw()override;//•\Ž¦
 	virtual void Movement(Vector2 vec)override;
 	virtual int TouchAttackPower()const override;
+	virtual void Damage(int damage) override;
 	virtual bool IsCollidable()const override;
 private:
 	int m_idx = 0;

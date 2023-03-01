@@ -5,12 +5,11 @@ class HpBar;
 
 enum class ActionType
 {
-	grah_no,
-	grah_walk,
 	grah_idle,
-	grah_attack,
+	grah_walk,
 	grah_jump,
-	grah_hit,
+	grah_attack,
+	grah_death,
 
 	grah_max
 };

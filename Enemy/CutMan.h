@@ -28,6 +28,7 @@ private:
 	void (CutMan::* updateFunc)();
 
 	int m_idx = 0;//‰æ‘œ‚Ì•\Ž¦”ÍˆÍ
+	int m_frame = 0;//ŽŸ‚Ì‰æ‘œ‚ÉˆÚ“®
 	int m_shotFrame;//ŽŸ‚Ì’e‚ðŒ‚‚Â‚Ü‚Å
 	int m_JumpFrame;//ŽŸ‚ÌƒWƒƒƒ“ƒv‚Ü‚Å
 

@@ -10,6 +10,11 @@ namespace
 	constexpr int kCutManTouchAttackPower = 4;//接触した時の攻撃力
 
 	constexpr float kSpeed = 4.0f;	//移動スピード
+	constexpr int kGraphNum = 13;	//グラフィックの数
+	constexpr int kGraphSizeWidth = 2600/kGraphNum;		//サイズ
+	constexpr int kGraphSizeHeight = 400;	//サイズ
+	constexpr float kDrawScale = 0.5f;		//拡大率
+	constexpr int kAnimFrameSpeed = 5;	//グラフィックアニメーションスピード
 	constexpr int kSizeX = 30;	//グラフィックサイズ
 	constexpr int kSizeY = kSizeX;
 
@@ -25,7 +30,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle,s
 {
 	m_isLeft = true;
 	m_handle = handle;
-	m_rect = { pos,{kSizeX,kSizeY} };
+	m_rect = { pos,{static_cast<int>(kGraphSizeWidth* kDrawScale/2),static_cast<int>(kGraphSizeHeight* kDrawScale)} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
@@ -36,6 +41,12 @@ CutMan::~CutMan()
 void CutMan::Update()
 {
 	if (!m_isExist)return;
+	if (m_frame++ > kAnimFrameSpeed) 
+	{
+		m_idx = (m_idx + 1) % kGraphNum; 
+		m_frame = 0;
+	}
+	
 	if (--m_ultimateTimer <= 0)
 	{
 		m_ultimateTimer = 0;
@@ -49,9 +60,14 @@ void CutMan::Draw()
 	
 	//無敵時間点滅させる
 	if ((m_ultimateTimer / 10) % 2 == 1)	return;
-	
-	int img = m_idx * kSizeX;
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kSizeX, kSizeY, 1.0f, 0.0f, m_handle, true, m_isLeft);
+
+	int img = m_idx * kGraphSizeWidth;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+#ifdef _DEBUG
+	DrawFormatString(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0xffffff, L"%d", m_idx);
+	m_rect.Draw(0xaaffaa);
+#endif
+
 }
 
 void CutMan::Movement(Vector2 vec)

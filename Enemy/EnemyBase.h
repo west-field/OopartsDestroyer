@@ -35,7 +35,7 @@ public:
 	/// ダメージを受けた
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>
-	void Damage(int damage);
+	virtual void Damage(int damage) = 0;
 	/// <summary>
 	/// この敵は生きているか
 	/// </summary>
@@ -91,6 +91,7 @@ protected:
 	Vector2 m_vec;//移動速度
 
 	int m_handle = -1;
+	int m_burstHandle = -1;
 
 	bool m_isLeft = false;	//左を向いている
 

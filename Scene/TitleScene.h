@@ -73,4 +73,4 @@ public:
 	void Update(const InputState& input);
 	virtual void Draw() override;
 };
-
+//x224,y160
