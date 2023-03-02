@@ -1085,10 +1085,13 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		m_crea = 1;
 		return;
 	}
+	//エネミーのHPが０になったらゲームクリア
 	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
 		if (!enemy->IsExist())
 		{
+			m_manager.ChangeScene(new GameclearScene(m_manager, m_player));
+			return;
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
 			m_crea = 0;
@@ -1096,7 +1099,6 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		}
 		
 	}
-	////エネミーのHPが０になったらゲームクリア
 	//if (m_hp[Object_EnemyBoss]->GetHp() <= 0)
 	//{
 	//	m_updateFunc = &GameplayingScene::FadeOutUpdat;
@@ -1122,7 +1124,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 		switch (m_crea)
 		{
 		case 0:
-			m_manager.ChangeScene(new GameclearScene(m_manager));
+			m_manager.ChangeScene(new GameclearScene(m_manager, m_player));
 			return;
 		case 1:
 			m_manager.ChangeScene(new GameoverScene(m_manager,m_player));

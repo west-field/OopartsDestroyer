@@ -2,6 +2,7 @@
 #include "game.h"
 #include "Util/Sound.h"
 #include "Util/Font.h"
+#include "Util/Graph.h"
 #include "Util/InputState.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"

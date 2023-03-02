@@ -50,16 +50,6 @@ CutMan::~CutMan()
 void CutMan::Update()
 {
 	if (!m_isExist)return;
-	if (m_frame++ > kAnimFrameSpeed) 
-	{
-		m_idx = (m_idx + 1) % kGraphNum; 
-		m_frame = 0;
-	}
-	
-	if (--m_ultimateTimer <= 0)
-	{
-		m_ultimateTimer = 0;
-	}
 	(this->*updateFunc)();
 }
 
@@ -120,6 +110,16 @@ void CutMan::MoveUpdate()
 
 void CutMan::StopUpdate()
 {
+	if (m_frame++ > kAnimFrameSpeed)
+	{
+		m_idx = (m_idx + 1) % kGraphNum;
+		m_frame = 0;
+	}
+
+	if (--m_ultimateTimer <= 0)
+	{
+		m_ultimateTimer = 0;
+	}
 	return;
 
 	//ƒ_ƒ[ƒW‚ðŽó‚¯‚½‚ç’e‚ð‘Å‚Â
@@ -254,7 +254,7 @@ void CutMan::NormalDraw()
 
 void CutMan::BurstUpdate()
 {
-	m_idx++;
+	m_idx+=1;
 	if (m_idx == burst_frame_num * burst_frame_speed)
 	{
 		m_isExist = false;

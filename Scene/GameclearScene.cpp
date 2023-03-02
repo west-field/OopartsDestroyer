@@ -7,6 +7,8 @@
 #include "SceneManager.h"
 #include "TitleScene.h"
 
+#include "../Game/Player.h"
+
 void GameclearScene::FadeInUpdat(const InputState& input)
 {
 	//‚Ç‚ñ‚Ç‚ñ–¾‚é‚­‚È‚é
@@ -20,6 +22,25 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 
 void GameclearScene::NormalUpdat(const InputState& input)
 {
+	m_player->Update();
+	//ƒvƒŒƒCƒ„[‚ğ‰æ–Ê’†‰›‚ÉˆÚ“®‚³‚¹‚é
+	auto vel = Vector2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2) } - m_player->GetRect().GetCenter();
+
+	float Num = vel.SQLength();
+	if (Num <= 0.2f)
+	{
+		m_player->Action(ActionType::grah_jump);
+		vel = { 0.0f,0.0f };
+	}
+	else
+	{
+		vel.Normalize();
+		vel *= 1.0f;
+		m_player->ScaleEnlarge(0.03f);
+	}
+
+	m_player->Movement(vel);
+
 	if (input.IsTriggered(InputType::next))
 	{
 		m_updateFunc = &GameclearScene::FadeOutUpdat;
@@ -37,7 +58,8 @@ void GameclearScene::FadeOutUpdat(const InputState& input)
 	}
 }
 
-GameclearScene::GameclearScene(SceneManager& manager) : Scene(manager) , m_updateFunc(&GameclearScene::FadeInUpdat) {
+GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
+	Scene(manager) ,m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat) {
 	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
 	Sound::Play(Sound::Gameclear);
 }
@@ -55,6 +77,7 @@ void GameclearScene::Update(const InputState& input)
 
 void GameclearScene::Draw()
 {
+	m_player->Draw();
 	//DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, m_gameoverH, true);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);

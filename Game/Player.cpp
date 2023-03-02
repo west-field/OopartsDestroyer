@@ -186,11 +186,3 @@ void Player::NormalDraw()
 	DrawFormatString(0, 20, 0xaaaaaa, L"Y%d", m_idxY);
 #endif
 }
-
-void Player::BurstUpdate()
-{
-}
-
-void Player::BurstDraw()
-{
-}

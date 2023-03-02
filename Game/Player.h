@@ -49,10 +49,6 @@ private:
 	void NormalUpdate();
 	//普通の描画
 	void NormalDraw();
-	//爆発のアップデート
-	void BurstUpdate();
-	//爆発の描画
-	void BurstDraw();
 
 	void (Player::* m_updateFunc)();//アップデートの遷移
 	void (Player::* m_drawFunc)();//描画の遷移
