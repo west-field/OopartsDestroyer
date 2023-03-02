@@ -27,7 +27,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2) } - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 0.2f)
+	if (Num <= 0.3f)
 	{
 		m_player->Action(ActionType::grah_jump);
 		vel = { 0.0f,0.0f };

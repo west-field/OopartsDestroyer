@@ -105,7 +105,13 @@ private:
      void NormalDraw();
      //ボス戦表示
      void BossDraw();
-public:
+
+     //ボタン
+     void ButtonUpdate();
+     void ButtonDraw();
+private:
+    int m_buttonHandle = -1;
+
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
     
     void (GameplayingScene::* m_updateFunc)(const InputState& input);

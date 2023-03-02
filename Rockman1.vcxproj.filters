@@ -129,6 +129,9 @@
     <ClCompile Include="Util\Graph.cpp">
       <Filter>Util</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Button.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="Util\Graph.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Button.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

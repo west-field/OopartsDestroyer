@@ -4,6 +4,7 @@
 #include "Util/Font.h"
 #include "Util/Graph.h"
 #include "Util/InputState.h"
+#include "Game/Button.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 
@@ -28,6 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		return -1;
 	}
 	Sound::Load();
+	Button::Load();
 	Font::Load();
 	Font::FontChange(Font::NormalFont);
 
@@ -46,7 +48,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		input.Update();
 		sceneManeger.Update(input);
 		sceneManeger.Draw();
-
+		
 		//— ‰æ–Ê‚ð•\‰æ–Ê‚ð“ü‚ê‘Ö‚¦‚é
 		ScreenFlip();
 
@@ -58,6 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		while (GetNowHiPerformanceCount() - time < 16667){}
 	}
 	Sound::Unload();
+	Button::Unload();
 	Font::Unload();
 	DxLib_End();
 

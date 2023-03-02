@@ -18,6 +18,7 @@ void GameoverScene::FadeInUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameoverScene::NormalUpdat;
 		m_fadeValue = 0;
+		Sound::Play(Sound::Gameover);
 	}
 }
 
@@ -63,7 +64,6 @@ void GameoverScene::FadeOutUpdat(const InputState& input)
 GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>player) : 
 	Scene(manager) , m_player(player), m_updateFunc(&GameoverScene::FadeInUpdat) {
 	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
-	Sound::Play(Sound::Gameover);
 }
 
 GameoverScene::~GameoverScene()

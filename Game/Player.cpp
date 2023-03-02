@@ -60,7 +60,7 @@ const Rect& Player::GetRect() const
 
 void Player::Action(ActionType type)
 {
-	if (m_idxX == 0 || m_idxY == 0 || m_idxY == 1)
+	//if (m_idxX == 0 || m_idxY == 0 || m_idxY == 1)
 	{
 		switch (type)
 		{
@@ -68,17 +68,17 @@ void Player::Action(ActionType type)
 			m_idxY = 0;
 			break;
 		case ActionType::grah_walk:
-			m_idxY = 1;
+			if(m_idxX == 0 && m_idxY == 0) m_idxY = 1;
 			break;
 		case ActionType::grah_jump:
 			m_idxY = 2;
 			break;
 		case ActionType::grah_attack:
 			m_idxY = 3;
+			m_idxX = 0;
 			break;
 		case ActionType::grah_death:
 			m_idxY = 4;
-			m_ultimateTimer = 0;
 			break;
 		default:
 			m_idxY = 0;
@@ -104,6 +104,7 @@ void Player::Damage(int damage)
 void Player::ScaleEnlarge(float scale)
 {
 	if (m_drawScale >= 5.0f)	return;
+	if(m_ultimateTimer < 0) m_ultimateTimer = 0;
 	m_drawScale += scale;
 }
 
@@ -142,8 +143,6 @@ void Player::NormalUpdate()
 			m_idxX = (m_idxX + 1) % (2);
 			break;
 		case  2:
-			m_idxX = (m_idxX + 1) % (4);
-			break;
 		case  3:
 			m_idxX = (m_idxX + 1) % (4);
 			break;
