@@ -23,13 +23,21 @@ namespace
 	//ジャンプ
 	constexpr float kGravity = 0.8f;//重力
 	constexpr float kJumpAcc = -10.0f;//ジャンプ力
+	//爆発アニメーション
+	constexpr int burst_img_width = 48;//画像サイズX
+	constexpr int burst_img_height = 48;//画像サイズY
+	constexpr float burst_draw_scale = 1.0f;//拡大率
+	constexpr int burst_frame_num = 8;//アニメーション枚数
+	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle,std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate), m_shotFrame(0), m_JumpFrame(kJumpInterval)
+CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, int burstH,std::shared_ptr<ShotFactory> sFactory):
+	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate),m_drawFunc(&CutMan::NormalDraw),
+	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
 	m_isLeft = true;
 	m_handle = handle;
+	m_burstHandle = burstH;
 	m_rect = { pos,{static_cast<int>(kGraphSizeWidth* kDrawScale/2),static_cast<int>(kGraphSizeHeight* kDrawScale)} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
@@ -57,17 +65,7 @@ void CutMan::Update()
 void CutMan::Draw()
 {
 	if (!m_isExist)return;
-	
-	//無敵時間点滅させる
-	if ((m_ultimateTimer / 10) % 2 == 1)	return;
-
-	int img = m_idx * kGraphSizeWidth;
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
-#ifdef _DEBUG
-	DrawFormatString(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0xffffff, L"%d", m_idx);
-	m_rect.Draw(0xaaffaa);
-#endif
-
+	(this->*m_drawFunc)();
 }
 
 void CutMan::Movement(Vector2 vec)
@@ -93,9 +91,20 @@ int CutMan::TouchAttackPower() const
 	return kCutManTouchAttackPower;
 }
 
+void CutMan::Damage(int damage)
+{
+	m_hp->Damage(damage);
+	if (m_hp->GetHp() == 0)
+	{
+		updateFunc = &CutMan::BurstUpdate;
+		m_drawFunc = &CutMan::BurstDraw;
+		m_idx = 0;
+	}
+}
+
 bool CutMan::IsCollidable() const
 {
-	return /*(updateFunc == &CutMan::MoveUpdate) &&*/ m_ultimateTimer == 0;
+	return (updateFunc != &CutMan::BurstUpdate) && m_ultimateTimer == 0;
 }
 
 void CutMan::MoveUpdate()
@@ -227,4 +236,35 @@ void CutMan::TwoShotUpdate()
 		updateFunc = &CutMan::StopUpdate;
 		return;
 	}
+}
+
+void CutMan::NormalDraw()
+{
+	//無敵時間点滅させる
+	if ((m_ultimateTimer / 10) % 2 == 1)	return;
+
+	int img = m_idx * kGraphSizeWidth;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+#ifdef _DEBUG
+	DrawFormatString(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0xffffff, L"%d", m_idx);
+	m_rect.Draw(0xaaffaa);
+#endif
+}
+
+void CutMan::BurstUpdate()
+{
+	m_idx++;
+	if (m_idx == burst_frame_num * burst_frame_speed)
+	{
+		m_isExist = false;
+	}
+}
+
+void CutMan::BurstDraw()
+{
+	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
+
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true, false);
+
 }

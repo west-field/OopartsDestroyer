@@ -60,8 +60,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/maphai.fmf");
 
 	//ŠJŽnˆÊ’u
-	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
-	Position2 pos = { -5451.0f,-1235.0f };//ƒ{ƒXí‘O
+	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	//Position2 pos = { -5451.0f,-1235.0f };//ƒ{ƒXí‘O
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//”wŒi
@@ -778,6 +778,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
+			if (!enemy->IsCollidable())continue;//“–‚½‚è”»’è‘ÎÛ‚É‚È‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“–‚½‚ç‚È‚¢
 			//“G‚É’e‚ªƒqƒbƒg‚µ‚½
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
@@ -811,6 +812,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
+			if (!enemy->IsCollidable())continue;//“–‚½‚è”»’è‘ÎÛ‚É‚È‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“–‚½‚ç‚È‚¢
 			//“G‚ÆƒvƒŒƒCƒ„[‚ª“–‚½‚Á‚½
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{
@@ -1029,6 +1031,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
+			if (!enemy->IsCollidable())continue;//“–‚½‚è”»’è‘ÎÛ‚É‚È‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“–‚½‚ç‚È‚¢
 			//“G‚É’e‚ªƒqƒbƒg‚µ‚½
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
@@ -1062,6 +1065,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
+			if (!enemy->IsCollidable())continue;//“–‚½‚è”»’è‘ÎÛ‚É‚È‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç“–‚½‚ç‚È‚¢
 			//“G‚ÆƒvƒŒƒCƒ„[‚ª“–‚½‚Á‚½
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{

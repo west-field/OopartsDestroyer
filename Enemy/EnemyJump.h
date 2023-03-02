@@ -7,7 +7,7 @@
 class EnemyJump : public EnemyBase
 {
 public:
-	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory);
+	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyJump();
 
 	virtual void Update() override;
@@ -30,7 +30,6 @@ private:
 	void (EnemyJump::* m_updateFunc)();
 	void (EnemyJump::* m_drawFunc)();
 
-	int m_idx = 0;//‰æ‘œ•ÏX
 	int m_frame = 0;//ƒWƒƒƒ“ƒv‚·‚é‚Ü‚Å‚ÌŠÔ
 
 	float m_posTemp = 0.0f;

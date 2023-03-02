@@ -8,7 +8,7 @@
 class EnemyMoveUpDown : public EnemyBase
 {
 public:
-	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, std::shared_ptr<ShotFactory> sFactory);
+	EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~EnemyMoveUpDown();
 	virtual void Update()override;//更新
 	virtual void Draw()override;//表示
@@ -17,6 +17,14 @@ public:
 	virtual void Damage(int damage) override;
 	virtual bool IsCollidable()const override;
 private:
-	int m_idx = 0;
+	void NormalUpdate();
+	void NormalDraw();
+	//爆発アニメーション
+	void BurstUpdate();
+	void BurstDraw();
+
+	//メンバ関数ポインタ
+	void (EnemyMoveUpDown::* m_updateFunc)();
+	void (EnemyMoveUpDown::* m_drawFunc)();
 };
 

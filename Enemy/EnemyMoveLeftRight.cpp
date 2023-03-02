@@ -14,18 +14,26 @@ namespace
 	constexpr float kDrawScall = 1.0f;//グラフィック拡大率
 
 	constexpr float kEnemyMoveSpeed = 4.0f;//エネミーの移動速度
+
+	constexpr int burst_img_width = 32;//画像サイズX
+	constexpr int burst_img_height = 32;//画像サイズY
+	constexpr float burst_draw_scale = 1.0f;//拡大率
+	constexpr int burst_frame_num = 8;//アニメーション枚数
+	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyMoveLeftRight::EnemyMoveLeftRight(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveLeftRight::NormalUpdate)
+EnemyMoveLeftRight::EnemyMoveLeftRight(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory) :
+	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveLeftRight::NormalUpdate),m_drawFunc(&EnemyMoveLeftRight::NormalDraw)
 {
 	m_handle = handle;
+	m_burstHandle = burstH;
 	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
 	m_hp->MaxHp(5);
 }
 
 EnemyMoveLeftRight::~EnemyMoveLeftRight()
 {
+
 }
 
 void EnemyMoveLeftRight::Update()
@@ -37,13 +45,7 @@ void EnemyMoveLeftRight::Update()
 
 void EnemyMoveLeftRight::Draw()
 {
-	if (!m_isExist)	return;
-	int img = m_idx * kLeftRightSize;
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
-#ifdef _DEBUG
-	m_rect.Draw(0xff00ff);
-#endif
+	(this->*m_drawFunc)();
 }
 
 void EnemyMoveLeftRight::Movement(Vector2 vec)
@@ -64,13 +66,15 @@ void EnemyMoveLeftRight::Damage(int damage)
 	//m_ultimateTimer = kUltimateFrame;//無敵時間
 	if (m_hp->GetHp() == 0)
 	{
-		m_isExist = false;
+		m_updateFunc = &EnemyMoveLeftRight::BurstUpdate;
+		m_drawFunc = &EnemyMoveLeftRight::BurstDraw;
+		m_idx = 0;
 	}
 }
 
 bool EnemyMoveLeftRight::IsCollidable() const
 {
-	return true;
+	return (m_updateFunc != &EnemyMoveLeftRight::BurstUpdate);
 }
 
 void EnemyMoveLeftRight::NormalUpdate()
@@ -128,4 +132,31 @@ void EnemyMoveLeftRight::RightUpdate()
 		m_isLeft = true;
 		m_updateFunc = &EnemyMoveLeftRight::NormalUpdate;
 	}
+}
+
+void EnemyMoveLeftRight::NormalDraw()
+{
+	if (!m_isExist)	return;
+	int img = m_idx * kLeftRightSize;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
+#ifdef _DEBUG
+	m_rect.Draw(0xff00ff);
+#endif
+}
+
+void EnemyMoveLeftRight::BurstUpdate()
+{
+	m_idx++;
+	if (m_idx == burst_frame_num * burst_frame_speed)
+	{
+		m_isExist = false;
+	}
+}
+
+void EnemyMoveLeftRight::BurstDraw()
+{
+	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true, false);
 }

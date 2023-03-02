@@ -23,17 +23,18 @@ namespace
 	constexpr float kGrap = 2.0f;
 	constexpr float kJumpA = 5.0f;
 
-	constexpr int burst_img_width = 48;//画像サイズX
-	constexpr int burst_img_height = 48;//画像サイズY
+	constexpr int burst_img_width = 32;//画像サイズX48
+	constexpr int burst_img_height = 32;//画像サイズY
 	constexpr float burst_draw_scale = 1.0f;//拡大率
 	constexpr int burst_frame_num = 8;//アニメーション枚数
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, std::shared_ptr<ShotFactory> sFactory):
+EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
 	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
 {
-	m_handle = handle;
+	m_handle = handle;//敵ハンドル
+	m_burstHandle = burstH;//爆発ハンドル
 	m_rect = { pos,{static_cast<int>(kJumpSize * kDrawScall),static_cast<int>(kJumpSize * kDrawScall)} };
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);
@@ -41,6 +42,7 @@ EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int ha
 
 EnemyJump::~EnemyJump()
 {
+
 }
 
 void EnemyJump::Update()
@@ -82,7 +84,7 @@ void EnemyJump::Damage(int damage)
 
 bool EnemyJump::IsCollidable() const
 {
-	return true;
+	return (m_updateFunc != &EnemyJump::BurstUpdate);
 }
 
 void EnemyJump::NormalUpdate()
@@ -156,5 +158,6 @@ void EnemyJump::BurstDraw()
 {
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 
-	my::MyDrawRectRotaGraph(m_rect.center.x, m_rect.center.y, imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true,false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true,false);
 }

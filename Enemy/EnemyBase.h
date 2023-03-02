@@ -93,6 +93,8 @@ protected:
 	int m_handle = -1;
 	int m_burstHandle = -1;
 
+	int m_idx = 0;//‰æ‘œ•ÏX
+
 	bool m_isLeft = false;	//¶‚ğŒü‚¢‚Ä‚¢‚é
 
 	bool m_isJump = false;	//ƒWƒƒƒ“ƒv‚ğ‚µ‚Ä‚¢‚é‚©

@@ -8,14 +8,15 @@
 class CutMan :public EnemyBase
 {
 public :
-	CutMan(std::shared_ptr<Player>player, const Position2& pos,int handle, std::shared_ptr<ShotFactory> sFactory);
+	CutMan(std::shared_ptr<Player>player, const Position2& pos,int handle,int burstH, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~CutMan();
-	virtual void Update();
-	virtual void Draw();
+	virtual void Update()override;
+	virtual void Draw()override;
 
 	virtual void Movement(Vector2 vec)override;
 	virtual void EnemyMovement(Vector2 vec)override;
 	virtual int TouchAttackPower() const override;
+	virtual void Damage(int damage) override;
 	virtual bool IsCollidable()const override;
 private:
 	void MoveUpdate();//ボスを移動させる
@@ -25,7 +26,13 @@ private:
 	void OneShotUpdate();//ボスが1回弾を撃つ
 	void TwoShotUpdate();//ボスが2回弾を撃つ
 	
+	void NormalDraw();
+
+	void BurstUpdate();
+	void BurstDraw();
+
 	void (CutMan::* updateFunc)();
+	void (CutMan::* m_drawFunc)();
 
 	int m_idx = 0;//画像の表示範囲
 	int m_frame = 0;//次の画像に移動

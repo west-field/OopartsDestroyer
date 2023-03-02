@@ -8,7 +8,7 @@
 class EnemyBattery : public EnemyBase
 {
 public:
-	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle,std::shared_ptr<ShotFactory> sFactory,bool isLeft);
+	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH,std::shared_ptr<ShotFactory> sFactory,bool isLeft);
 	virtual ~EnemyBattery();
 	virtual void Update()override;		//更新
 	virtual void Draw()override;		//表示
@@ -19,7 +19,16 @@ public:
 	virtual void Damage(int damage) override;
 	virtual bool IsCollidable()const override;
 private:
-	int m_idx = 0;		//表示する画像の場所
+	//通常
+	void NormalUpdate();
+	void NormalDraw();
+	//爆発アニメーション
+	void BurstUpdate();
+	void BurstDraw();
+
+	void (EnemyBattery::* m_updateFunc)();
+	void (EnemyBattery::* m_drawFunc)();
+
 	int m_fireFrame = 0;
 	int num = 0;
 
