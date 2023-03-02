@@ -60,8 +60,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/maphai.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -5451.0f,-1235.0f };//ボス戦前
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { -5451.0f,-1235.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -1038,7 +1038,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 				shot->SetExist(false);
 				//enemy->Damage(shot->AttackPower());
 				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
-				enemy->OnDamage();
+				enemy->Damage(shot->AttackPower());
 				break;
 			}
 		}
@@ -1078,19 +1078,33 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//プレイヤーのHPが０になったらゲームオーバーにする
 	if (m_hp[Object_Player]->GetHp() <= 0)
 	{
-		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0xff0000;
+		/*m_updateFunc = &GameplayingScene::FadeOutUpdat;
+		m_fadeColor = 0xff0000;*/
+		m_manager.ChangeScene(new GameoverScene(m_manager,m_player));
+		return;
 		m_crea = 1;
 		return;
 	}
-	//エネミーのHPが０になったらゲームクリア
-	if (m_hp[Object_EnemyBoss]->GetHp() <= 0)
+	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
-		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0xff0000;
-		m_crea = 0;
-		return;
+		if (!enemy->IsExist())
+		{
+			m_updateFunc = &GameplayingScene::FadeOutUpdat;
+			m_fadeColor = 0xff0000;
+			m_crea = 0;
+			return;
+		}
+		
 	}
+	////エネミーのHPが０になったらゲームクリア
+	//if (m_hp[Object_EnemyBoss]->GetHp() <= 0)
+	//{
+	//	m_updateFunc = &GameplayingScene::FadeOutUpdat;
+	//	m_fadeColor = 0xff0000;
+	//	m_crea = 0;
+	//	return;
+	//}
+	
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
@@ -1111,7 +1125,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 			m_manager.ChangeScene(new GameclearScene(m_manager));
 			return;
 		case 1:
-			m_manager.ChangeScene(new GameoverScene(m_manager));
+			m_manager.ChangeScene(new GameoverScene(m_manager,m_player));
 		default:
 			return;
 		}

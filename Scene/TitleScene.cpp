@@ -12,11 +12,6 @@
 #include "GameplayingScene.h"
 #include "OptionScene.h"
 
-namespace
-{
-	//constexpr float bg_scale = 1.0f;//”wŒiŠg‘å—¦
-}
-
 void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//‚Ç‚ñ‚Ç‚ñ–¾‚é‚­‚È‚é

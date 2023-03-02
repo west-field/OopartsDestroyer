@@ -1,6 +1,9 @@
 #pragma once
 #include "Secne.h"
 
+#include <memory>//スマートポインタをつかうため
+class Player;               //プレイヤー
+
 /// <summary>
 /// ゲームオーバーシーン
 /// </summary>
@@ -15,8 +18,11 @@ private:
 
     using UpdateFunc_t = void (GameoverScene::*)(const InputState&);
     UpdateFunc_t m_updateFunc;
+
+    //プレイヤー
+    std::shared_ptr<Player> m_player;
 public:
-    GameoverScene(SceneManager& manager);
+    GameoverScene(SceneManager& manager,std::shared_ptr<Player>player);
     virtual ~GameoverScene();
 
     void Update(const InputState& input);

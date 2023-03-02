@@ -24,8 +24,8 @@ namespace
 	constexpr float kGravity = 0.8f;//重力
 	constexpr float kJumpAcc = -10.0f;//ジャンプ力
 	//爆発アニメーション
-	constexpr int burst_img_width = 48;//画像サイズX
-	constexpr int burst_img_height = 48;//画像サイズY
+	constexpr int burst_img_width = 32;//画像サイズX
+	constexpr int burst_img_height = 32;//画像サイズY
 	constexpr float burst_draw_scale = 1.0f;//拡大率
 	constexpr int burst_frame_num = 8;//アニメーション枚数
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
@@ -35,6 +35,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate),m_drawFunc(&CutMan::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
+	m_hp->MaxHp(28);
 	m_isLeft = true;
 	m_handle = handle;
 	m_burstHandle = burstH;
@@ -267,4 +268,7 @@ void CutMan::BurstDraw()
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true, false);
 
+#ifdef _DEBUG
+	DrawFormatString(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);
+#endif
 }

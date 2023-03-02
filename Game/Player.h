@@ -40,6 +40,10 @@ public:
 	bool IsCollidable()const;
 	//ダメージを受けたか
 	void Damage(int damage);
+	//存在しているかどうか
+	bool IsExist()const { return m_isExist; }
+	//サイズを大きくする
+	void ScaleEnlarge(float scale);
 private:
 	//普通のアップデート
 	void NormalUpdate();
@@ -59,6 +63,8 @@ private:
 	int m_idxX = 0;//表示する描画位置X
 	int m_idxY = 2;//表示する描画位置Y
 
+	float m_drawScale = 0.0f;//拡大率
+
 	int m_frame = 0;//アニメーション時間
 
 	bool m_isLeft = false;//左を向いている
@@ -66,6 +72,8 @@ private:
 	bool m_isJump = false;//ジャンプをしているか
 
 	int m_ultimateTimer = 0;//無敵時間
+
+	bool m_isExist = true;//存在しているかどうか
 
 	std::shared_ptr<HpBar> m_hp;
 };

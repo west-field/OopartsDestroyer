@@ -25,6 +25,7 @@ namespace
 
 Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::NormalUpdate),m_drawFunc(&Player::NormalDraw),m_hp(hp)
 {
+	m_drawScale = kDrawScale;
 	m_rect.center = pos;
 	m_rect.size = { static_cast<int>(kGraphSizeWidth /** kDrawScale*/ - kSize) ,static_cast<int>(kGraphSizeHeight /** kDrawScale*/ - kSize)};
 	//m_handle = my::MyLoadGraph(L"Data/Retro-Lines-Player-transparent.png");
@@ -37,11 +38,13 @@ Player::~Player()
 
 void Player::Update()
 {
+	if (!m_isExist)	return;
 	(this->*m_updateFunc)();
 }
 
 void Player::Draw()
 {
+	if (!m_isExist)	return;
 	(this->*m_drawFunc)();
 }
 
@@ -75,6 +78,7 @@ void Player::Action(ActionType type)
 			break;
 		case ActionType::grah_death:
 			m_idxY = 4;
+			m_ultimateTimer = 0;
 			break;
 		default:
 			m_idxY = 0;
@@ -95,6 +99,12 @@ void Player::Damage(int damage)
 	m_drawFunc = &Player::BurstDraw;*/
 	m_ultimateTimer = ultimate_frame;
 	m_hp->Damage(damage);
+}
+
+void Player::ScaleEnlarge(float scale)
+{
+	if (m_drawScale >= 5.0f)	return;
+	m_drawScale += scale;
 }
 
 void Player::NormalUpdate()
@@ -139,6 +149,10 @@ void Player::NormalUpdate()
 			break;
 		case  4:
 			m_idxX = (m_idxX + 1) % (6);
+			if (m_idxX == 0)
+			{
+				m_isExist = false;
+			}
 			break;
 		}
 		if (m_idxX == 0)
@@ -164,7 +178,7 @@ void Player::NormalDraw()
 	}
 	//プレイヤーを表示
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y- kGraphSizeHeight/2),
-		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, m_drawScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffaa);
 
