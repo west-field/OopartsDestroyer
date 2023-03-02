@@ -17,7 +17,6 @@ enum class InputType
 
 	junp,//ジャンプ
 	shot,//ショット
-	rapidFire,//連射
 
 	max
 };

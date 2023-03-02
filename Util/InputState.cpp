@@ -40,11 +40,9 @@ InputState::InputState()
 										{InputCategory::pad , PAD_INPUT_A} };//A
 	m_inputMapTable[InputType::shot] = { {InputCategory::keybd , KEY_INPUT_Z},
 										{InputCategory::pad , PAD_INPUT_3} };//X
-	m_inputMapTable[InputType::rapidFire] = { {InputCategory::keybd , KEY_INPUT_X},
-											{InputCategory::pad , PAD_INPUT_X} };//Y
 	
-	//m_inputMapTable = defaultMapTable_;
 	LoadKeyInfo();
+	//SaveKeyInfo();
 	//一時マップテーブルにコピー
 	tempMapTable_ = m_inputMapTable;
 
@@ -55,7 +53,6 @@ InputState::InputState()
 	m_inputNameTable[InputType::keyconf] = L"keyconf";
 	m_inputNameTable[InputType::junp] = L"junp";
 	m_inputNameTable[InputType::shot] = L"shot";
-	m_inputNameTable[InputType::rapidFire] = L"rapidFire";
 
 	m_currentInput.resize(static_cast<int>(InputType::max));
 	m_lastInput.resize(static_cast<int>(InputType::max));
