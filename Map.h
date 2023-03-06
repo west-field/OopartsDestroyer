@@ -8,7 +8,7 @@ class EnemyFactory;
 
 enum MapLayer
 {
-	MapLayer_bg,	//マップ
+	MapLayer_bg,	//背景
 	MapLayer_map,	//マップ
 	MapLayer_enemy,	//エネミー
 	MapLayer_event	//当たり判定

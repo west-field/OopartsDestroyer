@@ -15,7 +15,8 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
 	m_mapWidth(0),m_mapHeight(0)
 {
 	//m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
-	m_handle = my::MyLoadGraph(L"Data/map/mapkarichip.png");
+	//m_handle = my::MyLoadGraph(L"Data/map/mapkarichip.png");
+	m_handle = my::MyLoadGraph(L"Data/map/inca_front.png");
 }
 
 Map::~Map()
@@ -96,40 +97,26 @@ void Map::Draw()
 	{
 		for (int chipX = 0; chipX < m_mapWidth; chipX++)
 		{
-#if true
-			//背景
-			auto chipngId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
-			if (chipngId != 0)
+			int size = Game::ChipSize / 2;
+			int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
+			int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
+			//画面外を表示しない
+			if (X < Game::kMapScreenLeftX - size) continue;
+			if (Y < Game::kMapScreenTopY - size)continue;
+			if (X > Game::kMapScreenRightX + size) continue;
+			if (Y > Game::kMapScreenBottomY + size) continue;
+			//背景を表示
+			auto bgChipId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
+			if (bgChipId != 0)
 			{
-				int size = Game::ChipSize / 2;
-
-				int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
-				int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
-
-				//画面外を表示しない
-				if (X < Game::kMapScreenLeftX - size) continue;
-				if (Y < Game::kMapScreenTopY - size)continue;
-				if (X > Game::kMapScreenRightX + size) continue;
-				if (Y > Game::kMapScreenBottomY + size) continue;
-
-				//マップチップ表示
-				my::MyDrawRectRotaGraph(X, Y, (chipngId % 16) * Game::ChipSize, (chipngId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
+				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
-#endif
+
 			auto chipId = GetChipId(static_cast<int>(MapLayer_map+m_stage), chipX, chipY);
 			if (chipId != 0)
 			{
-				int size = Game::ChipSize / 2;
-
-				int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
-				int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
-
-				//画面外を表示しない
-				if (X < Game::kMapScreenLeftX - size) continue;
-				if (Y < Game::kMapScreenTopY - size)continue;
-				if (X > Game::kMapScreenRightX + size) continue;
-				if (Y > Game::kMapScreenBottomY + size) continue;
-
 				//マップチップ表示
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
 			}
