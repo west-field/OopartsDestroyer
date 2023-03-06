@@ -39,7 +39,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	m_isLeft = true;
 	m_handle = handle;
 	m_burstHandle = burstH;
-	m_rect = { pos,{static_cast<int>(kGraphSizeWidth* kDrawScale/2),static_cast<int>(kGraphSizeHeight* kDrawScale)} };
+	m_rect = { {pos.x,pos.y-8.0f},{static_cast<int>(kGraphSizeWidth * kDrawScale / 2),static_cast<int>(kGraphSizeHeight * kDrawScale)} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
