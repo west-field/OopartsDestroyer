@@ -4,7 +4,7 @@
 #include "Util/Font.h"
 #include "Util/Graph.h"
 #include "Util/InputState.h"
-#include "Game/Button.h"
+#include "Util/Button.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 
@@ -30,6 +30,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 	Sound::Load();
 	Button::Load();
+	Graph::Load();
 	Font::Load();
 	Font::FontChange(Font::NormalFont);
 
@@ -61,6 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	}
 	Sound::Unload();
 	Button::Unload();
+	Graph::Unload();
 	Font::Unload();
 	DxLib_End();
 

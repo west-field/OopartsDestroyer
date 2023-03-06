@@ -129,8 +129,8 @@
     <ClCompile Include="Util\Graph.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Button.cpp">
-      <Filter>Game</Filter>
+    <ClCompile Include="Util\Button.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,8 +233,8 @@
     <ClInclude Include="Util\Graph.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Button.h">
-      <Filter>Game</Filter>
+    <ClInclude Include="Util\Button.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
