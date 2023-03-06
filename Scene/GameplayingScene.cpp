@@ -12,12 +12,12 @@
 #include "../Util/Sound.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
+#include "../Util/Graph.h"
 
 #include "../Game/Player.h"
 #include "../Game/EnemyFactory.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/HpBar.h"
-#include "../Game/Button.h"
 #include "../Enemy/EnemyBase.h"
 #include "../Shot/RockBuster.h"
 /*
@@ -26,7 +26,7 @@
 */
 namespace
 {
-	constexpr float kPlayerMoveSpeed = 5.0f;//プレイヤーの移動速度
+	constexpr float kPlayerMoveSpeed = 4.1f;//プレイヤーの移動速度
 	constexpr float kJumpAcc = 10.0f;//ジャンプ力
 	constexpr float kShotSpeed = 8.0f;//ショットスピード
 
@@ -65,8 +65,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
 	//m_map->Load(L"Data/map.fmf");
-	//m_map->Load(L"Data/map/mapkari.fmf");
-	m_map->Load(L"Data/map/maphai.fmf");
+	m_map->Load(L"Data/map/mapkari.fmf");
+	//m_map->Load(L"Data/map/maphai.fmf");
 
 	//開始位置
 	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
@@ -75,6 +75,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_add = pos * -1.0f;
 	//背景
 	m_handle = my::MyLoadGraph(L"Data/Background.png");
+	Graph::Init();
 }
 
 GameplayingScene::~GameplayingScene()
@@ -82,17 +83,19 @@ GameplayingScene::~GameplayingScene()
 	DeleteGraph(m_buttonHandle);
 	DeleteGraph(m_handle);
 	Sound::StopBgm(Sound::BgmMain);
+	Sound::StopBgm(Sound::BgmBoss);
 }
 
 void GameplayingScene::Update(const InputState& input)
 {
+	Graph::BgUpdate();
 	(this->*m_updateFunc)(input);
 }
 
 void GameplayingScene::Draw()
 {
 	DrawExtendGraph(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_handle, false);
-	
+	Graph::Bg();
 	m_map->Draw();
 
 	m_player->Draw();
@@ -114,7 +117,7 @@ void GameplayingScene::Draw()
 	DrawBox(Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenTopY - Game::ChipSize, Game::kMapScreenRightX + Game::ChipSize, Game::kMapScreenTopY, m_framecolor, true);//上
 	DrawBox(Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenBottomY + Game::ChipSize, Game::kMapScreenRightX + Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//下
 
-	ButtonDraw();
+	//Button::Draw({ Game::kMapScreenLeftX + 50,Game::kMapScreenBottomY + 50 });
 
 	//何かを表示
 	//DrawFormatString(Game::kScreenWidth/2, Game::kScreenHeight/3, 0x000000, L"%d", m_enemyKill);
@@ -530,20 +533,7 @@ void GameplayingScene::PlayerCenter()
 		m_isPlayerMoveD = true;
 	}
 
-	if (m_isPlayerMoveU || m_isPlayerMoveD || m_isPlayerMoveW)
-	{
-		//ショットを削除する
-		for (auto& shot : m_shots)
-		{
-			shot->SetExist(false);
-		}
-		for (auto& shot : m_shotFactory->GetShot())
-		{
-			if (!shot->IsExist())	continue;
-			shot->SetExist(false);
-		}
-	}
-	else
+	if (!m_isPlayerMoveU && !m_isPlayerMoveD && !m_isPlayerMoveW)
 	{
 		m_isFirst = false;
 	}
@@ -619,16 +609,16 @@ void GameplayingScene::Ladder(const InputState& input)
 	{
 		if (input.IsPressed(InputType::up))
 		{
-			Button::PushArrow(Button::ARROWS_UP);
+			//Button::PushArrow(Button::ARROWS_UP);
 			//m_fallPlayerSpeed = 0.0f;
 			m_isLadder = true;
 			PlayerMoveY = 0.0f;
 			//プレイヤーの位置を梯子の位置にする
 			PlayerMoveY -= kPlayerMoveSpeed;
-			//下に何もないとき　は移動しないようにする
+			//プレイヤー下が何もないとき　は移動しないようにする
 			if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2) == MapEvent_no))
 			{
-				PlayerMoveY += kPlayerMoveSpeed;
+				PlayerMoveY += kPlayerMoveSpeed-2.0f;
 				m_isLadder = false;
 			}
 		}
@@ -645,7 +635,7 @@ void GameplayingScene::Ladder(const InputState& input)
 		//下キーで梯子を下がれる　下が梯子
 		if (input.IsPressed(InputType::down))
 		{
-			Button::PushArrow(Button::ARROWS_DOWN);
+			//Button::PushArrow(Button::ARROWS_DOWN);
 			//m_fallPlayerSpeed = 0.0f;
 			m_isLadder = true;
 			PlayerMoveY = 0.0f;
@@ -677,14 +667,14 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
 	PlayerCenter();//プレイヤーがセンターに居るかどうか
-	ButtonUpdate();
+	//Button::Update();
 
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = {0.0f,0.0f};
 	//左に移動
 	if (input.IsPressed(InputType::left))
 	{
-		Button::PushArrow(Button::ARROWS_LEFT);
+		//Button::PushArrow(Button::ARROWS_LEFT);
 		if (input.IsTriggered(InputType::left))
 		{
 			m_player->SetLeft(true);
@@ -700,7 +690,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//右に移動
 	else if (input.IsPressed(InputType::right))
 	{
-		Button::PushArrow(Button::ARROWS_RIGHT);
+		//Button::PushArrow(Button::ARROWS_RIGHT);
 		if (input.IsTriggered(InputType::right))
 		{
 			m_player->SetLeft(false);
@@ -725,19 +715,11 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 	//梯子移動
 	Ladder(input);
-	//if (!m_player->IsJump())
-	//{
-	//	
-	//}
-	//else
-	//{
-	//	m_isLadder = false;
-	//}
 	
 	//プレイヤージャンプ処理
 	if (!m_isLadder && !m_player->IsJump() && input.IsTriggered(InputType::junp))
 	{
-		Button::PushButton(Button::ButtonType_A);
+		//Button::PushButton(Button::ButtonType_A);
 
 		m_fallPlayerSpeed = -kJumpAcc;
 		m_player->Action(ActionType::grah_jump);
@@ -774,7 +756,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//ショット
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
-		Button::PushButton(Button::ButtonType_X);
+		//Button::PushButton(Button::ButtonType_X);
 
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
 		Sound::Play(Sound::PlayeyShot);
@@ -871,7 +853,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
-		Button::PushButton(Button::ButtonType_BACK);
+		//Button::PushButton(Button::ButtonType_BACK);
 		Sound::Play(Sound::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
@@ -880,15 +862,26 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 void GameplayingScene::MoveMapUpdat(const InputState& input)
 {
-	//移動する前にエネミーをすべて消す
+	//移動する前にすべて消す
 	if (!m_isFirst)
 	{
-		Button::PushArrow(Button::ARROWS_NORMAL);
+		//Button::PushArrow(Button::ARROWS_NORMAL);
 		m_isFirst = true;
+		//エネミーを削除する
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
 			enemy->SetExist(false);
+		}
+		//ショットを削除する
+		for (auto& shot : m_shots)
+		{
+			shot->SetExist(false);
+		}
+		for (auto& shot : m_shotFactory->GetShot())
+		{
+			if (!shot->IsExist())	continue;
+			shot->SetExist(false);
 		}
 	}
 
@@ -906,12 +899,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ 0.0f,moveY });//mapを移動させる
 			MoveEnemy( 0.0f,moveY);//エネミーを移動させる
-			MovePlayer(0.0f, moveY - 0.1f);//プレイヤーを移動させる
+			MovePlayer(0.0f, moveY - 0.2f);//プレイヤーを移動させる
 			moveY *= -1.0f;
 			m_add.y += moveY;//どのくらいプレイヤーが移動したか
 		}
 		else
 		{
+			m_player->Movement({ 0.0f,0.1f });
 			m_updateFunc = &GameplayingScene::NormalUpdat;
 			m_isPlayerMoveU = false;
 			return;
@@ -926,12 +920,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ 0.0f,moveY });
 			MoveEnemy(0.0f, moveY);
-			m_player->Movement({ 0.0f,moveY + 0.1f });
+			m_player->Movement({ 0.0f,moveY + 0.2f });
 			moveY *= -1.0f;
 			m_add.y += moveY;
 		}
 		else
 		{
+			m_player->Movement({ 0.0f,0.1f });
 			m_updateFunc = &GameplayingScene::NormalUpdat;
 			m_isPlayerMoveD = false;
 			return;
@@ -946,7 +941,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			m_map->Movement({ moveX,0.0f });
 			MoveBoss(moveX, 0.0f);
-			m_player->Movement({ moveX + 0.1f,0.0f });
+			m_player->Movement({ moveX + 0.2f,0.0f });
 			moveX *= -1.0f;
 			m_add.x += moveX;
 		}
@@ -958,6 +953,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			m_isPlayerMoveW = false;
 			//ボス戦BGMと入れ替える
 			Sound::StopBgm(Sound::BgmMain);
+			Sound::StartBgm(Sound::BgmBoss);
 			return;
 		}
 	}
@@ -965,13 +961,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 
 void GameplayingScene::BossUpdate(const InputState& input)
 {
-	ButtonUpdate();
+	//Button::Update();
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = { 0.0f,0.0f };
 	//左に移動
 	if (input.IsPressed(InputType::left))
 	{
-		Button::PushArrow(Button::ARROWS_LEFT);
+		//Button::PushArrow(Button::ARROWS_LEFT);
 		if (input.IsTriggered(InputType::left))
 		{
 			m_player->SetLeft(true);
@@ -987,7 +983,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//右に移動
 	else if (input.IsPressed(InputType::right))
 	{
-		Button::PushArrow(Button::ARROWS_RIGHT);
+		//Button::PushArrow(Button::ARROWS_RIGHT);
 		if (input.IsTriggered(InputType::right))
 		{
 			m_player->SetLeft(false);
@@ -1012,7 +1008,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//プレイヤージャンプ処理
 	if (!m_player->IsJump() && input.IsTriggered(InputType::junp))
 	{
-		Button::PushButton(Button::ButtonType_A);
+		//Button::PushButton(Button::ButtonType_A);
 		m_fallPlayerSpeed = -kJumpAcc;
 		m_player->Action(ActionType::grah_jump);
 		m_player->SetJump(true);
@@ -1040,7 +1036,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//ショット
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
-		Button::PushButton(Button::ButtonType_X);
+		//Button::PushButton(Button::ButtonType_X);
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
 		Sound::Play(Sound::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
@@ -1070,6 +1066,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 				//enemy->Damage(shot->AttackPower());
 				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
 				enemy->Damage(shot->AttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				break;
 			}
 		}
@@ -1086,6 +1083,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			{
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				return;
 			}
 		}
@@ -1101,6 +1099,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{
 				m_player->Damage(enemy->TouchAttackPower());
+				Sound::Play(Sound::PlayeyShotHit);
 				break;
 			}
 		}
@@ -1167,15 +1166,5 @@ void GameplayingScene::BossDraw()
 	//HPバーを表示
 	m_hp[Object_Player]->Draw(true);
 	m_hp[Object_EnemyBoss]->Draw(false);
-}
-
-void GameplayingScene::ButtonUpdate()
-{
-	Button::Update();
-}
-
-void GameplayingScene::ButtonDraw()
-{
-	Button::Draw({ Game::kMapScreenRightX,Game::kMapScreenTopY });
 }
 

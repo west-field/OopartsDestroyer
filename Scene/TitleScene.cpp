@@ -7,6 +7,8 @@
 #include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
+#include "../Util/Button.h"
+#include "../Util/Graph.h"
 
 #include "SceneManager.h"
 #include "GameplayingScene.h"
@@ -25,7 +27,8 @@ void TitleScene::FadeInUpdat(const InputState& input)
 
 void TitleScene::NormalUpdat(const InputState& input)
 {
-	m_scroll = m_scroll + 1;
+	Button::NextUpdate();
+	Graph::BgUpdate();//m_scroll = m_scroll + 1;
 
 	bool isPress = false;//キーが押されたかどうか
 	if (input.IsTriggered(InputType::down))
@@ -84,35 +87,13 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 }
 
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
-{
-	bg_scale = 3.0f;
-	//廃墟
-	m_bgImgs[0].handle = my::MyLoadGraph(L"Data/bg/1.png");
-	m_bgImgs[1].handle = my::MyLoadGraph(L"Data/bg/2.png");
-	m_bgImgs[2].handle = my::MyLoadGraph(L"Data/bg/3.png");
-	m_bgImgs[3].handle = my::MyLoadGraph(L"Data/bg/4.png");
-	m_bgImgs[4].handle = my::MyLoadGraph(L"Data/bg/5.png");
-
-	m_bgImgs[0].scrollSpeed = 0.5f;	//一番遠い
-	m_bgImgs[1].scrollSpeed = 0.6f;	//一番遠い
-	m_bgImgs[2].scrollSpeed = 0.75f;//中間
-	m_bgImgs[3].scrollSpeed = 0.8f;//中間
-	m_bgImgs[4].scrollSpeed = 1.0f;	//一番手前
-
-	for (auto& bg : m_bgImgs)
-	{
-		GetGraphSize(bg.handle, &bg.imgSize.w, &bg.imgSize.h);
-	}
-	
+{	
+	Graph::Init();
 	Sound::StartBgm(Sound::BgmTitle);
 }
 
 TitleScene::~TitleScene()
 {
-	for (auto& bg : m_bgImgs)
-	{
-		DeleteGraph(bg.handle);
-	}
 	Sound::StopBgm(Sound::BgmTitle);
 }
 
@@ -127,34 +108,29 @@ void
 TitleScene::Draw()
 {
 	//背景
-	for (auto& bg : m_bgImgs)
-	{
-		auto bgWidth = bg.imgSize.w * bg_scale;
-		int scroll = static_cast<int>(m_scroll * bg.scrollSpeed) % static_cast<int>(bgWidth);
+	Graph::BgDraw(0);
 
-		DrawRotaGraph(bgWidth / 2 - scroll,
-			bg.imgSize.h / 2 * bg_scale,//表示中心Y座標
-			bg_scale,
-		  0.0f,
-		  bg.handle, true, false, false);
-		DrawRotaGraph(bgWidth * (1 + 0.5) - scroll,
-			bg.imgSize.h / 2 * bg_scale,
-			bg_scale, 
-			0.0f, 
-			bg.handle, true, false, false);
-	}
+	Button::NextDraw({Game::kScreenWidth/2,Game::kScreenHeight/2});
 
 	//メニュー項目を描画
-	Font::ChangeFontSize(kTitleFontSize);
-	DrawFormatString(Game::kScreenWidth / 3, Game::kScreenHeight / 2 - kTitleFontSize, 0xaaffaa, L"オーパーツディフェンダー");
-	Font::ChangeFontSize(kMenuFontSize);
-	DrawFormatString(SelectMenu[menuGameStart].x, SelectMenu[menuGameStart].y, 0xaaffaa, L"ゲームスタート");
-	DrawFormatString(SelectMenu[menuConfig].x, SelectMenu[menuConfig].y, 0xaaffaa, L"せってい");
-	DrawFormatString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, 0xaaffaa, L"おわり");
-	Font::ChangeFontSize(0);
+	m_color = 0x000000;
+	MenuDraw(5, 5);
+	m_color = 0xaaa0ff;
+	MenuDraw(0,0);
 
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void TitleScene::MenuDraw(int X, int Y)
+{
+	Font::ChangeFontSize(kTitleFontSize);
+	DrawString((Game::kScreenWidth- kTitleFontSize*12 ) / 2 + X, (Game::kScreenHeight / 2 - kTitleFontSize) + Y, L"オーパーツディフェンダー", m_color);
+	Font::ChangeFontSize(kMenuFontSize);
+	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
+	DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
+	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"おわり", m_color);
+	Font::ChangeFontSize(0);
 }

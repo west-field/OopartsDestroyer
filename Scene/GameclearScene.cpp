@@ -2,12 +2,73 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
+#include "../Util/Graph.h"
+#include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
 #include "TitleScene.h"
 
 #include "../Game/Player.h"
+
+namespace
+{
+	const TCHAR* const kMoji[GameclearScene::kMojiNum] =
+	{
+		L"ÉQ",
+		L"Å[",
+		L"ÉÄ",
+		L"ÉN",
+		L"Éä",
+		L"ÉA",
+	};
+
+	constexpr float kMojiNum = 20.0f;
+}
+
+GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
+	Scene(manager), m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat) {
+	Graph::Init();
+	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
+	for (int i = 0; i < kMojiNum; i++)
+	{
+		m_moji[i].pos = { static_cast<float>(posX + i * kMojiSize) ,Game::kScreenHeight / 3 };
+		m_moji[i].moveY = i * -1.0f;
+		m_moji[i].add = 0.5f;
+	}
+}
+
+GameclearScene::~GameclearScene()
+{
+	Sound::StopBgm(Sound::Gameclear);
+	Sound::StopBgm(Sound::GameclearBgm);
+}
+
+void GameclearScene::Update(const InputState& input)
+{
+	Graph::BgUpdate();
+	(this->*m_updateFunc)(input);
+}
+
+void GameclearScene::Draw()
+{
+	Graph::BgDraw(0);
+	m_player->Draw();
+
+	if (m_mojiDraw)
+	{
+		Font::ChangeFontSize(kMojiSize);
+		for (int i = 0; i < kMojiNum; i++)
+		{
+			DrawString(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
+		}
+		Font::ChangeFontSize(0);
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
 
 void GameclearScene::FadeInUpdat(const InputState& input)
 {
@@ -17,6 +78,8 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
+		Sound::Play(Sound::Gameclear);
+		Sound::StartBgm(Sound::GameclearBgm);
 	}
 }
 
@@ -30,6 +93,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	if (Num <= 0.3f)
 	{
 		m_player->Action(ActionType::grah_jump);
+		m_mojiDraw = true;
 		vel = { 0.0f,0.0f };
 	}
 	else
@@ -40,6 +104,22 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	}
 
 	m_player->Movement(vel);
+
+	if (m_mojiDraw)
+	{
+		for (auto& moji : m_moji)
+		{
+			if (moji.moveY > kMojiNum)
+			{
+				moji.add *= -1.0f;
+			}
+			else if (moji.moveY < -kMojiNum)
+			{
+				moji.add *= -1.0f;
+			}
+			moji.moveY += moji.add;
+		}
+	}
 
 	if (input.IsTriggered(InputType::next))
 	{
@@ -58,33 +138,3 @@ void GameclearScene::FadeOutUpdat(const InputState& input)
 	}
 }
 
-GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
-	Scene(manager) ,m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat) {
-	//m_gameoverH = my::MyLoadGraph(L"Data/img/gameover.png");
-	Sound::Play(Sound::Gameclear);
-}
-
-GameclearScene::~GameclearScene()
-{
-	//DeleteGraph(m_gameoverH);
-	Sound::StopBgm(Sound::Gameclear);
-}
-
-void GameclearScene::Update(const InputState& input)
-{
-	(this->*m_updateFunc)(input);
-}
-
-void GameclearScene::Draw()
-{
-	m_player->Draw();
-	//DrawRotaGraph(Game::kScreenWidth / 2, Game::kScreenHeight / 2, 1.0f, 0.0f, m_gameoverH, true);
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	SetFontSize(50);
-	DrawString(Game::kScreenWidth / 3, Game::kScreenHeight / 3, L"Gameclear", 0xffffff);
-	SetFontSize(0);
-}

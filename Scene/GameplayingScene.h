@@ -105,10 +105,6 @@ private:
      void NormalDraw();
      //ボス戦表示
      void BossDraw();
-
-     //ボタン
-     void ButtonUpdate();
-     void ButtonDraw();
 private:
     int m_buttonHandle = -1;
 

@@ -22,7 +22,7 @@ struct MenuElement
 
 namespace
 {
-	constexpr int kTitleFontSize = 60;//タイトルのサイズ
+	constexpr int kTitleFontSize = 80;//タイトルのサイズ
 	constexpr int kMenuFontSize = 50;//文字のサイズ
 	constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize;    //メニュー文字のx位置
 	constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize;    //メニュー文字のy位置
@@ -37,7 +37,7 @@ class TitleScene : public Scene
 {
 private:
 	int m_selectNum = 0;//選択しているメニュー項目
-
+	unsigned int m_color = 0x000000;
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input);
 	//通常状態の時のUpdate関数
@@ -53,18 +53,7 @@ private:
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd}
 	};
-
-	struct BackImg
-	{
-		int handle;//画像のハンドル
-		float scrollSpeed;//スクロールスピード
-		Size imgSize;
-	};
-	//背景
-	static constexpr int bgNum = 5;
-	std::array<BackImg, bgNum> m_bgImgs;
 	int m_scroll = 0;
-	float bg_scale;
 
 public:
 	TitleScene(SceneManager& manager);
@@ -72,5 +61,6 @@ public:
 
 	void Update(const InputState& input);
 	virtual void Draw() override;
+	void MenuDraw(int X,int Y);
 };
 //x224,y160
