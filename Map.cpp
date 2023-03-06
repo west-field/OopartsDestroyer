@@ -14,9 +14,7 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
 	m_handle(-1),m_camera(),m_enemies(enemyFactory),m_stage(stage),
 	m_mapWidth(0),m_mapHeight(0)
 {
-	//m_handle = my::MyLoadGraph(L"Data/mapchip.bmp");
-	//m_handle = my::MyLoadGraph(L"Data/map/mapkarichip.png");
-	m_handle = my::MyLoadGraph(L"Data/map/inca_front.png");
+	m_handle = my::MyLoadGraph(L"Data/map/mapchip.png");
 }
 
 Map::~Map()
@@ -49,7 +47,6 @@ void Map::Update()
 
 			//画面内に入った時生成
 			//mapXがGame::kMapScreenRightXからGame::kMapScreenRightX + Game::ChipSizeの中に入った時
-			
 			auto address = chipY * m_mapWidth + chipX;
 #ifdef _DEBUG
 			DrawFormatString(10, 800, 0x000000, L"マップ%d,エネミー位置%d", chipId, m_enemyPos[address]);
@@ -109,6 +106,7 @@ void Map::Draw()
 			auto bgChipId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
 			if (bgChipId != 0)
 			{
+				DrawBox(X- Game::ChipSize/2, Y- Game::ChipSize/2, X- Game::ChipSize /2+Game::ChipSize, Y- Game::ChipSize /2+Game::ChipSize, 0xffffff, true);
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
 				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
