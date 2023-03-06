@@ -8,9 +8,11 @@ namespace Sound
 		//BGM
 		BgmTitle,		//タイトルBGM
 		BgmMain,		//メインBGM
-		Gameclear,	//ゲームクリアBGM
-		Gameover,	//ゲームオーバーBGM
-		//BgmBoss,	//ボス戦BGM
+		Gameclear,		//ゲームクリア音
+		GameclearBgm,	//ゲームクリアBGM
+		Gameover,		//ゲームオーバー音
+		GameoverBgm,	//ゲームオーバーBGM
+		BgmBoss,		//ボス戦BGM
 
 		//効果音
 		Cursor,			//カーソル移動音
@@ -27,6 +29,7 @@ namespace Sound
 		PlayeyShotHit,	//プレイヤーの弾が敵にヒット
 
 		EnemyShot,		//敵の弾発射音
+		EnemyShotHit,	//弾のプレイヤーが敵にヒット
 
 		Max
 	};

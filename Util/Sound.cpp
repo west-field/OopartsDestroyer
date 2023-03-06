@@ -12,9 +12,11 @@ namespace
 	{
 		L"Sound/noranekonokuchibue.mp3",//タイトルBGM
 		L"Sound/Disital_Delta.mp3",	//メインBGM
-		//L"Sound/retroparty.mp3",	//メインBGM
-		L"Sound/gameclear.mp3",	//ゲームクリア
-		L"Sound/gameover.mp3",	//ゲームオーバー
+		L"Sound/gameclear.mp3",	//ゲームクリア音
+		L"Sound/emerald.mp3",	//ゲームクリアBGM
+		L"Sound/gameover.mp3",	//ゲームオーバー音
+		L"Sound/shizukanoumi.mp3",	//ゲームオーバーBGM
+		L"Sound/arabiantechno.mp3",	//ボス戦BGM
 		
 		L"Sound/Cursor.mp3",		//カーソル
 		L"Sound/pushbotan.mp3",		//決定ボタン
@@ -27,6 +29,7 @@ namespace
 		L"Sound/playerShot.wav",	//プレイヤー弾発射音
 		L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
 		L"Sound/enemyShot.wav",	//敵弾発射音
+		L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
 	};
 }
 
