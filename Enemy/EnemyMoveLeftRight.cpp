@@ -28,7 +28,7 @@ EnemyMoveLeftRight::EnemyMoveLeftRight(std::shared_ptr<Player> player, const Pos
 	m_handle = handle;
 	m_burstHandle = burstH;
 	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
-	m_hp->MaxHp(5);
+	m_hp->MaxHp(3);
 }
 
 EnemyMoveLeftRight::~EnemyMoveLeftRight()
