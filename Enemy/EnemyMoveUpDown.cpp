@@ -9,17 +9,23 @@ namespace
 {
 	constexpr int kUpDownTouchAttackPower = 4;//接触した時の攻撃力
 
-	constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
-	constexpr int anim_frame_num = 5;//アニメーション枚数
-	constexpr int kSize = 29;
-	constexpr float kDrawScall = 1.0f;
+	//constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
+	//constexpr int anim_frame_num = 5;//アニメーション枚数
+	//constexpr int kSize = 29;
+	//constexpr float kDrawScall = 1.0f;
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
+
+	constexpr int kSize = 768;//画像サイズX
+	constexpr float kDrawScall = 0.04f;//拡大率
+	constexpr int anim_frame_num = 1;//アニメーション枚数
+	constexpr int anim_frame_speed = 5;//アニメーションスピード
 
 	constexpr int burst_img_width = 32;//画像サイズX
 	constexpr int burst_img_height = 32;//画像サイズY
 	constexpr float burst_draw_scale = 1.0f;//拡大率
 	constexpr int burst_frame_num = 8;//アニメーション枚数
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	
 }
 
 EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
