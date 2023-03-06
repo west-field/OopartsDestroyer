@@ -7,6 +7,7 @@ enum class ActionType
 {
 	grah_idle,
 	grah_walk,
+	grah_reload,
 	grah_jump,
 	grah_attack,
 	grah_death,

@@ -12,8 +12,6 @@ namespace
 	constexpr int kGraphSizeWidth = 32;		//サイズ
 	constexpr int kGraphSizeHeight = 32;	//サイズ
 	constexpr float kDrawScale = 2.0f;		//拡大率
-	constexpr int kMoveFrameNum = 4;	//歩く時のアニメーション枚数
-	constexpr int kFrameNum = 2;		//そのほかのアニメーション枚数
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 
 	constexpr int kBurstFrameNum = 5;
@@ -27,9 +25,8 @@ Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::No
 {
 	m_drawScale = kDrawScale;
 	m_rect.center = pos;
-	m_rect.size = { static_cast<int>(kGraphSizeWidth /** kDrawScale*/ - kSize) ,static_cast<int>(kGraphSizeHeight /** kDrawScale*/ - kSize)};
-	//m_handle = my::MyLoadGraph(L"Data/Retro-Lines-Player-transparent.png");
-	m_handle = my::MyLoadGraph(L"Data/players blue x1.png");
+	m_rect.size = { static_cast<int>(kGraphSizeWidth /* kDrawScale*/ - kSize) ,static_cast<int>(kGraphSizeHeight /* kDrawScale*/ - kSize)};
+	m_handle = my::MyLoadGraph(L"Data/player.png");
 }
 
 Player::~Player()
@@ -65,20 +62,20 @@ void Player::Action(ActionType type)
 		switch (type)
 		{
 		case ActionType::grah_idle:
-			m_idxY = 0;
+			m_idxY = static_cast<int>(ActionType::grah_idle);
 			break;
 		case ActionType::grah_walk:
-			if(m_idxX == 0 && m_idxY == 0) m_idxY = 1;
+			if(m_idxX == 0 && m_idxY == 0) m_idxY = static_cast<int>(ActionType::grah_walk);
 			break;
 		case ActionType::grah_jump:
-			m_idxY = 2;
+			m_idxY = static_cast<int>(ActionType::grah_jump);
 			break;
 		case ActionType::grah_attack:
-			m_idxY = 3;
+			m_idxY = static_cast<int>(ActionType::grah_attack);
 			m_idxX = 0;
 			break;
 		case ActionType::grah_death:
-			m_idxY = 4;
+			m_idxY = static_cast<int>(ActionType::grah_death);
 			break;
 		default:
 			m_idxY = 0;
@@ -136,17 +133,17 @@ void Player::NormalUpdate()
 	{
 		switch (m_idxY)
 		{
-		case 0:
+		case static_cast<int>(ActionType::grah_idle):
 			m_idxX = (m_idxX + 1) % (1);
 			break;
-		case 1:
+		case static_cast<int>(ActionType::grah_walk):
 			m_idxX = (m_idxX + 1) % (2);
 			break;
-		case  2:
-		case  3:
+		case  static_cast<int>(ActionType::grah_jump):
+		case  static_cast<int>(ActionType::grah_attack):
 			m_idxX = (m_idxX + 1) % (4);
 			break;
-		case  4:
+		case  static_cast<int>(ActionType::grah_death):
 			m_idxX = (m_idxX + 1) % (6);
 			if (m_idxX == 0)
 			{
