@@ -31,12 +31,6 @@ namespace
 	constexpr float kShotSpeed = 8.0f;//ショットスピード
 
 	constexpr float kPullPos = 10.0f;
-
-	//キー
-	constexpr int kButtonSize = 480;
-	constexpr float kButtonDrawScale = 0.15f;
-	constexpr int kButtonDrawSize = kButtonSize * kButtonDrawScale;
-	constexpr int kButtonPushFrame = 5;
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager) :
@@ -64,9 +58,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットと敵を倒した数を渡す
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
-	//m_map->Load(L"Data/map.fmf");
-	m_map->Load(L"Data/map/mapkari.fmf");
-	//m_map->Load(L"Data/map/maphai.fmf");
+	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
 	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
