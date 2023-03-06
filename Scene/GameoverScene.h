@@ -21,7 +21,7 @@ public:
 
     static constexpr int kMojiNum = 7;
 private:
-    unsigned int m_fadeColor = 0x000000;//フェードの色（黒
+    unsigned int m_fadeColor = 0xff0000;//フェードの色（赤
 
     void FadeInUpdat(const InputState& input);
     void FadeOutUpdat(const InputState& input);

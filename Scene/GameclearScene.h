@@ -21,10 +21,15 @@ private:
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
 
     void FadeInUpdat(const InputState& input);
-    void NormalUpdat(const InputState& input);
     void FadeOutUpdat(const InputState& input);
+    void NormalUpdat(const InputState& input);
+    void MojiUpdate(const InputState& input);
+
+    void NormalDraw();
+    void MojiDraw();
 
     void (GameclearScene::* m_updateFunc)(const InputState&);
+    void (GameclearScene::* m_drawFunc)();
 
     //プレイヤー
     std::shared_ptr<Player> m_player;
@@ -38,6 +43,5 @@ private:
 
     static constexpr int kMojiSize = 80;
     std::array<Moji, kMojiNum> m_moji;
-    bool m_mojiDraw = false;
 };
 

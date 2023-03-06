@@ -86,17 +86,20 @@ namespace Graph
 	}
 	void Bg()
 	{
-		int bgWidth = static_cast<int>(bgImgs[BgGraph_1].imgSize.w * kBgScale);
-		int scroX = static_cast<int>(scrollx * bgImgs[BgGraph_1].scrollSpeed) % bgWidth;
-		DrawRotaGraph(bgWidth / 2 - scroX,
-			bgImgs[BgGraph_1].imgSize.h / 2 * kBgScale,
-			kBgScale,
-			0.0f,
-			bgImgs[BgGraph_1].handle, true, false, false);
-		DrawRotaGraph(bgWidth * (1 + 0.5) - scroX,
-			bgImgs[BgGraph_1].imgSize.h / 2 * kBgScale,
-			kBgScale,
-			0.0f,
-			bgImgs[BgGraph_1].handle, true, false, false);
+		for (int i = 0; i <= 1; i++)
+		{
+			int bgWidth = static_cast<int>(bgImgs[i].imgSize.w * kBgScale);
+			int scroX = static_cast<int>(scrollx * bgImgs[i].scrollSpeed) % bgWidth;
+			DrawRotaGraph(bgWidth / 2 - scroX,
+				bgImgs[i].imgSize.h / 2 * kBgScale,
+				kBgScale,
+				0.0f,
+				bgImgs[i].handle, true, false, false);
+			DrawRotaGraph(bgWidth * (1 + 0.5) - scroX,
+				bgImgs[i].imgSize.h / 2 * kBgScale,
+				kBgScale,
+				0.0f,
+				bgImgs[i].handle, true, false, false);
+		}
 	}
 }

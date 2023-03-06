@@ -24,16 +24,17 @@ namespace
 		L"Å[",
 	};
 
-	constexpr float kMojiNum = 20.0f;
+	constexpr float kMojiNum = 30.0f;
 }
 GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>player) :
 	Scene(manager), m_player(player), m_updateFunc(&GameoverScene::FadeInUpdat),
-	m_drawFunc(&GameoverScene::NormalDraw) {
+	m_drawFunc(&GameoverScene::NormalDraw) 
+{
 	Graph::Init();
 	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
 	for (int i = 0; i < kMojiNum; i++)
 	{
-		m_moji[i].pos = { static_cast<float>(posX + i * kMojiSize) ,Game::kScreenHeight / 3};
+		m_moji[i].pos = { static_cast<float>(posX + i * kMojiSize) ,Game::kScreenHeight / 2};
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
@@ -66,7 +67,6 @@ GameoverScene::Draw()
 
 void GameoverScene::FadeInUpdat(const InputState& input)
 {
-	//ÅûÇ«ÇÒÇ«ÇÒñæÇÈÇ≠Ç»ÇÈ
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if (--m_fadeTimer == 0)
 	{
@@ -84,7 +84,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2)} - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 0.2f)
+	if (Num <= 0.5f)
 	{
 		m_player->Action(ActionType::grah_death);
 		vel = { 0.0f,0.0f };
@@ -92,7 +92,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	else
 	{
 		vel.Normalize();
-		vel *= 1.0f;
+		vel *= 2.0f;
 		m_player->ScaleEnlarge(0.03f);
 	}
 
@@ -109,6 +109,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 
 void GameoverScene::MojiUpdate(const InputState& input)
 {
+	//ï∂éöÇóhÇÁÇ∑
 	for (auto& moji : m_moji)
 	{
 		if (moji.moveY > kMojiNum)

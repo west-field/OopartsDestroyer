@@ -7,7 +7,6 @@
 #include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
-#include "../Util/Button.h"
 #include "../Util/Graph.h"
 
 #include "SceneManager.h"
@@ -27,7 +26,6 @@ void TitleScene::FadeInUpdat(const InputState& input)
 
 void TitleScene::NormalUpdat(const InputState& input)
 {
-	Button::NextUpdate();
 	Graph::BgUpdate();//m_scroll = m_scroll + 1;
 
 	bool isPress = false;//キーが押されたかどうか
@@ -88,12 +86,14 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
 {	
+	m_titleH = my::MyLoadGraph(L"Data/title.png");
 	Graph::Init();
 	Sound::StartBgm(Sound::BgmTitle);
 }
 
 TitleScene::~TitleScene()
 {
+	DeleteGraph(m_titleH);
 	Sound::StopBgm(Sound::BgmTitle);
 }
 
@@ -104,13 +104,13 @@ TitleScene::Update(const InputState& input)
 	(this->*m_updateFunc)(input);
 }
 
-void
-TitleScene::Draw()
+void TitleScene::Draw()
 {
 	//背景
 	Graph::BgDraw(0);
 
-	Button::NextDraw({Game::kScreenWidth/2,Game::kScreenHeight/2});
+	//DrawString((Game::kScreenWidth - kTitleFontSize * 12) / 2, (Game::kScreenHeight / 2 - kTitleFontSize), L"オーパーツディフェンダー", m_color);
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 2), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
 
 	//メニュー項目を描画
 	m_color = 0x000000;
@@ -126,8 +126,6 @@ TitleScene::Draw()
 
 void TitleScene::MenuDraw(int X, int Y)
 {
-	Font::ChangeFontSize(kTitleFontSize);
-	DrawString((Game::kScreenWidth- kTitleFontSize*12 ) / 2 + X, (Game::kScreenHeight / 2 - kTitleFontSize) + Y, L"オーパーツディフェンダー", m_color);
 	Font::ChangeFontSize(kMenuFontSize);
 	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
 	DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);

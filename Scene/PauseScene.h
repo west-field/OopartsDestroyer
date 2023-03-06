@@ -6,7 +6,6 @@ enum Item
 {
 	pauseKeyconfig,
 	pauseBack,
-	pauseTitle,
 
 	pauseMax
 };
@@ -47,7 +46,6 @@ public:
 	Element m_pauseMenu[pauseMax] = {
 		{pw_start_x + 20,pw_start_y + 30 + 20 * pauseKeyconfig,0xffffff},
 		{pw_start_x + 10,pw_start_y + 30 + 20 * pauseBack,0xffffff},
-		{pw_start_x + 10,pw_start_y + 30 + 20 * pauseTitle,0xffffff},
 	};
 	int m_selectNum = 0;
 

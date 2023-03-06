@@ -54,9 +54,6 @@ void PauseScene::Update(const InputState& input)
 		case pauseBack:
 			m_manager.PopScene();
 			return;
-		case pauseTitle:
-			m_manager.PopScene();
-			return;
 		default:
 			break;
 		}
@@ -79,7 +76,6 @@ void PauseScene::Draw()
 	DrawString(pw_start_x + 10, pw_start_y + 10, L"Pausing...", 0xffff88);
 	DrawString(m_pauseMenu[pauseKeyconfig].x, m_pauseMenu[pauseKeyconfig].y, L"KeyConfig", m_pauseMenu[pauseKeyconfig].color);
 	DrawString(m_pauseMenu[pauseBack].x, m_pauseMenu[pauseBack].y, L"戻る", m_pauseMenu[pauseBack].color);
-	DrawString(m_pauseMenu[pauseTitle].x, m_pauseMenu[pauseTitle].y, L"タイトルに戻る", m_pauseMenu[pauseTitle].color);
 	//ポーズウィンドウ枠線
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 }

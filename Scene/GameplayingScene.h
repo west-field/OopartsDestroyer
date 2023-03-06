@@ -75,9 +75,9 @@ private:
     /// <returns>1:左辺に当たった 2:右辺に当たった 3:上辺に当たった 4:下辺に当たった 0:どこにも当たらなかった</returns>
     int MapHitCheck(float X, float Y, float& MoveX, float& MoveY);
     /// <summary>
-    /// プレイヤーが画面の中央に居るか
+    /// 画面を移動させられるかどうか
     /// </summary>
-    void PlayerCenter();
+    void ScreenMove();
     /// <summary>
     /// マップを動かしてキャラクターがマップと当たるかどうか
     /// </summary>
@@ -90,6 +90,8 @@ private:
     /// </summary>
     void Ladder(const InputState& input);
 
+    //プレイヤー登場シーン
+    void PlayerOnScreen(const InputState& input);
     //画面のフェードイン
      void FadeInUpdat(const InputState& input);
     //通常更新
@@ -113,8 +115,6 @@ private:
     void (GameplayingScene::* m_updateFunc)(const InputState& input);
     void (GameplayingScene::* m_drawFunc)();
 
-    int m_handle = -1;
-
     //マップ
     std::shared_ptr<Map> m_map; 
     Position2 m_add;            //プレイヤーがどのくらい移動しているか
@@ -125,9 +125,10 @@ private:
     std::shared_ptr<Player> m_player;
     float m_fallPlayerSpeed = 0;    //落ちていくスピード
     bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
-    bool m_isPlayerMoveU = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
-    bool m_isPlayerMoveD = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
-    bool m_isPlayerMoveW = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
+    
+    bool m_isScreenMoveUp = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
+    bool m_isScreenMoveDown = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
+    bool m_isScreenMoveWidth = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
 
     //ショット
     std::shared_ptr <ShotFactory> m_shotFactory;  

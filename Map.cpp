@@ -107,7 +107,7 @@ void Map::Draw()
 			if (bgChipId != 0)
 			{
 				DrawBox(X- Game::ChipSize/2, Y- Game::ChipSize/2, X- Game::ChipSize /2+Game::ChipSize, Y- Game::ChipSize /2+Game::ChipSize, 0xffffff, true);
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}

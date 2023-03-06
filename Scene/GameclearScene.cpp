@@ -23,11 +23,12 @@ namespace
 		L"ÉA",
 	};
 
-	constexpr float kMojiNum = 20.0f;
+	constexpr float kMojiNum = 30.0f;
 }
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
-	Scene(manager), m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat) {
+	Scene(manager), m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat),
+	m_drawFunc(&GameclearScene::NormalDraw) {
 	Graph::Init();
 	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
 	for (int i = 0; i < kMojiNum; i++)
@@ -54,16 +55,7 @@ void GameclearScene::Draw()
 {
 	Graph::BgDraw(0);
 	m_player->Draw();
-
-	if (m_mojiDraw)
-	{
-		Font::ChangeFontSize(kMojiSize);
-		for (int i = 0; i < kMojiNum; i++)
-		{
-			DrawString(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
-		}
-		Font::ChangeFontSize(0);
-	}
+	(this->*m_drawFunc)();
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -72,14 +64,21 @@ void GameclearScene::Draw()
 
 void GameclearScene::FadeInUpdat(const InputState& input)
 {
-	//ÅûÇ«ÇÒÇ«ÇÒñæÇÈÇ≠Ç»ÇÈ
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
 		Sound::Play(Sound::Gameclear);
-		Sound::StartBgm(Sound::GameclearBgm);
+	}
+}
+void GameclearScene::FadeOutUpdat(const InputState& input)
+{
+	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	if (++m_fadeTimer == kFadeInterval)
+	{
+		m_manager.ChangeScene(new TitleScene(m_manager));
+		return;
 	}
 }
 
@@ -90,35 +89,41 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2) } - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 0.3f)
+	if (Num <= 0.5f)
 	{
-		m_player->Action(ActionType::grah_jump);
-		m_mojiDraw = true;
 		vel = { 0.0f,0.0f };
+		m_player->Action(ActionType::grah_jump);
+		Sound::StartBgm(Sound::GameclearBgm);
+		m_updateFunc = &GameclearScene::MojiUpdate;
+		m_drawFunc = &GameclearScene::MojiDraw;
+		return;
 	}
 	else
 	{
 		vel.Normalize();
-		vel *= 1.0f;
+		vel *= 2.0f;
 		m_player->ScaleEnlarge(0.03f);
 	}
 
 	m_player->Movement(vel);
+}
 
-	if (m_mojiDraw)
+void GameclearScene::MojiUpdate(const InputState& input)
+{
+	m_player->Update();
+	m_player->Action(ActionType::grah_jump);
+
+	for (auto& moji : m_moji)
 	{
-		for (auto& moji : m_moji)
+		if (moji.moveY > kMojiNum)
 		{
-			if (moji.moveY > kMojiNum)
-			{
-				moji.add *= -1.0f;
-			}
-			else if (moji.moveY < -kMojiNum)
-			{
-				moji.add *= -1.0f;
-			}
-			moji.moveY += moji.add;
+			moji.add *= -1.0f;
 		}
+		else if (moji.moveY < -kMojiNum)
+		{
+			moji.add *= -1.0f;
+		}
+		moji.moveY += moji.add;
 	}
 
 	if (input.IsTriggered(InputType::next))
@@ -128,13 +133,19 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	}
 }
 
-void GameclearScene::FadeOutUpdat(const InputState& input)
+void GameclearScene::NormalDraw()
 {
-	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	if (++m_fadeTimer == kFadeInterval)
-	{
-		m_manager.ChangeScene(new TitleScene(m_manager));
-		return;
-	}
 }
+
+void GameclearScene::MojiDraw()
+{
+	Font::ChangeFontSize(kMojiSize);
+	for (int i = 0; i < kMojiNum; i++)
+	{
+		DrawString(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
+	}
+	Font::ChangeFontSize(0);
+}
+
+
 
