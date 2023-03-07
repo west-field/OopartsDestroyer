@@ -60,6 +60,7 @@ public:
 	//マップチップの値を取得する関数
 	int GetMapChipParam(float X, float Y);
 	int GetMapEventParam(float X, float Y);
+	Vector2 GetMapChipPos(float X, float Y);
 private:
 	MapData_t m_mapData;//マップデータ
 	int m_mapWidth;//マップの横幅

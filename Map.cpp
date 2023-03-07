@@ -107,7 +107,7 @@ void Map::Draw()
 			if (bgChipId != 0)
 			{
 				DrawBox(X- Game::ChipSize/2, Y- Game::ChipSize/2, X- Game::ChipSize /2+Game::ChipSize, Y- Game::ChipSize /2+Game::ChipSize, 0xffffff, true);
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
@@ -245,4 +245,25 @@ int Map::GetMapEventParam(float X, float Y)
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0) return 0;
 
 	return GetChipId(static_cast<int>(MapLayer_event + m_stage), x, y);
+}
+
+Vector2 Map::GetMapChipPos(float X, float Y)
+{
+	int x, y;
+
+	// 整数値へ変換
+	x = (int)(X) / Game::ChipSize;
+	y = (int)(Y) / Game::ChipSize;
+
+	// マップからはみ出ていたら 0 を返す
+	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0)
+	{
+		x = 0;
+		y = 0;
+	}
+
+	Vector2 aling = { static_cast<float>(x * Game::ChipSize),static_cast<float>( y * Game::ChipSize) };
+
+	//return Vector2(x*Game::ChipSize,y*Game::ChipSize);
+	return aling;
 }
