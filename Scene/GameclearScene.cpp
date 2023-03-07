@@ -65,6 +65,7 @@ void GameclearScene::Draw()
 void GameclearScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	Sound::SetVolume(Sound::GameclearBgm, 255-m_fadeValue);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
@@ -75,6 +76,7 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 void GameclearScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	Sound::SetVolume(Sound::GameclearBgm, 255 - m_fadeValue);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));
@@ -89,11 +91,11 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2) } - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 0.5f)
+	if (Num <= 1.0f)
 	{
 		vel = { 0.0f,0.0f };
 		m_player->Action(ActionType::grah_jump);
-		Sound::StartBgm(Sound::GameclearBgm);
+		Sound::StartBgm(Sound::GameclearBgm, 0);
 		m_updateFunc = &GameclearScene::MojiUpdate;
 		m_drawFunc = &GameclearScene::MojiDraw;
 		return;
@@ -102,7 +104,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	{
 		vel.Normalize();
 		vel *= 2.0f;
-		m_player->ScaleEnlarge(0.03f);
+		m_player->ScaleEnlarge(0.05f);
 	}
 
 	m_player->Movement(vel);
@@ -110,6 +112,12 @@ void GameclearScene::NormalUpdat(const InputState& input)
 
 void GameclearScene::MojiUpdate(const InputState& input)
 {
+	if (m_soundVolume++ >= 255)
+	{
+		m_soundVolume = 255;
+	}
+	Sound::SetVolume(Sound::GameclearBgm, m_soundVolume);
+
 	m_player->Update();
 	m_player->Action(ActionType::grah_jump);
 

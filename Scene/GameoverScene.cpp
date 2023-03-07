@@ -84,7 +84,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2)} - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 0.5f)
+	if (Num <= 1.0f)
 	{
 		m_player->Action(ActionType::grah_death);
 		vel = { 0.0f,0.0f };
@@ -92,7 +92,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	else
 	{
 		vel.Normalize();
-		vel *= 2.0f;
+		vel *= 3.0f;
 		m_player->ScaleEnlarge(0.03f);
 	}
 
@@ -102,13 +102,19 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameoverScene::MojiUpdate;
 		m_drawFunc = &GameoverScene::MojiDraw;
-		Sound::StartBgm(Sound::GameoverBgm);
+		Sound::StartBgm(Sound::GameoverBgm, 0);
 		return;
 	}
 }
 
 void GameoverScene::MojiUpdate(const InputState& input)
 {
+	if (m_soundVolume++ >= 200)
+	{
+		m_soundVolume = 200;
+	}
+	Sound::SetVolume(Sound::GameoverBgm, m_soundVolume);
+
 	//•¶Žš‚ð—h‚ç‚·
 	for (auto& moji : m_moji)
 	{
@@ -150,6 +156,7 @@ void GameoverScene::MojiDraw()
 void GameoverScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	Sound::SetVolume(Sound::GameoverBgm, 255-m_fadeValue);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));

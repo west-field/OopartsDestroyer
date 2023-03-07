@@ -17,6 +17,7 @@ void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//◇どんどん明るくなる
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
+	Sound::SetVolume(Sound::BgmTitle, 255-m_fadeValue);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &TitleScene::NormalUpdat;
@@ -66,6 +67,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 void TitleScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
+	Sound::SetVolume(Sound::BgmTitle, 255-m_fadeValue);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		//現在選択中の状態によって処理を分岐
@@ -74,9 +76,9 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 		case menuGameStart:
 			m_manager.ChangeScene(new GameplayingScene(m_manager));
 			return;
-		case menuConfig:
+		/*case menuConfig:
 			m_manager.ChangeScene(new OptionScene(m_manager));
-			return;
+			return;*/
 		case menuGameEnd:
 			m_manager.SetIsEnd();
 			return;
@@ -86,9 +88,10 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
 {	
-	m_titleH = my::MyLoadGraph(L"Data/title.png");
+	//m_titleH = my::MyLoadGraph(L"Data/title.png");
+	m_titleH = my::MyLoadGraph(L"Data/Title 1.png");
 	Graph::Init();
-	Sound::StartBgm(Sound::BgmTitle);
+	Sound::StartBgm(Sound::BgmTitle, 0);
 }
 
 TitleScene::~TitleScene()
@@ -110,7 +113,7 @@ void TitleScene::Draw()
 	Graph::BgDraw(0);
 
 	//DrawString((Game::kScreenWidth - kTitleFontSize * 12) / 2, (Game::kScreenHeight / 2 - kTitleFontSize), L"オーパーツディフェンダー", m_color);
-	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 2), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
 
 	//メニュー項目を描画
 	m_color = 0x000000;
@@ -128,7 +131,7 @@ void TitleScene::MenuDraw(int X, int Y)
 {
 	Font::ChangeFontSize(kMenuFontSize);
 	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
-	DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
+	//DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
 	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"おわり", m_color);
 	Font::ChangeFontSize(0);
 }

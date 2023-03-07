@@ -8,7 +8,7 @@
 enum MenuItem
 {
 	menuGameStart,	//ゲームスタート
-	menuConfig,		//設定
+	//menuConfig,		//設定
 	menuGameEnd,	//ゲーム終了
 
 	menuNum			//項目の数
@@ -50,7 +50,7 @@ private:
 	int m_titleH = -1;
 	MenuElement SelectMenu[menuNum] = {
 		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart },
-		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
+		//{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd}
 	};
 	int m_scroll = 0;
