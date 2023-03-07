@@ -22,7 +22,6 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	m_player(player), m_shotFactory(sFactory)
 {
 	//“G‚Ì‰æ‘œ‚ðƒ[ƒh‚·‚é
-	//m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/enemy1.png");
 	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
 	m_handleMap[EnemyType::BatteryRight] = my::MyLoadGraph(L"Data/burst.png");
 	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
