@@ -41,7 +41,7 @@ namespace Sound
 	void StartBgm(SoundId id,int volume = 255);
 	void StopBgm(SoundId id);
 	//Œø‰Ê‰¹‚ÌÄ¶
-	void Play(SoundId id);
+	void Play(SoundId id, int volume = 255);
 	//‰¹—Êİ’è
 	void SetVolume(SoundId id, int volume);
 };

@@ -57,16 +57,17 @@ namespace Sound
 	//BGMの再生
 	void StartBgm(SoundId id, int volume)
 	{
-		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_LOOP, true);//ループ再生させる
 		SetVolume(id, volume);
+		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_LOOP, true);//ループ再生させる
 	}
 	void StopBgm(SoundId id)
 	{
 		StopSoundMem(m_soundHandle[id]);
 	}
 	//効果音の再生
-	void Play(SoundId id)
+	void Play(SoundId id, int volume)
 	{
+		SetVolume(id, volume);
 		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_BACK, true);
 	}
 	//音量設定
