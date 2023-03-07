@@ -15,9 +15,9 @@ namespace
 	//constexpr float kDrawScall = 1.0f;
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 
-	constexpr int kSize = 768;//画像サイズX
-	constexpr float kDrawScall = 0.04f;//拡大率
-	constexpr int anim_frame_num = 1;//アニメーション枚数
+	constexpr int kSize = 96;//画像サイズX
+	constexpr float kDrawScall = 0.3f;//拡大率
+	constexpr int anim_frame_num = 4;//アニメーション枚数
 	constexpr int anim_frame_speed = 5;//アニメーションスピード
 
 	constexpr int burst_img_width = 32;//画像サイズX
@@ -31,6 +31,7 @@ namespace
 EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
 	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyMoveUpDown::NormalUpdate),m_drawFunc(&EnemyMoveUpDown::NormalDraw)
 {
+	m_idx = 0;
 	m_handle = handle;
 	m_burstHandle = burstH;
 	m_rect = { pos, { static_cast<int>(kSize* kDrawScall),static_cast<int>(kSize* kDrawScall) } };
