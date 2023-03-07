@@ -26,7 +26,7 @@
 */
 namespace
 {
-	constexpr float kPlayerMoveSpeed = 4.1f;//プレイヤーの移動速度
+	constexpr float kPlayerMoveSpeed = 4.0f;//プレイヤーの移動速度
 	constexpr float kJumpAcc = 9.0f;//ジャンプ力
 	constexpr float kShotSpeed = 8.0f;//ショットスピード
 
@@ -35,10 +35,8 @@ namespace
 
 GameplayingScene::GameplayingScene(SceneManager& manager) :
 	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),m_drawFunc(&GameplayingScene::NormalDraw),
-	m_add(), m_correction()
+	m_add(), m_correction(), m_playerPosUp(), m_playerPosBottom()
 {
-	m_buttonHandle = my::MyLoadGraph(L"Data/button.png");
-
 	//HPバーのグラフィック
 	for (auto& hp : m_hp)
 	{
@@ -51,7 +49,6 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 		shot = std::make_shared<RockBuster>(my::MyLoadGraph(L"Data/rockBuster.png"));
 	}
 	//プレイヤー
-	//m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX + Game::ChipSize*8),(Game::kMapScreenBottomY - Game::ChipSize*5)},m_hp[Object_Player]);//プレイヤーの初期位置
 	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX- Game::ChipSize/2),(Game::kMapScreenBottomY - Game::ChipSize*5)},m_hp[Object_Player]);//プレイヤーの初期位置
 	//敵の弾工場
 	m_shotFactory = std::make_shared<ShotFactory>();
@@ -63,33 +60,34 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 
 	//開始位置
 	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -5451.0f,-1235.0f };//ボス戦前
+	//Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
 	Graph::Init();
+	Sound::StartBgm(Sound::BgmMain,0);
 }
 
 GameplayingScene::~GameplayingScene()
 {
-	DeleteGraph(m_buttonHandle);
 	Sound::StopBgm(Sound::BgmMain);
 	Sound::StopBgm(Sound::BgmBoss);
 }
 
 void GameplayingScene::Update(const InputState& input)
 {
+	//背景を移動させる
 	Graph::BgUpdate();
 	(this->*m_updateFunc)(input);
 }
 
 void GameplayingScene::Draw()
 {
-	Graph::Bg();	
-	m_map->Draw();
+	Graph::Bg();//背景の一部を表示
+	m_map->Draw();//マップを表示
 
-	m_player->Draw();
-	m_enemyFactory->Draw();
+	m_player->Draw();//プレイヤーを表示
+	m_enemyFactory->Draw();//エネミーを表示
 	for (auto& shot : m_shots)//ショットを表示
 	{
 		if (shot->IsExist())
@@ -97,9 +95,9 @@ void GameplayingScene::Draw()
 			shot->Draw();
 		}
 	}
-	m_shotFactory->Draw();//ショット表示
+	m_shotFactory->Draw();//敵ショット表示
 
-	(this->*m_drawFunc)();
+	(this->*m_drawFunc)();//HPバーの表示
 
 	//枠を作る
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
@@ -119,11 +117,12 @@ void GameplayingScene::Draw()
 	}
 	
 	//梯子に上れる範囲
-	DrawBoxAA(m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos
-		, m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 + 2.0f
+	DrawBoxAA(
+		 m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos
+		,m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 + 2.0f
 		,m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos
 		,m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.5f
-		, 0x0000ff, false);
+		, 0x0000ff, true);
 
 	int num = 0;
 	for (auto& shot : m_shots)//ショットを表示
@@ -159,6 +158,14 @@ void GameplayingScene::Draw()
 	{
 		DrawFormatString(300, 80, 0xff00ff, L"Ladder,false"); 
 	}
+	if (m_isLadderFirst)
+	{
+		DrawFormatString(300, 100, 0xff00ff, L"LadderFirst,true");
+	}
+	else
+	{
+		DrawFormatString(300, 100, 0xff00ff, L"LadderFirst,false");
+	}
 	int centeridxX = Game::kNumX / 2;
 	int centeridxY = Game::kNumY / 2;
 	Position2 fieldCenterLeftUp =
@@ -186,6 +193,22 @@ void GameplayingScene::Draw()
 	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenBottomY, color, L"%d",Game::kMapScreenRightX);
 	//判定する範囲
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenRightX, Game::kMapScreenBottomY - 1, 0xffaaaa, false);
+
+
+	float posX = m_add.x + m_player->GetRect().GetCenter().x;
+	float posY = m_add.y + m_player->GetRect().GetCenter().y;
+	//梯子の位置
+	Vector2 lader = m_map->GetMapChipPos(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY);
+	//移動させる量
+	Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
+						(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };
+	DrawBoxAA(lader.x + m_map->GetPos().x, lader.y + m_map->GetPos().y,
+		lader.x + Game::ChipSize + m_map->GetPos().x, lader.y + Game::ChipSize + m_map->GetPos().y, 0xaaffaa, false);
+	DrawFormatString(500, 100, 0x000000, L"梯子.x%3f,y%3f", lader.x, lader.y);
+	DrawFormatString(500, 120, 0x000000, L"移動.x%3f,y%3f", aling.x, aling.y);
+
+	DrawFormatString(500, 500, 0x000000, L"playerPosUp.%3f", m_playerPosUp);
+	DrawFormatString(500, 520, 0x000000, L"playerPosBottom.%3f", m_playerPosBottom);
 #endif
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -214,33 +237,31 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	float hsize, wsize;
 
 	// キャラクタの左上、右上、左下、右下部分が当たり判定のあるマップに衝突しているか調べ、衝突していたら補正する
-	// 半分のサイズを算出
+	// 半分のサイズ
 	wsize = m_player->GetRect().GetSize().w * 0.5f;
 	hsize = m_player->GetRect().GetSize().h * 0.5f;
 
-	// 左下のチェック、もしブロックの上辺に着いていたら落下を止める 左位置、下位置
+	// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
 	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
 	{
-
 		m_fallPlayerSpeed = 0.0f;
 	}
-	// 右下のチェック、もしブロックの上辺に着いていたら落下を止める 右位置、下位置
+	// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
 	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
 	{
 		m_fallPlayerSpeed = 0.0f;
 	}
-	// 左上のチェック、もしブロックの下辺に当たっていたら落下させる 左位置、上位置
+	// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
 	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
 	{
 		m_fallPlayerSpeed *= -1.0f;
 	}
-	// 右上のチェック、もしブロックの下辺に当たっていたら落下させる 右位置、上位置
+	// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
 	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
 	{
 		m_fallPlayerSpeed *= -1.0f;
 	}
-
-	m_player->Movement({ 0.0f,MoveY });
+	m_player->Movement({ 0.0f,MoveY });//移動
 
 	// 後に左右移動成分だけでチェック
 	// 左下のチェック
@@ -255,27 +276,29 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	// 右上のチェック
 	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
 
-	// 左右移動成分を加算
-	m_player->Movement({ MoveX,0.0f });
+	m_player->Movement({ MoveX,0.0f });//移動
 
 	// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
-	//当たり判定のある場所に来たら音を鳴らして足場がある判定にする
 	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit) ||
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit))
 	{
-		/*if (m_player->IsJump())
+		//当たり判定のある場所に来たら音を鳴らす
+		if (m_player->IsJump())
 		{
 			Sound::Play(Sound::BlockMove);
-		}*/
+		}
 
 		//足場があったら設置中にする
 		m_fallPlayerSpeed = 0.0f;
+		m_isFall = false;
 		m_player->SetJump(false);
+		m_isLadderFirst = false;
 	}
 	//梯子があったら足場がある判定にする
-	else if ( (m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_ladder)||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_ladder))
+	else if (	(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder)||
+				(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
 	{
+		m_isFall = false;
 		m_fallPlayerSpeed = 0.0f;
 		m_player->SetJump(false);
 	}
@@ -284,7 +307,7 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 		//ないときはジャンプ中にする
 		m_player->SetJump(true);
 	}
-	// 終了
+	
 	return;
 }
 
@@ -292,7 +315,7 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
-	float moveX = 4.0f;
+	float moveX = 0.0f;
 	float moveY = 1.0f;
 
 	for (auto& enemy : m_enemyFactory->GetEnemies())
@@ -301,9 +324,12 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		// 半分のサイズを算出
 		wsize = enemy->GetRect().GetSize().w * 0.5f;
 		hsize = enemy->GetRect().GetSize().h * 0.5f;
-		
+		//移動量
+		moveX = enemy->GetVec().x;
+
 		enemy->Movement({ MoveX,MoveY });
 
+		//向いている方向で当たっているか判定する
 		if (enemy->IsLeft())
 		{
 			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x-wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
@@ -361,22 +387,22 @@ void GameplayingScene::MoveBoss(float MoveX, float MoveY)
 
 		enemy->Movement({ MoveX,MoveY });//画面移動
 
-		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める 左位置、下位置
+		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
 		if (MapHitCheck(PosX - wsize , PosY + hsize , Dummy, moveY) == 3)
 		{
 			m_fallPlayerSpeed = 0.0f;
 		}
-		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める 右位置、下位置
+		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
 		if (MapHitCheck(PosX + wsize, PosY + hsize , Dummy, moveY) == 3)
 		{
 			m_fallPlayerSpeed = 0.0f;
 		}
-		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる 左位置、上位置
+		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
 		if (MapHitCheck(PosX - wsize , PosY - hsize , Dummy, moveY) == 4)
 		{
 			m_fallPlayerSpeed *= -1.0f;
 		}
-		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる 右位置、上位置
+		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
 		if (MapHitCheck(PosX + wsize , PosY - hsize , Dummy, moveY) == 4)
 		{
 			m_fallPlayerSpeed *= -1.0f;
@@ -508,16 +534,17 @@ void GameplayingScene::ScreenMove()
 	{
 		m_isScreenMoveWidth = true;
 	}
-	//プレイヤーの上座標がフィールドの上に当たっていたら移動できる	
-	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU)&&
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_screenMoveU))
+	//プレイヤーの上座標がフィールドの上に当たっていたら移動できる
+	if (m_player->GetRect().GetCenter().y < fieldCenterRightBottom.y &&
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU)&&
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU))
 	{
 		m_isScreenMoveUp = true;
 	}
 	//プレイヤーの下座標が縦移動できる場所についたら移動させる
 	else if (/*!m_isScreenMoveUp &&*/
 		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == MapEvent_screenMoveD) &&
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 2.0f) == MapEvent_screenMoveD))
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 - 1.0f) == MapEvent_screenMoveD))
 	{
 		m_isScreenMoveDown = true;
 	}
@@ -588,53 +615,78 @@ void GameplayingScene::Ladder(const InputState& input)
 	float posY = m_add.y + m_player->GetRect().GetCenter().y;
 	float PlayerMoveY = 0.0f;
 
-	////プレイヤーの足が地面についているときだけ梯子移動できる or プレイヤーの足が梯子についているとき
-	//if ((m_map->GetMapEventParam(posX, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) != MapEvent_hit) ||
-	//	(m_map->GetMapEventParam(posX, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) != MapEvent_ladder)) return;
-
-	//上キーで梯子を上がれる　上が梯子または下が梯子
-	if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU) ||
-		(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
+	//上キーで梯子を上がれる
+	if (input.IsPressed(InputType::up))
 	{
-		if (input.IsPressed(InputType::up))
+		//下に梯子　　右-10と下+1 左-10と下+1
+		if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2) == MapEvent_screenMoveU) ||
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2) == MapEvent_ladder)/*&&
+			(m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w / 2 + kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_screenMoveU) ||
+			(m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w / 2 + kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder)*/)
 		{
-			m_isLadder = true;
-			PlayerMoveY = 0.0f;
-			//プレイヤーの位置を梯子の位置にする
-			PlayerMoveY -= kPlayerMoveSpeed;
-			//プレイヤー下が何もないとき　は移動しないようにする
-			if ((m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2) == MapEvent_no))
-			{
-				PlayerMoveY += kPlayerMoveSpeed-2.0f;
-				m_isLadder = false;
-			}
+			LadderAlign();//梯子とプレイヤーの位置を合わせる
+
+			m_isLadder = true;//梯子に上っている
+			
+			PlayerMoveY = 0.0f;//移動量初期化
+			PlayerMoveY -= kPlayerMoveSpeed;//上を押しているときは上に移動する
+
+			
+		}
+		//プレイヤー下が何もないとき　は移動しないようにする　　右-10と下
+		if (m_isLadder && !m_isLadderFirst && (m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 - 1.0f) == MapEvent_no))
+		{
+			m_isLadderFirst = true;
+			PlayerMoveY += -kPlayerMoveSpeed;//上に移動させる
+			m_isLadder = false;//梯子に上っていない
+
+			Vector2 lader = m_map->GetMapChipPos(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY);//現在の位置
+
+			Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
+								(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };//移動させる量
+
+			MovePlayer(0.0f, aling.y);//移動
 		}
 	}
-	else
+	//下キーで梯子を下がれる　
+	else if (input.IsPressed(InputType::down))
 	{
-		m_player->SetJump(true);
-		m_isLadder = false;
-	}
-	
-	if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w / 2 + kPullPos, posY - m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_ladder) ||
-		(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.5f) == MapEvent_ladder))
-	{
-		//下キーで梯子を下がれる　下が梯子
-		if (input.IsPressed(InputType::down))
+		//上下どちらかに梯子があるとき
+		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w / 2 + kPullPos, posY - m_player->GetRect().GetSize().h / 2 + 2.0f) == MapEvent_ladder) ||
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY + m_player->GetRect().GetSize().h / 2 + 1.5f) == MapEvent_ladder))
 		{
+			LadderAlign();
+
 			m_isLadder = true;
 			PlayerMoveY = 0.0f;
 			PlayerMoveY += kPlayerMoveSpeed;
 		}
-		
 	}
 	else
 	{
-		m_player->SetJump(true);
+		//m_player->SetJump(true);
+		m_isFall = true;
 		m_isLadder = false;
 	}
 
 	MovePlayer(0.0f, PlayerMoveY);
+}
+
+void GameplayingScene::LadderAlign()
+{
+	{
+		float posX = m_add.x + m_player->GetRect().GetCenter().x;
+		float posY = m_add.y + m_player->GetRect().GetCenter().y;
+		//プレイヤーの位置を梯子の位置にする
+		//移動する量＝プレイヤーの位置ー梯子の位置
+		//梯子の位置
+		Vector2 lader = m_map->GetMapChipPos(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY );
+		//移動させる量
+		Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
+							(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y  ) };
+		//移動
+		MovePlayer(aling.x, 0.0f);
+	}
 }
 
 void GameplayingScene::PlayerOnScreen(const InputState& input)
@@ -642,7 +694,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 	float PlayerMoveY = 0.0f, PlayerMoveX = kPlayerMoveSpeed / 2;
 	m_player->Update();
 
-	if (!m_isLadder && !m_player->IsJump())
+	if (!m_isLadder && !m_player->IsJump()&&!m_isFall)
 	{
 		PlayerMoveY -= 2.0f;
 		m_player->Action(ActionType::grah_jump);
@@ -670,10 +722,9 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 void GameplayingScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	Sound::SetVolume(Sound::BgmMain, 255-m_fadeValue);
 	if (--m_fadeTimer == 0)
 	{
-		Sound::StartBgm(Sound::BgmMain);
-		//m_updateFunc = &GameplayingScene::NormalUpdat;
 		m_updateFunc = &GameplayingScene::PlayerOnScreen;
 		m_fadeValue = 0;
 		return;
@@ -713,8 +764,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			//プレイヤーが画面中央にいる＆マップの表示できる範囲以内の時は動かせる
 			if (m_isPlayerCenterLR &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX  , m_add.y + Game::kMapScreenTopY) != MapEvent_screen &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX , m_add.y + Game::kMapScreenBottomY - 1.0f ) != MapEvent_screen)
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_screen &&
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen &&
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_pause &&
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_pause)
 			{
 				MoveMap(-kPlayerMoveSpeed, 0.0f);
 			}
@@ -731,7 +784,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	Ladder(input);
 	
 	//プレイヤージャンプ処理
-	if (!m_isLadder && !m_player->IsJump() && input.IsTriggered(InputType::junp))
+	if (!m_isFall&&!m_isLadder && !m_player->IsJump() && input.IsTriggered(InputType::junp))
 	{
 		//Button::PushButton(Button::ButtonType_A);
 
@@ -849,8 +902,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		float posX = m_add.x + m_player->GetRect().GetCenter().x;
 		float posY = m_add.y + m_player->GetRect().GetCenter().y;
 		//プレイヤーの上座標+10ぐらいが　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death) &&
-			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY + m_player->GetRect().GetSize().h * 0.5f + 10.0f) == MapEvent_death))
+		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h - 10.0f) == MapEvent_death) &&
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h - 10.0f) == MapEvent_death))
 		{
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
@@ -870,6 +923,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 void GameplayingScene::MoveMapUpdat(const InputState& input)
 {
+	//プレイヤーの左座標と下座標と上座標
+	float playerPosLeft = 0.0f;
 	//移動する前にすべて消す
 	if (!m_isFirst)
 	{
@@ -890,6 +945,9 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			if (!shot->IsExist())	continue;
 			shot->SetExist(false);
 		}
+		m_correction = { 0.0f,0.0f };
+		m_playerPosUp =(m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 );
+		m_playerPosBottom= (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 );
 	}
 
 	//今いる場所が画面の下になるように移動させる
@@ -902,11 +960,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	if (m_isScreenMoveUp)
 	{
 		//プレイヤーの下座標がフィールドの下座標よりも小さいとき
-		if (m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 < Game::kMapScreenBottomY)
+		if (m_playerPosBottom+ m_correction.y < Game::kMapScreenBottomY)
 		{
 			m_map->Movement({ 0.0f,moveY });//mapを移動させる
 			MoveEnemy( 0.0f,moveY);//エネミーを移動させる
-			MovePlayer(0.0f, moveY - 0.2f);//プレイヤーを移動させる
+			MovePlayer(0.0f, moveY - 0.5f);//プレイヤーを移動させる
+			m_correction.y += moveY;
 			moveY *= -1.0f;
 			m_add.y += moveY;//どのくらいプレイヤーが移動したか
 		}
@@ -923,11 +982,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	{
 		moveY *= -1.0f;
 		//プレイヤーの上座標がフィールドの上座標よりも大きいとき
-		if (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 > Game::kMapScreenTopY)
+		if (m_playerPosUp+ m_correction.y > Game::kMapScreenTopY)
 		{
 			m_map->Movement({ 0.0f,moveY });
 			MoveEnemy(0.0f, moveY);
-			m_player->Movement({ 0.0f,moveY + 0.2f });
+			m_player->Movement({ 0.0f,moveY + 0.5f });
+			m_correction.y += moveY;
 			moveY *= -1.0f;
 			m_add.y += moveY;
 		}
@@ -943,31 +1003,48 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	else if (m_isScreenMoveWidth)
 	{
 		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
+		//if (m_playerPosBottom > Game::kMapScreenLeftX)
 		//端についていないときは移動できる
-		if (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 > Game::kMapScreenLeftX)
+		if((m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y - Game::kMapScreenTopY) != MapEvent_screen &&
+			m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen))
 		{
 			m_map->Movement({ moveX,0.0f });
 			MoveBoss(moveX, 0.0f);
-			m_player->Movement({ moveX + 0.2f,0.0f });
+			m_player->Movement({ moveX + 0.5f,0.0f });
 			moveX *= -1.0f;
 			m_add.x += moveX;
 		}
 		else
 		{
-			//ボス戦
-			m_updateFunc = &GameplayingScene::BossUpdate;
-			m_drawFunc = &GameplayingScene::BossDraw;
-			m_isScreenMoveWidth = false;
-			//ボス戦BGMと入れ替える
-			Sound::StopBgm(Sound::BgmMain);
-			Sound::StartBgm(Sound::BgmBoss);
-			return;
+			m_soundVolume -= 4;
+			if (m_soundVolume <= 0)
+			{
+				m_soundVolume = 0;
+				//ボス戦
+				m_updateFunc = &GameplayingScene::BossUpdate;
+				m_drawFunc = &GameplayingScene::BossDraw;
+				m_isScreenMoveWidth = false;
+				//ボス戦BGMと入れ替える
+				Sound::StopBgm(Sound::BgmMain);
+				Sound::StartBgm(Sound::BgmBoss, 0);
+				return;
+			}
+			Sound::SetVolume(Sound::BgmMain, m_soundVolume);
 		}
 	}
 }
 
 void GameplayingScene::BossUpdate(const InputState& input)
 {
+	if (m_soundVolume++ >= 255)
+	{
+		m_soundVolume = 255;
+	}
+	else
+	{
+		Sound::SetVolume(Sound::BgmBoss, m_soundVolume);
+	}
+	ScreenMove();
 	//Button::Update();
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = { 0.0f,0.0f };
@@ -998,7 +1075,9 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			//プレイヤーが画面中央にいる＆マップの表示できる範囲以内の時は動かせる
 			if (m_isPlayerCenterLR &&
 				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_screen &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen)
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen &&
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_pause &&
+				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_pause)
 			{
 				MoveMap(-kPlayerMoveSpeed, 0.0f);
 			}
@@ -1138,6 +1217,8 @@ void GameplayingScene::BossUpdate(const InputState& input)
 void GameplayingScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
+	Sound::SetVolume(Sound::BgmMain, 255- m_fadeValue);
+	Sound::SetVolume(Sound::BgmBoss, 255- m_fadeValue);
 	if(++m_fadeTimer == kFadeInterval)
 	{
 		switch (m_crea)

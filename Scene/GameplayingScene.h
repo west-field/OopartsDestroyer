@@ -25,6 +25,7 @@ enum MapEvent
     MapEvent_screenMoveW,//画面横移動
     MapEvent_ladder,//梯子
     MapEvent_screen,//読み込める範囲
+    MapEvent_pause,//一時停止する
 };
 
 /// <summary>
@@ -90,6 +91,12 @@ private:
     /// </summary>
     void Ladder(const InputState& input);
 
+    /// <summary>
+    /// 梯子とプレイヤーの位置を合わせる
+    /// </summary>
+    void LadderAlign();
+
+
     //プレイヤー登場シーン
     void PlayerOnScreen(const InputState& input);
     //画面のフェードイン
@@ -108,8 +115,6 @@ private:
      //ボス戦表示
      void BossDraw();
 private:
-    int m_buttonHandle = -1;
-
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
     
     void (GameplayingScene::* m_updateFunc)(const InputState& input);
@@ -129,6 +134,8 @@ private:
     bool m_isScreenMoveUp = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
     bool m_isScreenMoveDown = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
     bool m_isScreenMoveWidth = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
+    float m_playerPosUp;
+    float m_playerPosBottom;
 
     //ショット
     std::shared_ptr <ShotFactory> m_shotFactory;  
@@ -151,11 +158,17 @@ private:
     static constexpr int kShot = 15;                        //ショットの表示数
     std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
 
-    //梯子を上っているとき
+    //梯子を上っているときtrue
     bool m_isLadder = false;
-    //ゲームクリアかゲームオーバーか
+    //梯子を上り終えたとき一度だけ上に移動する
+    bool m_isLadderFirst = false;
+    //落ちているかどうか 落ちているときはジャンプできない
+    bool m_isFall;
+    //0:ゲームクリアか1:ゲームオーバーか
     int m_crea = 0;
-    //一回だけエネミーを削除
+    //画面移動する際一回だけエネミーを削除
     bool m_isFirst = false;
+    //サウンドの音量
+    int m_soundVolume;
 };
 
