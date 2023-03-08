@@ -641,13 +641,9 @@ void GameplayingScene::Ladder(const InputState& input)
 		if (m_isLadder && m_map->GetMapEventParam(lader.x, lader.y) == MapEvent_no)
 		{
 			m_isLadder = false;
-			int chip = m_map->GetMapEventParam(lader.x, lader.y);
-			if (chip != MapEvent_ladder)
-			{
-				Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
+			Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
 					(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };//移動させる量
-				MovePlayer(0.0f, aling.y);//移動
-			}
+			MovePlayer(0.0f, aling.y);//移動
 		}
 	}
 	//下キーで梯子を下がれる　
