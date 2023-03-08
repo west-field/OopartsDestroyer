@@ -1,4 +1,4 @@
-#include "EnemyMoveLR.h"
+#include "EnemyMoveUD.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
@@ -22,64 +22,62 @@ namespace
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
+EnemyMoveUD::EnemyMoveUD(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory) :
+	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveUD::NormalUpdate),m_drawFunc(&EnemyMoveUD::NormalDraw)
 {
 	m_handle = handle;
 	m_burstHandle = burstH;
 	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
 	m_hp->MaxHp(3);
-
-	m_isLeft = GetRand(100) / 2;
 }
 
-EnemyMoveLR::~EnemyMoveLR()
+EnemyMoveUD::~EnemyMoveUD()
 {
 
 }
 
-void EnemyMoveLR::Update()
+void EnemyMoveUD::Update()
 {
 	if (!m_isExist)	return;
 	
 	(this->*m_updateFunc)();
 }
 
-void EnemyMoveLR::Draw()
+void EnemyMoveUD::Draw()
 {
 	(this->*m_drawFunc)();
 }
 
-void EnemyMoveLR::Movement(Vector2 vec)
+void EnemyMoveUD::Movement(Vector2 vec)
 {
 	if (!m_isExist)	return;
 
 	m_rect.center += vec;
 }
 
-int EnemyMoveLR::TouchAttackPower() const
+int EnemyMoveUD::TouchAttackPower() const
 {
 	return kLeftRightTouchAttackPower;
 }
 
-void EnemyMoveLR::Damage(int damage)
+void EnemyMoveUD::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	//m_ultimateTimer = kUltimateFrame;//無敵時間
 	if (m_hp->GetHp() == 0)
 	{
-		m_updateFunc = &EnemyMoveLR::BurstUpdate;
-		m_drawFunc = &EnemyMoveLR::BurstDraw;
+		m_updateFunc = &EnemyMoveUD::BurstUpdate;
+		m_drawFunc = &EnemyMoveUD::BurstDraw;
 		m_idx = 0;
 	}
 }
 
-bool EnemyMoveLR::IsCollidable() const
+bool EnemyMoveUD::IsCollidable() const
 {
-	return (m_updateFunc != &EnemyMoveLR::BurstUpdate);
+	return (m_updateFunc != &EnemyMoveUD::BurstUpdate);
 }
 
-void EnemyMoveLR::NormalUpdate()
+void EnemyMoveUD::NormalUpdate()
 {
 	//2秒間ぐらい止まる
 	if (m_frame++ >= 120)
@@ -91,11 +89,11 @@ void EnemyMoveLR::NormalUpdate()
 		//どっちを向いているかどうか
 		if (m_isLeft)
 		{
-			m_updateFunc = &EnemyMoveLR::LeftUpdate;
+			m_updateFunc = &EnemyMoveUD::UpUpdate;
 		}
 		else
 		{
-			m_updateFunc = &EnemyMoveLR::RightUpdate;
+			m_updateFunc = &EnemyMoveUD::DownUpdate;
 		}
 	}
 	//止まっている間は目を閉じた画像を表示させる
@@ -105,12 +103,12 @@ void EnemyMoveLR::NormalUpdate()
 	}
 }
 
-void EnemyMoveLR::LeftUpdate()
+void EnemyMoveUD::UpUpdate()
 {
 	//目が開いている画像
 	m_idx = 2;
-	//左に移動する
-	m_rect.center.x -= kEnemyMoveSpeed;
+	//上に移動する
+	m_rect.center.y -= kEnemyMoveSpeed;
 	//壁にぶつかった時
 	if (m_chipId != 0)
 	{
@@ -120,25 +118,25 @@ void EnemyMoveLR::LeftUpdate()
 		//向きを逆に
 		m_isLeft = false;
 		//通常の更新に切り替える
-		m_updateFunc = &EnemyMoveLR::NormalUpdate;
+		m_updateFunc = &EnemyMoveUD::NormalUpdate;
 	}
 }
 
-void EnemyMoveLR::RightUpdate()
+void EnemyMoveUD::DownUpdate()
 {
 	m_idx = 2;
-	//右に移動
-	m_rect.center.x += kEnemyMoveSpeed;
+	//下に移動
+	m_rect.center.y += kEnemyMoveSpeed;
 	if (m_chipId != 0)
 	{
 		m_chipId = 0;
 		m_idx = 1;
 		m_isLeft = true;
-		m_updateFunc = &EnemyMoveLR::NormalUpdate;
+		m_updateFunc = &EnemyMoveUD::NormalUpdate;
 	}
 }
 
-void EnemyMoveLR::NormalDraw()
+void EnemyMoveUD::NormalDraw()
 {
 	if (!m_isExist)	return;
 	int img = m_idx * kLeftRightSize;
@@ -149,7 +147,7 @@ void EnemyMoveLR::NormalDraw()
 #endif
 }
 
-void EnemyMoveLR::BurstUpdate()
+void EnemyMoveUD::BurstUpdate()
 {
 	m_idx++;
 	if (m_idx == burst_frame_num * burst_frame_speed)
@@ -158,7 +156,7 @@ void EnemyMoveLR::BurstUpdate()
 	}
 }
 
-void EnemyMoveLR::BurstDraw()
+void EnemyMoveUD::BurstDraw()
 {
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),

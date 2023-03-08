@@ -127,8 +127,9 @@ void EnemyJump::DownUpdate()
 
 	m_rect.center.x += m_vec.x;
 
-	if (m_chipId == 1)
+	if (m_chipId != 0)
 	{
+		m_chipId = 0;
 		m_idx = 0;
 		m_rect.center.y -= kGrap;
 		m_updateFunc = &EnemyJump::NormalUpdate;
