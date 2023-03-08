@@ -4,10 +4,10 @@
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
 #include "../Enemy/EnemyBase.h"
-#include "../Enemy/EnemyMoveUpDown.h"
+#include "../Enemy/EnemyMoveLeft.h"
 #include "../Enemy/EnemyBattery.h"
 #include "../Enemy/EnemyJump.h"
-#include "../Enemy/EnemyMoveLeftRight.h"
+#include "../Enemy/EnemyMoveLR.h"
 #include "../Enemy/CutMan.h"
 #include "Player.h"
 
@@ -81,7 +81,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	{
 	case EnemyType::MoveUpDown:
 		m_enemies.push_back(
-			std::make_shared<EnemyMoveUpDown>(
+			std::make_shared<EnemyMoveLeft>(
 				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_burstHandle,m_shotFactory));
 		break;
 	case EnemyType::BatteryRight:
@@ -101,7 +101,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		break;
 	case EnemyType::MoveLeftRight:
 		m_enemies.push_back(
-			std::make_shared<EnemyMoveLeftRight>(
+			std::make_shared<EnemyMoveLR>(
 				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_burstHandle, m_shotFactory));
 		break;
 	case EnemyType::MoveShot:
