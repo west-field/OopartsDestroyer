@@ -119,9 +119,9 @@ void Player::NormalUpdate()
 		m_rect.center.x = Game::kMapScreenRightX - chipSizeHalf;
 	}
 	//‰æ–Ê‚Ìã’[‚É‚Â‚¢‚½‚ç‚»‚êˆÈã“®‚¯‚È‚¢‚æ‚¤‚É
-	if (m_rect.center.y < Game::kMapScreenTopY + chipSizeHalf)
+	if (m_rect.center.y < Game::kMapScreenTopY - chipSizeHalf)
 	{
-		m_rect.center.y = Game::kMapScreenTopY + chipSizeHalf;
+		m_rect.center.y = Game::kMapScreenTopY - chipSizeHalf;
 	}
 	//‰æ–Ê‚Ì‰º’[‚É‚Â‚¢‚½‚ç‚»‚êˆÈã“®‚¯‚È‚¢‚æ‚¤‚É
 	else if (m_rect.center.y > Game::kMapScreenBottomY + chipSizeHalf)
