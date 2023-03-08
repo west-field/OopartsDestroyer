@@ -160,10 +160,13 @@ private:
 
     //梯子を上っているときtrue
     bool m_isLadder = false;
+    //梯子を上っているときは位置を合わせる
+    bool m_isLadderAlign = false;
     //梯子を上り終えたとき一度だけ上に移動する
     bool m_isLadderFirst = false;
     //落ちているかどうか 落ちているときはジャンプできない
     bool m_isFall;
+
     //0:ゲームクリアか1:ゲームオーバーか
     int m_crea = 0;
     //画面移動する際一回だけエネミーを削除

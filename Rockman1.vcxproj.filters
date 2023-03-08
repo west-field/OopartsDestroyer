@@ -105,10 +105,10 @@
     <ClCompile Include="Enemy\EnemyBattery.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\EnemyMoveUpDown.cpp">
+    <ClCompile Include="Enemy\EnemyMoveLeft.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\EnemyMoveLeftRight.cpp">
+    <ClCompile Include="Enemy\EnemyMoveLR.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Enemy\EnemyJump.cpp">
@@ -131,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="Util\Button.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy\EnemyMoveUD.cpp">
+      <Filter>Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,10 +212,10 @@
     <ClInclude Include="Enemy\EnemyBattery.h">
       <Filter>Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\EnemyMoveUpDown.h">
+    <ClInclude Include="Enemy\EnemyMoveLeft.h">
       <Filter>Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\EnemyMoveLeftRight.h">
+    <ClInclude Include="Enemy\EnemyMoveLR.h">
       <Filter>Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Enemy\EnemyJump.h">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="Util\Button.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy\EnemyMoveUD.h">
+      <Filter>Enemy</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
