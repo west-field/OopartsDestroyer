@@ -7,11 +7,11 @@ class Stage;
 /// <summary>
 /// くっつきスージー　壁、天井、床を上下、または、左右に往復　HP5,攻撃力4
 /// </summary>
-class EnemyMoveLeftRight : public EnemyBase
+class EnemyMoveLR : public EnemyBase
 {
 public:
-	EnemyMoveLeftRight(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory);
-	virtual ~EnemyMoveLeftRight();
+	EnemyMoveLR(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory);
+	virtual ~EnemyMoveLR();
 
 	virtual void Update()override;
 	virtual void Draw()override;
@@ -29,8 +29,8 @@ private:
 	void BurstUpdate();
 	void BurstDraw();
 
-	void (EnemyMoveLeftRight::* m_updateFunc)();
-	void (EnemyMoveLeftRight::* m_drawFunc)();
+	void (EnemyMoveLR::* m_updateFunc)();
+	void (EnemyMoveLR::* m_drawFunc)();
 
 	int m_frame = 0;
 };

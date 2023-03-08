@@ -1,4 +1,4 @@
-#include "EnemyMoveUpDown.h"
+#include "EnemyMoveLeft.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
@@ -28,8 +28,8 @@ namespace
 	
 }
 
-EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyMoveUpDown::NormalUpdate),m_drawFunc(&EnemyMoveUpDown::NormalDraw)
+EnemyMoveLeft::EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
+	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyMoveLeft::NormalUpdate),m_drawFunc(&EnemyMoveLeft::NormalDraw)
 {
 	m_idx = 0;
 	m_handle = handle;
@@ -39,26 +39,26 @@ EnemyMoveUpDown::EnemyMoveUpDown(std::shared_ptr<Player>player, const Position2 
 	m_hp->MaxHp(1);
 }
 
-EnemyMoveUpDown::~EnemyMoveUpDown()
+EnemyMoveLeft::~EnemyMoveLeft()
 {
 
 }
 
-void EnemyMoveUpDown::Update()
+void EnemyMoveLeft::Update()
 {
 	//存在していないときは更新しない
 	if (!m_isExist) return;
 	(this->*m_updateFunc)();
 }
 
-void EnemyMoveUpDown::Draw()
+void EnemyMoveLeft::Draw()
 {
 	//存在していないときは表示しない
 	if (!m_isExist) return;
 	(this->*m_drawFunc)();
 }
 
-void EnemyMoveUpDown::Movement(Vector2 vec)
+void EnemyMoveLeft::Movement(Vector2 vec)
 {
 	if (!m_isExist) return;
 	if (m_isLeft) vec *= 1.0f;
@@ -66,36 +66,36 @@ void EnemyMoveUpDown::Movement(Vector2 vec)
 	m_rect.center += vec;
 }
 
-int EnemyMoveUpDown::TouchAttackPower() const
+int EnemyMoveLeft::TouchAttackPower() const
 {
 	return kUpDownTouchAttackPower;
 }
 
-void EnemyMoveUpDown::Damage(int damage)
+void EnemyMoveLeft::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	//m_ultimateTimer = kUltimateFrame;//無敵時間
 	if (m_hp->GetHp() == 0)
 	{
-		m_updateFunc = &EnemyMoveUpDown::BurstUpdate;
-		m_drawFunc = &EnemyMoveUpDown::BurstDraw;
+		m_updateFunc = &EnemyMoveLeft::BurstUpdate;
+		m_drawFunc = &EnemyMoveLeft::BurstDraw;
 		m_idx = 0;
 	}
 }
 
-bool EnemyMoveUpDown::IsCollidable() const
+bool EnemyMoveLeft::IsCollidable() const
 {
 	//爆発アニメーションでないときは当たる
-	return (m_updateFunc != &EnemyMoveUpDown::BurstUpdate);
+	return (m_updateFunc != &EnemyMoveLeft::BurstUpdate);
 }
 
-void EnemyMoveUpDown::NormalUpdate()
+void EnemyMoveLeft::NormalUpdate()
 {
 	m_rect.center.x += kEnemyMoveSpeed;
 	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
 }
 
-void EnemyMoveUpDown::NormalDraw()
+void EnemyMoveLeft::NormalDraw()
 {
 	int imgX = (m_idx / anim_frame_speed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
@@ -105,7 +105,7 @@ void EnemyMoveUpDown::NormalDraw()
 #endif
 }
 
-void EnemyMoveUpDown::BurstUpdate()
+void EnemyMoveLeft::BurstUpdate()
 {
 	m_idx++;
 	if (m_idx == burst_frame_num * burst_frame_speed)
@@ -114,7 +114,7 @@ void EnemyMoveUpDown::BurstUpdate()
 	}
 }
 
-void EnemyMoveUpDown::BurstDraw()
+void EnemyMoveLeft::BurstDraw()
 {
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 
