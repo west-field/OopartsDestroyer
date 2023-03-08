@@ -1,25 +1,26 @@
 ダウンロードしたサイト
 効果音ラボ　甘茶の音楽工房　FC音工場
 
-L"Sound/noranekonokuchibue.mp3",//タイトルBGM
-L"Sound/Disital_Delta.mp3",	//メインBGM
-L"Sound/gameclear.mp3",	//ゲームクリア音
-L"Sound/gameover.mp3",	//ゲームオーバー音
-L"Sound/shizukanoumi.mp3",	//ゲームオーバーBGM
-L"Sound/arabiantechno.mp3",	//ボス戦BGM
+		L"Sound/noranekonokuchibue.mp3",//タイトルBGM
+		L"Sound/Disital_Delta.mp3",	//メインBGM
+		L"Sound/gameclear.mp3",	//ゲームクリア音
+		L"Sound/emerald.mp3",	//ゲームクリアBGM
+		L"Sound/gameover.mp3",	//ゲームオーバー音
+		L"Sound/shizukanoumi.mp3",	//ゲームオーバーBGM
+		L"Sound/arabiantechno.mp3",	//ボス戦BGM
 		
-L"Sound/Cursor.mp3",		//カーソル
-L"Sound/pushbotan.mp3",		//決定ボタン
-L"Sound/blockMove.mp3",		//ブロック接触音
-L"Sound/menuOpen.mp3",		//メニューを開く時の音
-L"Sound/playerJump.wav",	//プレイヤージャンプ音
-L"Sound/enemyJump.wav",		//敵ジャンプ音
+		L"Sound/Cursor.mp3",		//カーソル
+		L"Sound/pushbotan.mp3",		//決定ボタン
+		L"Sound/blockMove.mp3",		//ブロック接触音
+		L"Sound/menuOpen.mp3",		//メニューを開く時の音
+		L"Sound/playerJump.wav",	//プレイヤージャンプ音
+		L"Sound/enemyJump.wav",		//敵ジャンプ音
 
-L"Sound/playerShot.wav",	//プレイヤー弾発射音
-L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
-L"Sound/enemyShot.wav",	//敵弾発射音
-L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
 
+		L"Sound/playerShot.wav",	//プレイヤー弾発射音
+		L"Sound/playerShotHit.wav",	//プレイヤーに攻撃が当たった
+		L"Sound/enemyShot.wav",		//敵弾発射音
+		L"Sound/burst.wav",	//敵に攻撃が当たった
 
 SHW.
 ノスタルジア

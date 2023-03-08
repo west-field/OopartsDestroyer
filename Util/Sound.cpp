@@ -27,9 +27,9 @@ namespace
 
 
 		L"Sound/playerShot.wav",	//プレイヤー弾発射音
-		L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
-		L"Sound/enemyShot.wav",	//敵弾発射音
-		L"Sound/playerShotHit.wav",	//プレイヤーの弾が敵にヒット
+		L"Sound/playerShotHit.wav",	//プレイヤーに攻撃が当たった
+		L"Sound/enemyShot.wav",		//敵弾発射音
+		L"Sound/burst.wav",	//敵に攻撃が当たった
 	};
 }
 

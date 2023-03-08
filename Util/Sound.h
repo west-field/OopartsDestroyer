@@ -26,10 +26,10 @@ namespace Sound
 
 		//攻撃音
 		PlayeyShot,		//プレイヤーの弾発射音
-		PlayeyShotHit,	//プレイヤーの弾が敵にヒット
+		PlayeyHit,	//プレイヤーが攻撃を受けた
 
 		EnemyShot,		//敵の弾発射音
-		EnemyShotHit,	//弾のプレイヤーが敵にヒット
+		EnemyHit,	//敵が攻撃を受けたときの音
 
 		Max
 	};
