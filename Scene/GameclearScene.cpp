@@ -150,7 +150,7 @@ void GameclearScene::MojiDraw()
 	Font::ChangeFontSize(kMojiSize);
 	for (int i = 0; i < kMojiNum; i++)
 	{
-		DrawString(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
+		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
 	}
 	Font::ChangeFontSize(0);
 }
