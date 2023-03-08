@@ -57,25 +57,25 @@ void Map::Update()
 			{
 				switch (chipId)
 				{
-				case 1:
-					m_enemies->Create(EnemyType::MoveUpDown, Position2(pos.x, pos.y));
+				case static_cast<int>(EnemyType::MoveLeft):
+					m_enemies->Create(EnemyType::MoveLeft, Position2(pos.x, pos.y));
 					break;
-				case 2:
-					m_enemies->Create(EnemyType::BatteryRight, Position2(pos.x, pos.y));
-					break;
-				case 3:
+				case static_cast<int>(EnemyType::BatteryLeft):
 					m_enemies->Create(EnemyType::BatteryLeft, Position2(pos.x, pos.y));
 					break;
-				case 4:
+				case static_cast<int>(EnemyType::BatteryRight):
+					m_enemies->Create(EnemyType::BatteryRight, Position2(pos.x, pos.y));
+					break;
+				case static_cast<int>(EnemyType::Jump):
 					m_enemies->Create(EnemyType::Jump, Position2(pos.x, pos.y));
 					break;
-				case 5:
+				case static_cast<int>(EnemyType::MoveLeftRight):
 					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
 					break;
-				/*case 6:
+				/*case static_cast<int>(EnemyType::MoveShot):
 					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
 					break;*/
-				case 7:
+				case static_cast<int>(EnemyType::Boss):
 					m_enemies->Create(EnemyType::Boss, Position2(pos.x, pos.y));
 					break;
 				default:

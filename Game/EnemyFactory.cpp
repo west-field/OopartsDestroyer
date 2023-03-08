@@ -8,6 +8,7 @@
 #include "../Enemy/EnemyBattery.h"
 #include "../Enemy/EnemyJump.h"
 #include "../Enemy/EnemyMoveLR.h"
+#include "../Enemy/EnemyMoveUD.h"
 #include "../Enemy/CutMan.h"
 #include "Player.h"
 
@@ -22,7 +23,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	m_player(player), m_shotFactory(sFactory)
 {
 	//“G‚Ì‰æ‘œ‚ğƒ[ƒh‚·‚é
-	m_handleMap[EnemyType::MoveUpDown] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
+	m_handleMap[EnemyType::MoveLeft] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
 	m_handleMap[EnemyType::BatteryRight] = my::MyLoadGraph(L"Data/burst.png");
 	m_handleMap[EnemyType::Jump] = my::MyLoadGraph(L"Data/jump.png");
 	m_handleMap[EnemyType::MoveLeftRight] = my::MyLoadGraph(L"Data/move.png");
@@ -79,10 +80,10 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	//EnemyType‚É‚æ‚Á‚Äì‚é‚à‚Ì‚ğŒˆ‚ß‚é
 	switch (type)
 	{
-	case EnemyType::MoveUpDown:
+	case EnemyType::MoveLeft:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLeft>(
-				m_player, pos, m_handleMap[EnemyType::MoveUpDown], m_burstHandle,m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::MoveLeft], m_burstHandle,m_shotFactory));
 		break;
 	case EnemyType::BatteryRight:
 		m_enemies.push_back(

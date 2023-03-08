@@ -17,7 +17,8 @@ class ShotFactory;
 //“Gí—Ş
 enum class EnemyType
 {
-	MoveUpDown,//©‹@‚ÆX²‚ª“¯‚¶‚Æ‚«ã‰º‚ÉˆÚ“®‚·‚é“G
+	no,
+	MoveLeft,//©‹@‚ÆX²‚ª“¯‚¶‚Æ‚«ã‰º‚ÉˆÚ“®‚·‚é“G
 	BatteryRight,//ŒÅ’è–C‘ä
 	BatteryLeft,//ŒÅ’è–C‘ä
 	Jump,//ƒWƒƒƒ“ƒv‚·‚é“G
