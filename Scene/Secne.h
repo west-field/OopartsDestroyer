@@ -15,6 +15,7 @@ protected:
 	static constexpr int kFadeInterval = 60;
 	int m_fadeTimer = kFadeInterval;//フェードタイマー
 	int m_fadeValue = 255;//黒矩形とのブレンド具合
+	int m_BgmH = -1;
 public:
 	Scene(SceneManager& manager) :m_manager(manager){}
 	virtual ~Scene() {}

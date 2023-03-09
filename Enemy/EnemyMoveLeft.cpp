@@ -18,7 +18,7 @@ namespace
 	constexpr int kSize = 96;//画像サイズX
 	constexpr float kDrawScall = 0.3f;//拡大率
 	constexpr int anim_frame_num = 4;//アニメーション枚数
-	constexpr int anim_frame_speed = 5;//アニメーションスピード
+	constexpr int anim_frame_speed = 20;//アニメーションスピード
 
 	constexpr int burst_img_width = 32;//画像サイズX
 	constexpr int burst_img_height = 32;//画像サイズY

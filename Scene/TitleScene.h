@@ -1,6 +1,7 @@
 #pragma once
 #include "Secne.h"
 #include "../game.h"
+#include <memory>
 #include <array>
 #include "../Util/Geometry.h"
 
@@ -28,6 +29,11 @@ namespace
 	constexpr int kMovedPosX = kOriginalPosX - kMenuFontSize;//メニュー文字の移動したx位置
 }
 
+class EnemyMoveLeft;
+class Player;
+class HpBar;
+class ShotFactory;
+
 class InputState;
 /// <summary>
 /// タイトルシーン
@@ -44,6 +50,9 @@ private:
 	//フェードアウトの時のUpdate関数
 	void FadeOutUpdat(const InputState& input);
 
+	void SetBlock();
+	void MoveBlock();
+
 	//Update用メンバ関数ポインタ
 	void (TitleScene::* m_updateFunc)(const InputState& input);
 
@@ -55,6 +64,25 @@ private:
 	};
 	int m_scroll = 0;
 
+	//ブロックの画像
+	int m_blockH = -1;
+	//ブロックを表示するために必要なもの
+	struct Block
+	{
+		int idxX = 0;
+		int idxY = 0;
+		Size size = {};
+		Position2 pos = {};
+	};
+	Block m_blocks;
+	//ブロックの移動
+	Vector2 m_vel;
+
+	std::shared_ptr<Player>m_player;
+	std::shared_ptr<HpBar>m_hp;
+	std::shared_ptr<ShotFactory>m_shot;
+	int m_enemyH = -1;
+	std::shared_ptr<EnemyMoveLeft> m_enemy[3];
 public:
 	TitleScene(SceneManager& manager);
 	virtual ~TitleScene();

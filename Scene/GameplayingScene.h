@@ -171,7 +171,14 @@ private:
     int m_crea = 0;
     //画面移動する際一回だけエネミーを削除
     bool m_isFirst = false;
+    //ボス音楽
+    int m_bossBgm = -1;
     //サウンドの音量
     int m_soundVolume;
+
+
+    int tempScreenH_ = -1;//画面効果用スクリーンハンドル
+    int quakeTimer_ = 0;//画面揺れタイマー
+    float quakeX_ = 0.0f;//横揺れパラメータ
 };
 

@@ -16,6 +16,8 @@ public:
 	virtual int TouchAttackPower()const override;
 	virtual void Damage(int damage) override;
 	virtual bool IsCollidable()const override;
+
+	void SetPos(Position2 pos) { m_rect.center = pos; }
 private:
 	void NormalUpdate();
 	void NormalDraw();

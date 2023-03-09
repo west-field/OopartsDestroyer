@@ -30,7 +30,10 @@ EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, in
 	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
 	m_hp->MaxHp(3);
 
-	m_isLeft = GetRand(100) / 2;
+	if (GetRand(100) / 2 == 0)
+	{
+		m_isLeft = true;
+	}
 }
 
 EnemyMoveLR::~EnemyMoveLR()

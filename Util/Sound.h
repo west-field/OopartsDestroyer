@@ -6,13 +6,8 @@ namespace Sound
 	enum SoundId
 	{
 		//BGM
-		BgmTitle,		//タイトルBGM
-		BgmMain,		//メインBGM
 		Gameclear,		//ゲームクリア音
-		GameclearBgm,	//ゲームクリアBGM
 		Gameover,		//ゲームオーバー音
-		GameoverBgm,	//ゲームオーバーBGM
-		BgmBoss,		//ボス戦BGM
 
 		//効果音
 		Cursor,			//カーソル移動音

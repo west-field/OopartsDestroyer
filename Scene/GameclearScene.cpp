@@ -24,6 +24,7 @@ namespace
 	};
 
 	constexpr float kMojiNum = 30.0f;
+	constexpr float kMoveNum = 2.0f;
 }
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
@@ -37,12 +38,13 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>pla
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
+	m_BgmH = LoadSoundMem(L"Sound/emerald.mp3");
 }
 
 GameclearScene::~GameclearScene()
 {
+	DeleteSoundMem(m_BgmH);
 	Sound::StopBgm(Sound::Gameclear);
-	Sound::StopBgm(Sound::GameclearBgm);
 }
 
 void GameclearScene::Update(const InputState& input)
@@ -65,7 +67,6 @@ void GameclearScene::Draw()
 void GameclearScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	Sound::SetVolume(Sound::GameclearBgm, 255-m_fadeValue);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
@@ -76,7 +77,7 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 void GameclearScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	Sound::SetVolume(Sound::GameclearBgm, 255 - m_fadeValue);
+	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));
@@ -91,11 +92,12 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{ static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2) } - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 1.0f)
+	if (Num <= kMoveNum)
 	{
 		vel = { 0.0f,0.0f };
 		m_player->Action(ActionType::grah_jump);
-		Sound::StartBgm(Sound::GameclearBgm, 0);
+		ChangeVolumeSoundMem(0, m_BgmH);
+		PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 		m_updateFunc = &GameclearScene::MojiUpdate;
 		m_drawFunc = &GameclearScene::MojiDraw;
 		return;
@@ -103,7 +105,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	else
 	{
 		vel.Normalize();
-		vel *= 2.0f;
+		vel *= kMoveNum;
 		m_player->ScaleEnlarge(0.05f);
 	}
 
@@ -116,7 +118,7 @@ void GameclearScene::MojiUpdate(const InputState& input)
 	{
 		m_soundVolume = 255;
 	}
-	Sound::SetVolume(Sound::GameclearBgm, m_soundVolume);
+	ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
 
 	m_player->Update();
 	m_player->Action(ActionType::grah_jump);

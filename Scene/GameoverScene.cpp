@@ -25,6 +25,7 @@ namespace
 	};
 
 	constexpr float kMojiNum = 30.0f;
+	constexpr float kMoveNum = 2.0f;
 }
 GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>player) :
 	Scene(manager), m_player(player), m_updateFunc(&GameoverScene::FadeInUpdat),
@@ -38,12 +39,13 @@ GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>playe
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
+	m_BgmH = LoadSoundMem(L"Sound/shizukanoumi.mp3");
 }
 
 GameoverScene::~GameoverScene()
 {
+	DeleteSoundMem(m_BgmH);
 	Sound::StopBgm(Sound::Gameover);
-	Sound::StopBgm(Sound::GameoverBgm);
 }
 
 void
@@ -84,7 +86,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	auto vel = Vector2{static_cast<float>(Game::kScreenWidth / 2),static_cast<float>(Game::kScreenHeight / 2)} - m_player->GetRect().GetCenter();
 
 	float Num = vel.SQLength();
-	if (Num <= 1.0f)
+	if (Num <= kMoveNum)
 	{
 		m_player->Action(ActionType::grah_death);
 		vel = { 0.0f,0.0f };
@@ -92,7 +94,7 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	else
 	{
 		vel.Normalize();
-		vel *= 3.0f;
+		vel *= kMoveNum;
 		m_player->ScaleEnlarge(0.03f);
 	}
 
@@ -102,7 +104,8 @@ void GameoverScene::NormalUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameoverScene::MojiUpdate;
 		m_drawFunc = &GameoverScene::MojiDraw;
-		Sound::StartBgm(Sound::GameoverBgm, 0);
+		ChangeVolumeSoundMem(0, m_BgmH);
+		PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 		return;
 	}
 }
@@ -113,7 +116,7 @@ void GameoverScene::MojiUpdate(const InputState& input)
 	{
 		m_soundVolume = 200;
 	}
-	Sound::SetVolume(Sound::GameoverBgm, m_soundVolume);
+	ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
 
 	//•¶Žš‚ð—h‚ç‚·
 	for (auto& moji : m_moji)
@@ -156,7 +159,7 @@ void GameoverScene::MojiDraw()
 void GameoverScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	Sound::SetVolume(Sound::GameoverBgm, 255-m_fadeValue);
+	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));

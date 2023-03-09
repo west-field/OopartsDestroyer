@@ -1,5 +1,6 @@
 #include "GameplayingScene.h"
 #include <DxLib.h>
+#include <cassert>
 #include "SceneManager.h"
 #include "TitleScene.h"
 #include "PauseScene.h"
@@ -37,6 +38,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),m_drawFunc(&GameplayingScene::NormalDraw),
 	m_add(), m_correction(), m_playerPosUp(), m_playerPosBottom()
 {
+	int se = 0, sh = 0, bit = 0;
+	GetScreenState(&se, &sh, &bit);
+	tempScreenH_ = MakeScreen(se, sh);
+	assert(tempScreenH_ >= 0);
+
 	//HPバーのグラフィック
 	for (auto& hp : m_hp)
 	{
@@ -59,20 +65,25 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
 	//Position2 pos = { -3026.0f,178.0f };//下移動梯子
-	//Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
+	Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
 	Graph::Init();
-	Sound::StartBgm(Sound::BgmMain,0);
+
+	m_BgmH = LoadSoundMem(L"Sound/Disital_Delta.mp3");
+	m_bossBgm = LoadSoundMem(L"Sound/arabiantechno.mp3");
+	ChangeVolumeSoundMem(0, m_BgmH);
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 }
 
 GameplayingScene::~GameplayingScene()
 {
-	Sound::StopBgm(Sound::BgmMain);
-	Sound::StopBgm(Sound::BgmBoss);
+	DeleteSoundMem(m_BgmH);
+	DeleteSoundMem(m_bossBgm);
+	DeleteGraph(tempScreenH_);
 }
 
 void GameplayingScene::Update(const InputState& input)
@@ -84,6 +95,8 @@ void GameplayingScene::Update(const InputState& input)
 
 void GameplayingScene::Draw()
 {
+	//加工用スクリーンハンドル
+	SetDrawScreen(tempScreenH_);
 	Graph::Bg();//背景の一部を表示
 	m_map->Draw();//マップを表示
 
@@ -216,6 +229,19 @@ void GameplayingScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//裏画面に戻す
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	DrawGraph(quakeX_, 0, tempScreenH_, true);
+	//if (quakeTimer_ > 0)
+	//{
+	//	//GraphFilter(tempScreenH_, DX_GRAPH_FILTER_GAUSS, 16, 1400);//画面をぼかす
+	//	SetDrawBlendMode(DX_BLENDMODE_ADD, 192);//加算合成
+	//	DrawGraph(quakeX_, 0, tempScreenH_, true);
+	//	//GraphFilter(tempScreenH_, DX_GRAPH_FILTER_GAUSS, 32, 2000);//画面をぼかす
+	//	//SetDrawBlendMode(DX_BLENDMODE_ADD, 192);//加算合成
+	//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
+	//}
 }
 
 bool GameplayingScene::createShot(Position2 pos, bool isPlayer, bool isLeft)
@@ -724,7 +750,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 void GameplayingScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	Sound::SetVolume(Sound::BgmMain, 255-m_fadeValue);
+	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameplayingScene::PlayerOnScreen;
@@ -871,6 +897,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
 				Sound::Play(Sound::PlayeyHit);
+				quakeX_ = 5.0f;
+				quakeTimer_ = 40;
 				return;
 			}
 		}
@@ -886,6 +914,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				m_player->Damage(enemy->TouchAttackPower());
 				Sound::Play(Sound::PlayeyHit);
+				quakeX_ = 5.0f;
+				quakeTimer_ = 40;
 				break;
 			}
 		}
@@ -920,6 +950,17 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		Sound::Play(Sound::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
+	}
+
+	if (quakeTimer_ > 0)
+	{
+		quakeX_ = -quakeX_;
+		quakeX_ *= 0.95f;
+		quakeTimer_--;
+	}
+	else
+	{
+		quakeX_ = 0.0f;
 	}
 }
 
@@ -1027,11 +1068,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 				m_drawFunc = &GameplayingScene::BossDraw;
 				m_isScreenMoveWidth = false;
 				//ボス戦BGMと入れ替える
-				Sound::StopBgm(Sound::BgmMain);
-				Sound::StartBgm(Sound::BgmBoss, 0);
+				StopSoundMem(m_BgmH);
+				ChangeVolumeSoundMem(0, m_bossBgm);
+				PlaySoundMem(m_bossBgm, DX_PLAYTYPE_LOOP, true);
 				return;
 			}
-			Sound::SetVolume(Sound::BgmMain, m_soundVolume);
+			ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
 		}
 	}
 }
@@ -1044,7 +1086,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	}
 	else
 	{
-		Sound::SetVolume(Sound::BgmBoss, m_soundVolume);
+		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 	}
 	ScreenMove();
 	//Button::Update();
@@ -1192,6 +1234,8 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//プレイヤーのHPが０になったらゲームオーバーにする
 	if (m_hp[Object_Player]->GetHp() <= 0)
 	{
+		m_updateFunc = &GameplayingScene::FadeOutUpdat;
+		m_fadeColor = 0xff0000;
 		m_crea = 1;
 		return;
 	}
@@ -1219,8 +1263,8 @@ void GameplayingScene::BossUpdate(const InputState& input)
 void GameplayingScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	Sound::SetVolume(Sound::BgmMain, 255- m_fadeValue);
-	Sound::SetVolume(Sound::BgmBoss, 255- m_fadeValue);
+	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(255 - m_fadeValue, m_bossBgm);
 	if(++m_fadeTimer == kFadeInterval)
 	{
 		switch (m_crea)
