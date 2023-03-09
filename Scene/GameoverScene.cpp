@@ -30,7 +30,7 @@ GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>playe
 	Scene(manager), m_player(player), m_updateFunc(&GameoverScene::FadeInUpdat),
 	m_drawFunc(&GameoverScene::NormalDraw) 
 {
-	Graph::Init();
+	Background::GetInstance().Init();
 	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
 	for (int i = 0; i < kMojiNum; i++)
 	{
@@ -50,14 +50,14 @@ GameoverScene::~GameoverScene()
 void
 GameoverScene::Update(const InputState& input)
 {
-	Graph::BgUpdate();
+	Background::GetInstance().Update();
 	(this->*m_updateFunc)(input);
 }
 
 void
 GameoverScene::Draw()
 {
-	Graph::BgDraw(0);
+	Background::GetInstance().Draw(0);
 
 	(this->*m_drawFunc)();
 

@@ -71,7 +71,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
-	Graph::Init();
+	Background::GetInstance().Init();
 
 	m_BgmH = LoadSoundMem(L"Sound/Disital_Delta.mp3");
 	m_bossBgm = LoadSoundMem(L"Sound/arabiantechno.mp3");
@@ -89,7 +89,7 @@ GameplayingScene::~GameplayingScene()
 void GameplayingScene::Update(const InputState& input)
 {
 	//背景を移動させる
-	Graph::BgUpdate();
+	Background::GetInstance().Update();
 	(this->*m_updateFunc)(input);
 }
 
@@ -97,7 +97,7 @@ void GameplayingScene::Draw()
 {
 	//加工用スクリーンハンドル
 	SetDrawScreen(tempScreenH_);
-	Graph::Bg();//背景の一部を表示
+	Background::GetInstance().Bg();//背景の一部を表示
 	m_map->Draw();//マップを表示
 
 	m_player->Draw();//プレイヤーを表示

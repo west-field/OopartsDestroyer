@@ -29,7 +29,7 @@ namespace
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
 	Scene(manager), m_player(player), m_updateFunc(&GameclearScene::FadeInUpdat),
 	m_drawFunc(&GameclearScene::NormalDraw) {
-	Graph::Init();
+	Background::GetInstance().Init();
 	float posX = (Game::kScreenWidth - kMojiNum * kMojiSize) / 2;
 	for (int i = 0; i < kMojiNum; i++)
 	{
@@ -48,13 +48,13 @@ GameclearScene::~GameclearScene()
 
 void GameclearScene::Update(const InputState& input)
 {
-	Graph::BgUpdate();
+	Background::GetInstance().Update();
 	(this->*m_updateFunc)(input);
 }
 
 void GameclearScene::Draw()
 {
-	Graph::BgDraw(0);
+	Background::GetInstance().Draw(0);
 	m_player->Draw();
 	(this->*m_drawFunc)();
 

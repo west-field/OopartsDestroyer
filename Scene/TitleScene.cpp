@@ -33,7 +33,7 @@ void TitleScene::FadeInUpdat(const InputState& input)
 void TitleScene::NormalUpdat(const InputState& input)
 {
 	//îwåi
-	Graph::BgUpdate();//m_scroll = m_scroll + 1;
+	Background::GetInstance().Update();//m_scroll = m_scroll + 1;
 	//ÉuÉçÉbÉN
 	MoveBlock();
 	//ìG
@@ -202,7 +202,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 			Position2{ static_cast<float>(Game::kScreenWidth - Game::kDrawSize * (i + 2)),
 					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot);
 	}
-	Graph::Init();
+	Background::GetInstance().Init();
 	m_BgmH = LoadSoundMem(L"Sound/noranekonokuchibue.mp3");
 	ChangeVolumeSoundMem( 0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP,true);
@@ -226,7 +226,7 @@ TitleScene::Update(const InputState& input)
 void TitleScene::Draw()
 {
 	//îwåi
-	Graph::BgDraw(0);
+	Background::GetInstance().Draw(0);
 	//ÉuÉçÉbÉN
 	my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
 		m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,

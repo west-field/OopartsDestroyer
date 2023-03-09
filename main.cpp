@@ -20,6 +20,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		return -1;
 	}
 	auto& soundManager = SoundManager::GetInstance();
+	auto& background = Background::GetInstance();
 
 	//フォントを読み込む
 	LPCWSTR font_path = L"Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス;
@@ -32,7 +33,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		MessageBox(NULL, L"フォント読込失敗", L"", MB_OK);
 	}
 	ChangeFont(L"PixelMplus10", DX_CHARSET_DEFAULT);
-	Graph::Load();
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
@@ -60,7 +60,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// fpsを60に固定
 		while (GetNowHiPerformanceCount() - time < 16667){}
 	}
-	Graph::Unload();
 
 	//　リソースの解放
 	if (RemoveFontResourceEx(font_path, FR_PRIVATE, NULL)) {
