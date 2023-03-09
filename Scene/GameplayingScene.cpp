@@ -73,8 +73,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	//îwåi
 	Background::GetInstance().Init();
 
-	m_BgmH = LoadSoundMem(L"Sound/Disital_Delta.mp3");
-	m_bossBgm = LoadSoundMem(L"Sound/arabiantechno.mp3");
+	m_BgmH = LoadSoundMem(L"Sound/BGM/Disital_Delta.mp3");
+	m_bossBgm = LoadSoundMem(L"Sound/BGM/arabiantechno.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
 }

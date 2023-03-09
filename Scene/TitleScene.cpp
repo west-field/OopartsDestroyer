@@ -203,7 +203,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot);
 	}
 	Background::GetInstance().Init();
-	m_BgmH = LoadSoundMem(L"Sound/noranekonokuchibue.mp3");
+	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
 	ChangeVolumeSoundMem( 0, m_BgmH);
 	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP,true);
 }

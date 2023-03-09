@@ -37,7 +37,7 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>pla
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
-	m_BgmH = LoadSoundMem(L"Sound/emerald.mp3");
+	m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
 }
 
 GameclearScene::~GameclearScene()
