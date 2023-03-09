@@ -10,6 +10,7 @@
 
 #include "SceneManager.h"
 #include "GameplayingScene.h"
+#include "MonologueScene.h"
 #include "OptionScene.h"
 
 #include "../Game/HpBar.h"
@@ -35,7 +36,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 	//îwåi
 	Background::GetInstance().Update();//m_scroll = m_scroll + 1;
 	//ÉuÉçÉbÉN
-	MoveBlock();
+	(this->*m_blockMove)();
 	//ìG
 	int i = 0;
 	for (auto& enemy : m_enemy)
@@ -45,7 +46,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 			enemy->Update();
 			if (enemy->GetRect().GetCenter().x <= -enemy->GetRect().GetSize().w)
 			{
-				enemy->SetPos(Position2{ static_cast<float>(Game::kScreenWidth - Game::kDrawSize * (i + 2)),
+				enemy->SetPos(Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
 					static_cast<float>(Game::kDrawSize * (i + 2))});
 			}
 		}
@@ -98,11 +99,9 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 		switch (m_selectNum)
 		{
 		case menuGameStart:
-			m_manager.ChangeScene(new GameplayingScene(m_manager));
+			//m_manager.ChangeScene(new GameplayingScene(m_manager));
+			m_manager.ChangeScene(new MonologueScene(m_manager));
 			return;
-		/*case menuConfig:
-			m_manager.ChangeScene(new OptionScene(m_manager));
-			return;*/
 		case menuGameEnd:
 			m_manager.SetIsEnd();
 			return;
@@ -112,83 +111,65 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 
 void TitleScene::SetBlock()
 {
-	int numY = GetRand(100) / 10;
-	int numX = GetRand(100) / 10 + 1;
-
-	switch (numY)
+	int numY = GetRand(100) % 4;
+	int numX = GetRand(100) % 10 + 1;
+	m_blocks.size.w = m_blocks.size.h = Game::ChipSize * 2;
+	
+	int num = numX % 2;
+	switch (num)
 	{
 	case 0:
-	case 2:
-		m_blocks.idxY = numY;
-		m_blocks.size.w = m_blocks.size.h = Game::ChipSize * 2;
-		if (numX / 2 == 0)
-		{
-			m_blocks.idxX = numX;
-		}
-		else
-		{
-			m_blocks.idxX = numX - 1;
-		}
+		m_blocks.idxX = numX - 1;
 		break;
 	case 1:
-	case 3:
-		m_blocks.idxY = numY - 1;
-		m_blocks.size.w = m_blocks.size.h = Game::ChipSize * 2;
-		if (numX / 2 == 0)
-		{
-			m_blocks.idxX = numX;
-		}
-		else
-		{
-			m_blocks.idxX = numX - 1;
-		}
-		break;
-	case 4:
-	case 5:
-	case 6:
-		m_blocks.idxY = numY;
-		m_blocks.size.w = Game::ChipSize * 2;
-		m_blocks.size.h = Game::ChipSize;
-		if (numX / 2 == 0)
-		{
-			m_blocks.idxX = numX;
-		}
-		else
-		{
-			m_blocks.idxX = numX - 1;
-		}
-		break;
-	case 7:
-	case 8:
-	case 9:
-		m_blocks.size.w = m_blocks.size.h = Game::ChipSize;
-		m_blocks.idxY = numY;
 		m_blocks.idxX = numX;
 		break;
 	default:
 		break;
 	}
+	num = numY % 2;
+	switch (num)
+	{
+	case 0:
+		m_blocks.idxY = numY;
+		break;
+	case 1:
+		m_blocks.idxY = numY - 1;
+		break;
+	default:
+		break;
+	}
 
-	int screenSize = Game::kScreenWidth / Game::kDrawSize;
-	int num = GetRand(screenSize);
-	m_blocks.pos = { static_cast<float>(num* Game::kDrawSize - Game::kDrawSize / 2),0.0f-Game::kDrawSize /2 };
-
-	m_vel = { 0.0f,2.0f };
+	int screenSizeX = Game::kScreenWidth / Game::kDrawSize;
+	int tempX = GetRand(screenSizeX);
+	int screenSizeY = Game::kScreenHeight / Game::kDrawSize;
+	int tempY = GetRand(screenSizeY);
+	m_blocks.pos = { static_cast<float>(tempX * Game::kDrawSize - Game::kDrawSize / 2),static_cast<float>(tempY * Game::kDrawSize -Game::kDrawSize / 2 )};
 }
 
-void TitleScene::MoveBlock()
+void TitleScene::BlockIn()
 {
-	m_blocks.pos += m_vel;
-
-	if (m_blocks.pos.y + m_blocks.size.h >= Game::kScreenHeight)
+	m_fade = 255 * m_frame / 60;
+	if (m_frame++ == 60)
 	{
-		m_blocks.pos.y = 0.0f - Game::kDrawSize / 2;
+		m_blockMove=&TitleScene::BlockOut;
 	}
 }
 
-TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
+void TitleScene::BlockOut()
+{
+	m_fade = 255 * m_frame / 60;
+	if (m_frame-- == 0)
+	{
+		m_fade = 0;
+		m_frame = 0;
+		SetBlock();
+		m_blockMove = &TitleScene::BlockIn;
+	}
+}
+
+TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat), m_blockMove(&TitleScene::BlockIn)
 {	
-	//m_titleH = my::MyLoadGraph(L"Data/title.png");
 	m_titleH = my::MyLoadGraph(L"Data/Title 1.png");
 	m_blockH = my::MyLoadGraph(L"Data/map/mapchip.png");
 	SetBlock();
@@ -228,9 +209,11 @@ void TitleScene::Draw()
 	//îwåi
 	Background::GetInstance().Draw(0);
 	//ÉuÉçÉbÉN
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fade);
 	my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
 		m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,
 		m_blocks.size.w, m_blocks.size.h, Game::kScale, 0.0f, m_blockH, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//ìG
 	for (auto& enemy : m_enemy)
 	{
@@ -262,7 +245,6 @@ void TitleScene::MenuDraw(int X, int Y)
 {
 	SetFontSize(kMenuFontSize);
 	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ÉQÅ[ÉÄÉXÉ^Å[Ég", m_color);
-	//DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"ÇπÇ¡ÇƒÇ¢", m_color);
 	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"Ç®ÇÌÇË", m_color);
 	SetFontSize(0);
 }

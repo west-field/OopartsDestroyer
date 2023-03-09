@@ -63,9 +63,6 @@
     <ClCompile Include="Scene\GameplayingScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GameStartCountScene .cpp">
-      <Filter>Screen</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\KeyConfigScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
@@ -129,6 +126,9 @@
     <ClCompile Include="Enemy\EnemyMoveUD.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\MonologueScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -162,9 +162,6 @@
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="Scene\GameplayingScene.h">
-      <Filter>Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\GameStartCountScene.h">
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="Scene\KeyConfigScene.h">
@@ -229,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="Enemy\EnemyMoveUD.h">
       <Filter>Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\MonologueScene.h">
+      <Filter>Screen</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -149,6 +149,7 @@
     <ClCompile Include="Enemy\EnemyMoveLR.cpp" />
     <ClCompile Include="Enemy\EnemyBase.cpp" />
     <ClCompile Include="Enemy\EnemyBattery.cpp" />
+    <ClCompile Include="Scene\MonologueScene.cpp" />
     <ClCompile Include="Util\Graph.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
     <ClCompile Include="Enemy\EnemyMoveLeft.cpp" />
@@ -159,7 +160,6 @@
     <ClCompile Include="Scene\GameclearScene.cpp" />
     <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Scene\GameplayingScene.cpp" />
-    <ClCompile Include="Scene\GameStartCountScene .cpp" />
     <ClCompile Include="Scene\KeyConfigScene.cpp" />
     <ClCompile Include="Scene\OperateScene.cpp" />
     <ClCompile Include="Scene\OptionScene.cpp" />
@@ -182,6 +182,7 @@
     <ClInclude Include="Enemy\CutMan.h" />
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
+    <ClInclude Include="Scene\MonologueScene.h" />
     <ClInclude Include="Util\Graph.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Enemy\EnemyBase.h" />
@@ -194,7 +195,6 @@
     <ClInclude Include="Scene\GameclearScene.h" />
     <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Scene\GameplayingScene.h" />
-    <ClInclude Include="Scene\GameStartCountScene.h" />
     <ClInclude Include="Scene\KeyConfigScene.h" />
     <ClInclude Include="Scene\OperateScene.h" />
     <ClInclude Include="Scene\OptionScene.h" />

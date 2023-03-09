@@ -51,7 +51,8 @@ private:
 	void FadeOutUpdat(const InputState& input);
 
 	void SetBlock();
-	void MoveBlock();
+	void BlockIn();
+	void BlockOut();
 
 	//Update用メンバ関数ポインタ
 	void (TitleScene::* m_updateFunc)(const InputState& input);
@@ -75,8 +76,11 @@ private:
 		Position2 pos = {};
 	};
 	Block m_blocks;
-	//ブロックの移動
-	Vector2 m_vel;
+
+	void (TitleScene::*m_blockMove)();
+
+	int m_frame;
+	int m_fade;
 
 	std::shared_ptr<Player>m_player;
 	std::shared_ptr<HpBar>m_hp;
