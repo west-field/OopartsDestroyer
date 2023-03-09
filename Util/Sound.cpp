@@ -25,14 +25,6 @@ SoundManager::~SoundManager()
 
 int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
-	/*std::wstring path = L"Data/Sound/SE/";
-	path += fileName;
-	path += L".wav";
-	int handle = LoadSoundMem(path.c_str());
-
-	assert(handle >= 0);
-	nameAndHandleTable_[fileName] = handle;*/
-
 	std::wstring path = L"Sound/SE/";
 	path += fileName;
 	int handle = LoadSoundMem(path.c_str());

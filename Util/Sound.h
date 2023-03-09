@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 
 enum SoundId
 {
@@ -23,9 +24,6 @@ enum SoundId
 
 	SoundId_Max
 };
-
-#include <unordered_map>
-#include <string>
 
 class SoundManager
 {
