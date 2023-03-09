@@ -27,11 +27,11 @@
 */
 namespace
 {
-	constexpr float kPlayerMoveSpeed = 4.0f;//プレイヤーの移動速度
-	constexpr float kJumpAcc = 9.0f;//ジャンプ力
-	constexpr float kShotSpeed = 8.0f;//ショットスピード
+	constexpr float kPlayerMoveSpeed = 5.0f;//プレイヤーの移動速度
+	constexpr float kJumpAcc = 11.0f;//ジャンプ力
+	constexpr float kShotSpeed = 10.0f;//ショットスピード
 
-	constexpr float kPullPos = 10.0f;//梯子を上る範囲を決める
+	constexpr float kPullPos = 15.0f;//梯子を上る範囲を決める
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager) :
@@ -55,7 +55,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 		shot = std::make_shared<RockBuster>(my::MyLoadGraph(L"Data/rockBuster.png"));
 	}
 	//プレイヤー
-	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX- Game::ChipSize/2),(Game::kMapScreenBottomY - Game::ChipSize*5)},m_hp[Object_Player]);//プレイヤーの初期位置
+	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX- Game::kDrawSize /2),(Game::kMapScreenBottomY - Game::kDrawSize *5)},m_hp[Object_Player]);//プレイヤーの初期位置
 	//敵の弾工場
 	m_shotFactory = std::make_shared<ShotFactory>();
 	//敵工場
@@ -65,9 +65,9 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::ChipSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
 	//Position2 pos = { -3026.0f,178.0f };//下移動梯子
-	Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
+	//Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -114,10 +114,10 @@ void GameplayingScene::Draw()
 	(this->*m_drawFunc)();//HPバーの表示
 
 	//枠を作る
-	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
-	DrawBox(Game::kMapScreenRightX, Game::kMapScreenTopY, Game::kMapScreenRightX + Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//右側
-	DrawBox(Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenTopY - Game::ChipSize, Game::kMapScreenRightX + Game::ChipSize, Game::kMapScreenTopY, m_framecolor, true);//上
-	DrawBox(Game::kMapScreenLeftX - Game::ChipSize, Game::kMapScreenBottomY + Game::ChipSize, Game::kMapScreenRightX + Game::ChipSize, Game::kMapScreenBottomY, m_framecolor, true);//下
+	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
+	DrawBox(Game::kMapScreenRightX, Game::kMapScreenTopY, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//右側
+	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenTopY - Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenTopY, m_framecolor, true);//上
+	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY + Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//下
 
 	//倒した敵の数を表示
 	//DrawFormatString(Game::kScreenWidth/2, Game::kScreenHeight/3, 0x000000, L"%d", m_enemyKill);
@@ -184,13 +184,13 @@ void GameplayingScene::Draw()
 	int centeridxY = Game::kNumY / 2;
 	Position2 fieldCenterLeftUp =
 	{
-		static_cast<float>(centeridxX * Game::ChipSize),
-		static_cast<float>(centeridxY * Game::ChipSize)
+		static_cast<float>(centeridxX * Game::kDrawSize),
+		static_cast<float>(centeridxY * Game::kDrawSize)
 	};
 	Position2 fieldCenterRightBottom =
 	{
-		fieldCenterLeftUp.x + Game::ChipSize,
-		fieldCenterLeftUp.y + Game::ChipSize
+		fieldCenterLeftUp.x + Game::kDrawSize,
+		fieldCenterLeftUp.y + Game::kDrawSize
 	};
 	DrawBoxAA(fieldCenterLeftUp.x, fieldCenterLeftUp.y, fieldCenterRightBottom.x, fieldCenterRightBottom.y, 0xaaffaa, false);//画面の中心位置
 
@@ -216,10 +216,10 @@ void GameplayingScene::Draw()
 	//移動させる量
 	Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
 						(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };
-	DrawBoxAA(lader.x + m_map->GetPos().x, lader.y+ Game::ChipSize + m_map->GetPos().y,
-		lader.x + Game::ChipSize + m_map->GetPos().x, lader.y+ Game::ChipSize + Game::ChipSize + m_map->GetPos().y, 0xaaffaa, false);//現在いる場所(マップ)
+	DrawBoxAA(lader.x + m_map->GetPos().x, lader.y+ Game::kDrawSize + m_map->GetPos().y,
+		lader.x + Game::kDrawSize + m_map->GetPos().x, lader.y+ Game::kDrawSize + Game::kDrawSize + m_map->GetPos().y, 0xaaffaa, false);//現在いる場所(マップ)
 	DrawBoxAA(lader.x + m_map->GetPos().x, lader.y + m_map->GetPos().y,
-		lader.x + Game::ChipSize + m_map->GetPos().x, lader.y + Game::ChipSize + m_map->GetPos().y, 0xaaffaa, false);//現在いる場所(マップ)の1つ下のマス
+		lader.x + Game::kDrawSize + m_map->GetPos().x, lader.y + Game::kDrawSize + m_map->GetPos().y, 0xaaffaa, false);//現在いる場所(マップ)の1つ下のマス
 	DrawFormatString(500, 100, 0x000000, L"梯子.x%3f,y%3f", lader.x, lader.y);
 	DrawFormatString(500, 120, 0x000000, L"移動.x%3f,y%3f", aling.x, aling.y);
 
@@ -232,7 +232,7 @@ void GameplayingScene::Draw()
 	//裏画面に戻す
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	DrawGraph(quakeX_, 0, tempScreenH_, true);
+	DrawGraphF(quakeX_, 0, tempScreenH_, true);
 	//if (quakeTimer_ > 0)
 	//{
 	//	//GraphFilter(tempScreenH_, DX_GRAPH_FILTER_GAUSS, 16, 1400);//画面をぼかす
@@ -314,7 +314,7 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 		//当たり判定のある場所に来たら音を鳴らす
 		if (m_player->IsJump())
 		{
-			Sound::Play(Sound::BlockMove);
+			SoundManager::GetInstance().Play(SoundId::BlockMove);
 		}
 
 		//足場があったら設置中にする
@@ -487,14 +487,14 @@ int GameplayingScene::MapHitCheck(float X, float Y, float& MoveX, float& MoveY)
 	float blockLeftX = 0.0f, blockTopY = 0.0f, blockRightX = 0.0f, blockBottomY = 0.0f;
 
 	//整数値へ変換
-	int noX = static_cast<int>(afterX / Game::ChipSize);
-	int noY = static_cast<int>(afterY / Game::ChipSize);
+	int noX = static_cast<int>(afterX / Game::kDrawSize);
+	int noY = static_cast<int>(afterY / Game::kDrawSize);
 
 	//当たっていたら壁から離す処理を行う、ブロックの左右上下の座標を算出
-	blockLeftX = static_cast<float>(noX * Game::ChipSize);//左　X座標
-	blockRightX = static_cast<float>((noX + 1) * Game::ChipSize);//右　X座標
-	blockTopY = static_cast<float>(noY * Game::ChipSize);//上　Y座標
-	blockBottomY = static_cast<float>((noY + 1) * Game::ChipSize);//下　Y座標
+	blockLeftX = static_cast<float>(noX * Game::kDrawSize);//左　X座標
+	blockRightX = static_cast<float>((noX + 1) * Game::kDrawSize);//右　X座標
+	blockTopY = static_cast<float>(noY * Game::kDrawSize);//上　Y座標
+	blockBottomY = static_cast<float>((noY + 1) * Game::kDrawSize);//下　Y座標
 
 	int mapchip = m_map->GetMapEventParam(afterX, afterY);
 	//当たり判定のあるブロックに当たっているか
@@ -540,13 +540,13 @@ void GameplayingScene::ScreenMove()
 {
 	Position2 fieldCenterLeftUp =//フィールドの中心位置（左上）
 	{
-		static_cast<float>(Game::kNumX / 2 * Game::ChipSize),
-		static_cast<float>(Game::kNumY / 2 * Game::ChipSize)
+		static_cast<float>(Game::kNumX / 2 * Game::kDrawSize),
+		static_cast<float>(Game::kNumY / 2 * Game::kDrawSize)
 	};
 	Position2 fieldCenterRightBottom =//フィールドの中心位置（右下）
 	{
-		fieldCenterLeftUp.x + Game::ChipSize,
-		fieldCenterLeftUp.y + Game::ChipSize
+		fieldCenterLeftUp.x + Game::kDrawSize,
+		fieldCenterLeftUp.y + Game::kDrawSize
 	};
 
 	m_isPlayerCenterLR = false;
@@ -678,14 +678,14 @@ void GameplayingScene::Ladder(const InputState& input)
 		//上下どちらかに梯子があるとき
 		if ((m_map->GetMapEventParam(lader.x, lader.y) == MapEvent_ladder) ||
 			(m_map->GetMapEventParam(lader.x, lader.y) == MapEvent_screenMoveD) ||
-			(m_map->GetMapEventParam(lader.x, lader.y + Game::ChipSize) == MapEvent_ladder)||
-			(m_map->GetMapEventParam(lader.x, lader.y + Game::ChipSize) == MapEvent_screenMoveD))
+			(m_map->GetMapEventParam(lader.x, lader.y + Game::kDrawSize) == MapEvent_ladder)||
+			(m_map->GetMapEventParam(lader.x, lader.y + Game::kDrawSize) == MapEvent_screenMoveD))
 		{
 			m_isLadder = true;
 			PlayerMoveY = 0.0f;
 			PlayerMoveY += kPlayerMoveSpeed;
 		}
-		if (m_isLadder && m_map->GetMapEventParam(lader.x, lader.y + Game::ChipSize) != MapEvent_ladder)
+		if (m_isLadder && m_map->GetMapEventParam(lader.x, lader.y + Game::kDrawSize) != MapEvent_ladder)
 		{
 			m_isLadder = false;
 			PlayerMoveY = 0.0f;
@@ -727,7 +727,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 		PlayerMoveY -= 2.0f;
 		m_player->Action(ActionType::grah_jump);
 		m_player->SetJump(true);
-		Sound::Play(Sound::PlayerJump);
+		SoundManager::GetInstance().Play(SoundId::PlayerJump);
 	}
 	//プレイヤーがジャンプしていたら
 	if (m_player->IsJump() && !m_isLadder)
@@ -819,7 +819,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		m_fallPlayerSpeed = -kJumpAcc;
 		m_player->Action(ActionType::grah_jump);
 		m_player->SetJump(true);
-		Sound::Play(Sound::PlayerJump);
+		SoundManager::GetInstance().Play(SoundId::PlayerJump);
 	}
 
 	//プレイヤーがジャンプしていたら
@@ -852,7 +852,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
-		Sound::Play(Sound::PlayeyShot);
+		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
 
@@ -880,7 +880,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
-				Sound::Play(Sound::EnemyHit);
+				SoundManager::GetInstance().Play(SoundId::EnemyHit);
 				break;
 			}
 		}
@@ -896,7 +896,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
-				Sound::Play(Sound::PlayeyHit);
+				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
 				quakeX_ = 5.0f;
 				quakeTimer_ = 40;
 				return;
@@ -913,7 +913,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{
 				m_player->Damage(enemy->TouchAttackPower());
-				Sound::Play(Sound::PlayeyHit);
+				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
 				quakeX_ = 5.0f;
 				quakeTimer_ = 40;
 				break;
@@ -946,8 +946,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
-		//Button::PushButton(Button::ButtonType_BACK);
-		Sound::Play(Sound::MenuOpen);
+		SoundManager::GetInstance().Play(SoundId::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
 	}
@@ -996,8 +995,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	//今いる場所が画面の下になるように移動させる
 	m_map->Update();
 	
-	float moveY = (Game::kMapNumY * Game::ChipSize) / 120.0f;
-	float moveX = ((Game::kMapNumX * Game::ChipSize) / 120.0f) * -1.0f;
+	float moveY = (Game::kMapNumY * Game::kDrawSize) / 120.0f;
+	float moveX = ((Game::kMapNumX * Game::kDrawSize) / 120.0f) * -1.0f;
 
 	//上に移動するとき
 	if (m_isScreenMoveUp)
@@ -1140,14 +1139,14 @@ void GameplayingScene::BossUpdate(const InputState& input)
 		m_fallPlayerSpeed = -kJumpAcc;
 		m_player->Action(ActionType::grah_jump);
 		m_player->SetJump(true);
-		Sound::Play(Sound::PlayerJump);
+		SoundManager::GetInstance().Play(SoundId::PlayerJump);
 	}
 	//プレイヤーがジャンプしていたら
 	if (m_player->IsJump())
 	{
 		// 落下処理
 		m_fallPlayerSpeed += 0.4f;
-		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::ChipSize;
+		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::kDrawSize;
 		// 落下速度を移動量に加える
 		PlayerMoveY = m_fallPlayerSpeed;
 	}
@@ -1164,7 +1163,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
 		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
-		Sound::Play(Sound::PlayeyShot);
+		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
 	for (int i = 0; i < kShot; i++)
@@ -1192,7 +1191,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 				//enemy->Damage(shot->AttackPower());
 				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
 				enemy->Damage(shot->AttackPower());
-				Sound::Play(Sound::EnemyHit);
+				SoundManager::GetInstance().Play(SoundId::EnemyHit);
 				break;
 			}
 		}
@@ -1209,7 +1208,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			{
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
-				Sound::Play(Sound::PlayeyHit);
+				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
 				return;
 			}
 		}
@@ -1225,7 +1224,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 			if (enemy->GetRect().IsHit(m_player->GetRect()))
 			{
 				m_player->Damage(enemy->TouchAttackPower());
-				Sound::Play(Sound::PlayeyHit);
+				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
 				break;
 			}
 		}
@@ -1254,7 +1253,7 @@ void GameplayingScene::BossUpdate(const InputState& input)
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{
-		Sound::Play(Sound::MenuOpen);
+		SoundManager::GetInstance().Play(SoundId::MenuOpen);
 		m_manager.PushScene(new PauseScene(m_manager));
 		return;
 	}

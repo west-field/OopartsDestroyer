@@ -29,15 +29,15 @@ void Map::Update()
 		for (int chipX = 0; chipX < m_mapWidth; chipX++)
 		{
 			//表示する位置
-			int size = Game::ChipSize / 2;
+			int size = Game::kDrawSize / 2;
 			//右座標、下座標
-			Vector2 pos = { ((chipX * Game::ChipSize + size) + m_camera.x) ,((chipY * Game::ChipSize + size) + m_camera.y) };
+			Vector2 pos = { ((chipX * Game::kDrawSize + size) + m_camera.x) ,((chipY * Game::kDrawSize + size) + m_camera.y) };
 
 			//表示画面内にいないときは生成しない
-			if (pos.x < Game::kMapScreenLeftX - Game::ChipSize)	continue;
-			if (pos.x > Game::kMapScreenRightX + Game::ChipSize)	continue;
-			if (pos.y < Game::kMapScreenTopY - Game::ChipSize)	continue;
-			if (pos.y > Game::kMapScreenBottomY + Game::ChipSize)continue;
+			if (pos.x < Game::kMapScreenLeftX - Game::kDrawSize)	continue;
+			if (pos.x > Game::kMapScreenRightX + Game::kDrawSize)	continue;
+			if (pos.y < Game::kMapScreenTopY - Game::kDrawSize)	continue;
+			if (pos.y > Game::kMapScreenBottomY + Game::kDrawSize)continue;
 
 			auto chipId = GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
 			//何もないときはループを抜ける
@@ -94,9 +94,9 @@ void Map::Draw()
 	{
 		for (int chipX = 0; chipX < m_mapWidth; chipX++)
 		{
-			int size = Game::ChipSize / 2;
-			int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
-			int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
+			int size = Game::kDrawSize / 2;
+			int X = static_cast<int>((chipX * Game::kDrawSize + size) + m_camera.x);
+			int Y = static_cast<int>((chipY * Game::kDrawSize + size) + m_camera.y);
 			//画面外を表示しない
 			if (X < Game::kMapScreenLeftX - size) continue;
 			if (Y < Game::kMapScreenTopY - size)continue;
@@ -106,9 +106,9 @@ void Map::Draw()
 			auto bgChipId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
 			if (bgChipId != 0)
 			{
-				DrawBox(X- Game::ChipSize/2, Y- Game::ChipSize/2, X- Game::ChipSize /2+Game::ChipSize, Y- Game::ChipSize /2+Game::ChipSize, 0xffffff, true);
+				DrawBox(X- Game::kDrawSize /2, Y- Game::kDrawSize /2, X- Game::kDrawSize /2+Game::kDrawSize, Y- Game::kDrawSize /2+Game::kDrawSize, 0xffffff, true);
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
+				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
 
@@ -116,16 +116,16 @@ void Map::Draw()
 			if (chipId != 0)
 			{
 				//マップチップ表示
-				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, kScale, 0.0f, m_handle, true, false);
+				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
 			}
 			
 #ifdef _DEBUG
 			auto enemyId = GetChipId(static_cast<int>(MapLayer_enemy + m_stage), chipX, chipY);
 			if (enemyId != 0)
 			{
-				int size = Game::ChipSize / 2;
-				int X = static_cast<int>((chipX * Game::ChipSize + size) + m_camera.x);
-				int Y = static_cast<int>((chipY * Game::ChipSize + size) + m_camera.y);
+				int size = Game::kDrawSize / 2;
+				int X = static_cast<int>((chipX * Game::kDrawSize + size) + m_camera.x);
+				int Y = static_cast<int>((chipY * Game::kDrawSize + size) + m_camera.y);
 				//画面外を表示しない
 				if (X < Game::kMapScreenLeftX - size) continue;
 				if (Y < Game::kMapScreenTopY - size)continue;
@@ -145,9 +145,9 @@ void Map::Draw()
 
 void Map::Movement(Vector2 vec)
 {
-	int size = Game::ChipSize / 2;
-	int X = static_cast<int>((m_mapHeight * Game::ChipSize + size) + m_camera.x);
-	int Y = static_cast<int>((m_mapWidth * Game::ChipSize + size) + m_camera.y);
+	int size = Game::kDrawSize / 2;
+	int X = static_cast<int>((m_mapHeight * Game::kDrawSize + size) + m_camera.x);
+	int Y = static_cast<int>((m_mapWidth * Game::kDrawSize + size) + m_camera.y);
 	//画面外を表示しない
 	if (Y < Game::kMapScreenTopY - size)return;
 	m_camera += vec;
@@ -224,8 +224,8 @@ int Map::GetMapChipParam(float X, float Y)
 	int x, y;
 
 	// 整数値へ変換
-	x = (int)(X) / Game::ChipSize;
-	y = (int)(Y) / Game::ChipSize;
+	x = (int)(X) / Game::kDrawSize;
+	y = (int)(Y) / Game::kDrawSize;
 
 	// マップからはみ出ていたら 0 を返す
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0) return 0;
@@ -238,8 +238,8 @@ int Map::GetMapEventParam(float X, float Y)
 	int x, y;
 
 	// 整数値へ変換
-	x = (int)(X) / Game::ChipSize;
-	y = (int)(Y) / Game::ChipSize;
+	x = (int)(X) / Game::kDrawSize;
+	y = (int)(Y) / Game::kDrawSize;
 
 	// マップからはみ出ていたら 0 を返す
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0) return 0;
@@ -252,8 +252,8 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 	int x, y;
 
 	// 整数値へ変換
-	x = (int)(X) / Game::ChipSize;
-	y = (int)(Y) / Game::ChipSize;
+	x = (int)(X) / Game::kDrawSize;
+	y = (int)(Y) / Game::kDrawSize;
 
 	// マップからはみ出ていたら 0 を返す
 	if (x >= m_mapWidth || y >= m_mapHeight || x < 0 || y < 0)
@@ -262,7 +262,7 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 		y = 0;
 	}
 
-	Vector2 aling = { static_cast<float>(x * Game::ChipSize),static_cast<float>( y * Game::ChipSize) };
+	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>( y * Game::kDrawSize) };
 
 	//return Vector2(x*Game::ChipSize,y*Game::ChipSize);
 	return aling;

@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
+#include "../game.h"
 
 namespace
 {
@@ -27,7 +28,7 @@ EnemyMoveUD::EnemyMoveUD(std::shared_ptr<Player> player, const Position2 pos, in
 {
 	m_handle = handle;
 	m_burstHandle = burstH;
-	m_rect = { pos,{kLeftRightSize,kLeftRightSize} };
+	m_rect = { pos,{static_cast<int>(kLeftRightSize * Game::kScale),static_cast<int>(kLeftRightSize * Game::kScale)} };
 	m_hp->MaxHp(3);
 }
 
@@ -141,7 +142,7 @@ void EnemyMoveUD::NormalDraw()
 	if (!m_isExist)	return;
 	int img = m_idx * kLeftRightSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
+		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff00ff);
 #endif
@@ -160,5 +161,5 @@ void EnemyMoveUD::BurstDraw()
 {
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true, false);
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
 }

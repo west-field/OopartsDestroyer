@@ -123,13 +123,7 @@
     <ClCompile Include="Enemy\CutMan.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Util\Font.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="Util\Graph.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\Button.cpp">
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="Enemy\EnemyMoveUD.cpp">
@@ -230,13 +224,7 @@
     <ClInclude Include="Enemy\CutMan.h">
       <Filter>Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Util\Font.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="Util\Graph.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\Button.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Enemy\EnemyMoveUD.h">

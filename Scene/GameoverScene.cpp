@@ -2,7 +2,6 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/Sound.h"
-#include "../Util/Font.h"
 #include "../Util/Graph.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
@@ -45,7 +44,7 @@ GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>playe
 GameoverScene::~GameoverScene()
 {
 	DeleteSoundMem(m_BgmH);
-	Sound::StopBgm(Sound::Gameover);
+	SoundManager::GetInstance().StopBgm(SoundId::Gameover);
 }
 
 void
@@ -74,7 +73,7 @@ void GameoverScene::FadeInUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameoverScene::NormalUpdat;
 		m_fadeValue = 0;
-		Sound::Play(Sound::Gameover);
+		SoundManager::GetInstance().Play(SoundId::Gameover);
 	}
 }
 
@@ -146,14 +145,13 @@ void GameoverScene::NormalDraw()
 
 void GameoverScene::MojiDraw()
 {
-	Font::ChangeFontSize(kMojiSize);
+	SetFontSize(kMojiSize);
 	//DrawString(0, 0, L"ゲームオーバー", 0xffffff);
 	for (int i = 0;i < kMojiNum;i++)
 	{
-		DrawString(m_moji[i].pos.x , m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xff0000);
+		DrawStringF(m_moji[i].pos.x , m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xff0000);
 	}
-	
-	Font::ChangeFontSize(0);
+	SetFontSize(0);
 }
 
 void GameoverScene::FadeOutUpdat(const InputState& input)

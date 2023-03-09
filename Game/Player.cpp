@@ -25,7 +25,7 @@ Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::No
 {
 	m_drawScale = kDrawScale;
 	m_rect.center = pos;
-	m_rect.size = { static_cast<int>(kGraphSizeWidth /* kDrawScale*/ - kSize) ,static_cast<int>(kGraphSizeHeight /* kDrawScale*/ - kSize)};
+	m_rect.size = { static_cast<int>(kGraphSizeWidth*Game::kScale - kSize) ,static_cast<int>(kGraphSizeHeight * Game::kScale - kSize)};
 	m_handle = my::MyLoadGraph(L"Data/player.png");
 }
 
@@ -100,14 +100,14 @@ void Player::Damage(int damage)
 
 void Player::ScaleEnlarge(float scale)
 {
-	if (m_drawScale >= 5.0f)	return;
+	if (m_drawScale >= 3.0f)	return;
 	if(m_ultimateTimer < 0) m_ultimateTimer = 0;
 	m_drawScale += scale;
 }
 
 void Player::NormalUpdate()
 {
-	float chipSizeHalf = Game::ChipSize / 2;
+	float chipSizeHalf = Game::kDrawSize / 2;
 	//画面の左端についたらそれ以上動けないようにする
 	if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
 	{
@@ -174,7 +174,7 @@ void Player::NormalDraw()
 	}
 	//プレイヤーを表示
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y- kGraphSizeHeight/2),
-		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, m_drawScale, 0.0f, m_handle, true, m_isLeft);
+		m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, m_drawScale*Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffaa);
 

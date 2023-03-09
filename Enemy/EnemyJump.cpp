@@ -35,7 +35,7 @@ EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int ha
 {
 	m_handle = handle;//敵ハンドル
 	m_burstHandle = burstH;//爆発ハンドル
-	m_rect = { pos,{static_cast<int>(kJumpSize * kDrawScall),static_cast<int>(kJumpSize * kDrawScall)} };
+	m_rect = { pos,{static_cast<int>(kJumpSize * Game::kScale * kDrawScall),static_cast<int>(kJumpSize * Game::kScale * kDrawScall)} };
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);
 }
@@ -94,8 +94,8 @@ void EnemyJump::NormalUpdate()
 	{
 		m_frame = GetRand(kRand) * anim_frame_speed + 60;
 		m_idx = 1;
-		Sound::Play(Sound::EnemyJump);
-		m_posTemp =  m_rect.center.y - Game::ChipSize * 3;
+		SoundManager::GetInstance().Play(SoundId::EnemyJump);
+		m_posTemp =  m_rect.center.y - Game::kDrawSize * 3;
 
 		if (m_player->GetRect().GetCenter().x > m_rect.center.x)
 		{
@@ -140,7 +140,7 @@ void EnemyJump::NormalDraw()
 {
 	int img = m_idx * kJumpSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kJumpSize, kJumpSize, kDrawScall, 0.0f, m_handle, true, m_isLeft);
+		img, 0, kJumpSize, kJumpSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 #endif
@@ -160,5 +160,5 @@ void EnemyJump::BurstDraw()
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true,false);
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true,false);
 }

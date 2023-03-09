@@ -28,7 +28,7 @@ void KeyConfigScene::Update(const InputState& input)
 			return;
 		}
 
-		const int nameCount = input.m_inputNameTable.size() + 2;
+		const int nameCount = static_cast<int>(input.m_inputNameTable.size() + 2);
 
 		if (input.IsTriggered(InputType::up))
 		{

@@ -70,7 +70,7 @@ void OptionScene::NormalUpdat(const InputState& input)
 
 	if (isPress)
 	{
-		Sound::Play(Sound::Cursor);
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < configMax; i++)
 		{
 			if (i == m_selectNum)
@@ -82,7 +82,7 @@ void OptionScene::NormalUpdat(const InputState& input)
 
 	if (input.IsTriggered(InputType::next))
 	{
-		Sound::Play(Sound::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		switch (m_selectNum)
 		{
 		case configOperate:

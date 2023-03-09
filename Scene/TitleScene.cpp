@@ -4,7 +4,6 @@
 #include "../game.h"
 
 #include "../Util/Sound.h"
-#include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/Graph.h"
@@ -46,8 +45,8 @@ void TitleScene::NormalUpdat(const InputState& input)
 			enemy->Update();
 			if (enemy->GetRect().GetCenter().x <= -enemy->GetRect().GetSize().w)
 			{
-				enemy->SetPos(Position2{ static_cast<float>(Game::kScreenWidth - Game::ChipSize * (i + 2)),
-					static_cast<float>(Game::ChipSize * (i + 2))});
+				enemy->SetPos(Position2{ static_cast<float>(Game::kScreenWidth - Game::kDrawSize * (i + 2)),
+					static_cast<float>(Game::kDrawSize * (i + 2))});
 			}
 		}
 		i++;
@@ -68,7 +67,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 
 	if (isPress)
 	{
-		Sound::Play(Sound::Cursor);
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < menuNum; i++)
 		{
 			if (i == m_selectNum)
@@ -84,7 +83,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 	//「次へ」ボタンが押されたら次シーンへ移行する
 	if (input.IsTriggered(InputType::next))
 	{
-		Sound::Play(Sound::Determinant);
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_updateFunc = &TitleScene::FadeOutUpdat;
 	}
 }
@@ -170,9 +169,9 @@ void TitleScene::SetBlock()
 		break;
 	}
 
-	int screenSize = Game::kScreenWidth / Game::ChipSize;
+	int screenSize = Game::kScreenWidth / Game::kDrawSize;
 	int num = GetRand(screenSize);
-	m_blocks.pos = { static_cast<float>(num* Game::ChipSize - Game::ChipSize / 2),0.0f-Game::ChipSize/2 };
+	m_blocks.pos = { static_cast<float>(num* Game::kDrawSize - Game::kDrawSize / 2),0.0f-Game::kDrawSize /2 };
 
 	m_vel = { 0.0f,2.0f };
 }
@@ -183,7 +182,7 @@ void TitleScene::MoveBlock()
 
 	if (m_blocks.pos.y + m_blocks.size.h >= Game::kScreenHeight)
 	{
-		m_blocks.pos.y = 0.0f - Game::ChipSize / 2;
+		m_blocks.pos.y = 0.0f - Game::kDrawSize / 2;
 	}
 }
 
@@ -200,8 +199,8 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	for (int i = 0; i < 3; i++)
 	{
 		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
-			Position2{ static_cast<float>(Game::kScreenWidth - Game::ChipSize* (i + 2)),
-					static_cast<float>(Game::ChipSize * (i + 2)) }, m_enemyH, 0, m_shot);
+			Position2{ static_cast<float>(Game::kScreenWidth - Game::kDrawSize * (i + 2)),
+					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot);
 	}
 	Graph::Init();
 	m_BgmH = LoadSoundMem(L"Sound/noranekonokuchibue.mp3");
@@ -229,15 +228,16 @@ void TitleScene::Draw()
 	//背景
 	Graph::BgDraw(0);
 	//ブロック
-	my::MyDrawRectRotaGraph(m_blocks.pos.x, m_blocks.pos.y, m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize, 
-		m_blocks.size.w, m_blocks.size.h, 1.0f, 0.0f, m_blockH, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
+		m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,
+		m_blocks.size.w, m_blocks.size.h, Game::kScale, 0.0f, m_blockH, true, false);
 	//敵
 	for (auto& enemy : m_enemy)
 	{
 		enemy->Draw();
 	}
 
-	//DrawString((Game::kScreenWidth - kTitleFontSize * 12) / 2, (Game::kScreenHeight / 2 - kTitleFontSize), L"オーパーツディフェンダー", m_color);
+	//タイトルロゴ表示
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
 
 	//メニュー項目を描画
@@ -260,9 +260,9 @@ void TitleScene::Draw()
 
 void TitleScene::MenuDraw(int X, int Y)
 {
-	Font::ChangeFontSize(kMenuFontSize);
+	SetFontSize(kMenuFontSize);
 	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
 	//DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
 	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"おわり", m_color);
-	Font::ChangeFontSize(0);
+	SetFontSize(0);
 }

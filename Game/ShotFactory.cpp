@@ -17,7 +17,7 @@ ShotFactory::~ShotFactory()
 
 void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel,bool isleft)
 {
-	Sound::Play(Sound::EnemyShot);
+	SoundManager::GetInstance().Play(SoundId::EnemyShot);
 	switch (type)
 	{
 	case ShotType::RockBuster:

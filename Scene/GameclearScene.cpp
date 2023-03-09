@@ -3,7 +3,6 @@
 #include "../game.h"
 #include "../Util/Sound.h"
 #include "../Util/Graph.h"
-#include "../Util/Font.h"
 #include "../Util/InputState.h"
 #include "../Util/DrawFunctions.h"
 #include "SceneManager.h"
@@ -44,7 +43,7 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>pla
 GameclearScene::~GameclearScene()
 {
 	DeleteSoundMem(m_BgmH);
-	Sound::StopBgm(Sound::Gameclear);
+	SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
 }
 
 void GameclearScene::Update(const InputState& input)
@@ -71,7 +70,7 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 	{
 		m_updateFunc = &GameclearScene::NormalUpdat;
 		m_fadeValue = 0;
-		Sound::Play(Sound::Gameclear);
+		SoundManager::GetInstance().Play(SoundId::Gameclear);
 	}
 }
 void GameclearScene::FadeOutUpdat(const InputState& input)
@@ -149,12 +148,12 @@ void GameclearScene::NormalDraw()
 
 void GameclearScene::MojiDraw()
 {
-	Font::ChangeFontSize(kMojiSize);
+	SetFontSize(kMojiSize);
 	for (int i = 0; i < kMojiNum; i++)
 	{
 		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
 	}
-	Font::ChangeFontSize(0);
+	SetFontSize(0);
 }
 
 

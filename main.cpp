@@ -1,19 +1,10 @@
 #include <DxLib.h>
 #include "game.h"
 #include "Util/Sound.h"
-#include "Util/Font.h"
 #include "Util/Graph.h"
 #include "Util/InputState.h"
-#include "Util/Button.h"
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
-
-/*
-ボス戦
-弾をかわす
-フィールドをマップチップでつくる
-
-*/
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -28,11 +19,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		return -1;
 	}
-	Sound::Load();
-	Button::Load();
+	auto& soundManager = SoundManager::GetInstance();
+
+	//フォントを読み込む
+	LPCWSTR font_path = L"Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス;
+	if (AddFontResourceEx(font_path, FR_PRIVATE, NULL) > 0) 
+	{
+	}
+	else 
+	{
+		//　フォント読込エラー処理
+		MessageBox(NULL, L"フォント読込失敗", L"", MB_OK);
+	}
+	ChangeFont(L"PixelMplus10", DX_CHARSET_DEFAULT);
 	Graph::Load();
-	Font::Load();
-	Font::FontChange(Font::NormalFont);
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
@@ -60,10 +60,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// fpsを60に固定
 		while (GetNowHiPerformanceCount() - time < 16667){}
 	}
-	Sound::Unload();
-	Button::Unload();
 	Graph::Unload();
-	Font::Unload();
+
+	//　リソースの解放
+	if (RemoveFontResourceEx(font_path, FR_PRIVATE, NULL)) {
+	}
+	else {
+		MessageBox(NULL, L"remove failure", L"", MB_OK);
+	}
 	DxLib_End();
 
 	return 0;

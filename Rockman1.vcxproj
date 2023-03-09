@@ -144,14 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Enemy\EnemyMoveUD.cpp" />
-    <ClCompile Include="Util\Button.cpp" />
     <ClCompile Include="Enemy\CutMan.cpp" />
     <ClCompile Include="Enemy\EnemyJump.cpp" />
     <ClCompile Include="Enemy\EnemyMoveLR.cpp" />
     <ClCompile Include="Enemy\EnemyBase.cpp" />
     <ClCompile Include="Enemy\EnemyBattery.cpp" />
     <ClCompile Include="Util\Graph.cpp" />
-    <ClCompile Include="Util\Font.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
     <ClCompile Include="Enemy\EnemyMoveLeft.cpp" />
     <ClCompile Include="Game\HpBar.cpp" />
@@ -181,12 +179,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy\EnemyMoveUD.h" />
-    <ClInclude Include="Util\Button.h" />
     <ClInclude Include="Enemy\CutMan.h" />
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
     <ClInclude Include="Util\Graph.h" />
-    <ClInclude Include="Util\Font.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Enemy\EnemyBase.h" />
     <ClInclude Include="Enemy\EnemyBattery.h" />

@@ -4,6 +4,7 @@
 #include "../Game/ShotFactory.h"
 #include "../Game/Player.h"
 #include "../Game/HpBar.h"
+#include "../game.h"
 
 namespace
 {
@@ -39,7 +40,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	m_isLeft = true;
 	m_handle = handle;
 	m_burstHandle = burstH;
-	m_rect = { {pos.x,pos.y-8.0f},{static_cast<int>(kGraphSizeWidth * kDrawScale / 2),static_cast<int>(kGraphSizeHeight * kDrawScale)} };
+	m_rect = { {pos.x,pos.y-8.0f},{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2),static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale)} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
@@ -245,7 +246,8 @@ void CutMan::NormalDraw()
 	if ((m_ultimateTimer / 10) % 2 == 1)	return;
 
 	int img = m_idx * kGraphSizeWidth;
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale, 0.0f, m_handle, true, m_isLeft);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+		img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	DrawFormatString(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0xffffff, L"%d", m_idx);
 	m_rect.Draw(0xaaffaa);
@@ -266,7 +268,7 @@ void CutMan::BurstDraw()
 	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale, 0.0f, m_burstHandle, true, false);
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
 
 #ifdef _DEBUG
 	DrawFormatString(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);

@@ -1,73 +1,60 @@
 #include "Sound.h"
 #include <DxLib.h>
-#include <vector>
+#include <cassert>
 
-namespace
+SoundManager::SoundManager()
 {
-	//サウンドハンドル
-	std::vector<int> m_soundHandle;
-
-	//サウンドファイル名
-	const TCHAR* const kFileName[Sound::Max] =
-	{
-		L"Sound/gameclear.mp3",	//ゲームクリア音
-		L"Sound/gameover.mp3",	//ゲームオーバー音
-		
-		L"Sound/Cursor.mp3",		//カーソル
-		L"Sound/pushbotan.mp3",		//決定ボタン
-		L"Sound/blockMove.mp3",		//ブロック接触音
-		L"Sound/menuOpen.mp3",		//メニューを開く時の音
-		L"Sound/playerJump.wav",	//プレイヤージャンプ音
-		L"Sound/enemyJump.wav",		//敵ジャンプ音
-
-
-		L"Sound/playerShot.wav",	//プレイヤー弾発射音
-		L"Sound/playerShotHit.wav",	//プレイヤーに攻撃が当たった
-		L"Sound/enemyShot.wav",		//敵弾発射音
-		L"Sound/burst.wav",	//敵に攻撃が当たった
-	};
+	LoadSoundFile(Gameclear,L"gameclear.mp3");
+	LoadSoundFile(Gameover,L"gameover.mp3");
+	
+	LoadSoundFile(Cursor,L"Cursor.mp3");
+	LoadSoundFile(Determinant,L"pushbotan.mp3");
+	LoadSoundFile(BlockMove,L"blockMove.mp3");
+	LoadSoundFile(MenuOpen,L"menuOpen.mp3");
+	LoadSoundFile(PlayerJump,L"playerJump.wav");
+	LoadSoundFile(EnemyJump,L"enemyJump.wav");
+	
+	LoadSoundFile(PlayeyShot,L"playerShot.wav");
+	LoadSoundFile(PlayeyHit,L"playerShotHit.wav");
+	LoadSoundFile(EnemyShot,L"enemyShot.wav");
+	LoadSoundFile(EnemyHit,L"burst.wav");
+}
+SoundManager::~SoundManager()
+{
 }
 
-namespace Sound
+int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
-	//ロードアンロード
-	void Load()
-	{
-		// サウンドデータの読み込み
-		for (auto& fileName : kFileName)
-		{
-			int handle = LoadSoundMem(fileName);
-			m_soundHandle.push_back(handle);
-		}
-	}
-	void Unload()
-	{
-		// サウンドデータの解放
-		for (auto& handle : m_soundHandle)
-		{
-			DeleteSoundMem(handle);
-			handle = -1;
-		}
-	}
-	//BGMの再生
-	void StartBgm(SoundId id, int volume)
-	{
-		SetVolume(id, volume);
-		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_LOOP, true);//ループ再生させる
-	}
-	void StopBgm(SoundId id)
-	{
-		StopSoundMem(m_soundHandle[id]);
-	}
-	//効果音の再生
-	void Play(SoundId id, int volume)
-	{
-		SetVolume(id, volume);
-		PlaySoundMem(m_soundHandle[id], DX_PLAYTYPE_BACK, true);
-	}
-	//音量設定
-	void SetVolume(SoundId id, int volume)
-	{
-		ChangeVolumeSoundMem(volume, m_soundHandle[id]);
-	}
+	/*std::wstring path = L"Data/Sound/SE/";
+	path += fileName;
+	path += L".wav";
+	int handle = LoadSoundMem(path.c_str());
+
+	assert(handle >= 0);
+	nameAndHandleTable_[fileName] = handle;*/
+
+	std::wstring path = L"Sound/SE/";
+	path += fileName;
+	int handle = LoadSoundMem(path.c_str());
+
+	assert(handle >= 0);
+	nameAndHandleTable_[id] = handle;
+
+	return handle;
+}
+
+void SoundManager::Play(SoundId id, int volume)
+{
+	SetVolume(volume, id);
+	PlaySoundMem(nameAndHandleTable_[id], DX_PLAYTYPE_BACK);
+}
+
+void SoundManager::SetVolume(int volume, SoundId id)
+{
+	ChangeVolumeSoundMem(volume, nameAndHandleTable_[id]);
+}
+
+void SoundManager::StopBgm(SoundId id)
+{
+	StopSoundMem(nameAndHandleTable_[id]);
 }
