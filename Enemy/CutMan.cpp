@@ -5,7 +5,7 @@
 #include "../Game/Player.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
-
+#include "../Util/Sound.h"
 namespace
 {
 	constexpr int kCutManTouchAttackPower = 4;//ÚG‚µ‚½Žž‚ÌUŒ‚—Í
@@ -86,8 +86,10 @@ int CutMan::TouchAttackPower() const
 void CutMan::Damage(int damage)
 {
 	m_hp->Damage(damage);
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 	if (m_hp->GetHp() == 0)
 	{
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
 		updateFunc = &CutMan::BurstUpdate;
 		m_drawFunc = &CutMan::BurstDraw;
 		m_idx = 0;
@@ -271,6 +273,6 @@ void CutMan::BurstDraw()
 		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
 
 #ifdef _DEBUG
-	DrawFormatString(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);
+	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);
 #endif
 }

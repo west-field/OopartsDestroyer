@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
+#include "../Util/Sound.h"
 
 namespace
 {
@@ -77,6 +78,7 @@ void EnemyMoveLeft::Damage(int damage)
 	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
 	if (m_hp->GetHp() == 0)
 	{
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
 		m_updateFunc = &EnemyMoveLeft::BurstUpdate;
 		m_drawFunc = &EnemyMoveLeft::BurstDraw;
 		m_idx = 0;

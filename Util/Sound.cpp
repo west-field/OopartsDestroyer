@@ -17,7 +17,8 @@ SoundManager::SoundManager()
 	LoadSoundFile(PlayeyShot,L"playerShot.wav");
 	LoadSoundFile(PlayeyHit,L"playerShotHit.wav");
 	LoadSoundFile(EnemyShot,L"enemyShot.wav");
-	LoadSoundFile(EnemyHit,L"burst.wav");
+	LoadSoundFile(EnemyHit,L"playerShotHit.wav");
+	LoadSoundFile(EnemyBurst,L"burst.wav");
 }
 SoundManager::~SoundManager()
 {

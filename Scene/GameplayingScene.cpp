@@ -880,7 +880,6 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
-				SoundManager::GetInstance().Play(SoundId::EnemyHit);
 				break;
 			}
 		}
@@ -1191,7 +1190,6 @@ void GameplayingScene::BossUpdate(const InputState& input)
 				//enemy->Damage(shot->AttackPower());
 				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
 				enemy->Damage(shot->AttackPower());
-				SoundManager::GetInstance().Play(SoundId::EnemyHit);
 				break;
 			}
 		}

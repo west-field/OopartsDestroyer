@@ -21,6 +21,7 @@ enum SoundId
 
 	EnemyShot,		//“G‚Ì’e”­Ë‰¹
 	EnemyHit,	//“G‚ªUŒ‚‚ğó‚¯‚½‚Æ‚«‚Ì‰¹
+	EnemyBurst,	//“G‚ªUŒ‚‚ğó‚¯‚½‚Æ‚«‚Ì‰¹
 
 	SoundId_Max
 };

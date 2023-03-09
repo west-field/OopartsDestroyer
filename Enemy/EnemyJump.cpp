@@ -5,6 +5,7 @@
 #include "../Game/HpBar.h"
 #include "../game.h"
 #include "../Game/Player.h"
+#include "../Util/Sound.h"
 
 namespace
 {
@@ -76,6 +77,7 @@ void EnemyJump::Damage(int damage)
 
 	if (m_hp->GetHp() == 0)
 	{
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
 		m_updateFunc = &EnemyJump::BurstUpdate;
 		m_drawFunc = &EnemyJump::BurstDraw;
 		m_idx = 0;

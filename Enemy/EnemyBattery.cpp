@@ -5,6 +5,7 @@
 #include "../Game/HpBar.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/Player.h"
+#include "../Util/Sound.h"
 
 namespace
 {
@@ -76,6 +77,7 @@ void EnemyBattery::Damage(int damage)
 	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
 	if (m_hp->GetHp() == 0)
 	{
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
 		m_updateFunc = &EnemyBattery::BurstUpdate;
 		m_drawFunc = &EnemyBattery::BurstDraw;
 		m_idx = 0;

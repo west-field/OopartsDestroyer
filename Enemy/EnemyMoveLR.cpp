@@ -3,6 +3,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
+#include "../Util/Sound.h"
 
 namespace
 {
@@ -69,9 +70,11 @@ int EnemyMoveLR::TouchAttackPower() const
 void EnemyMoveLR::Damage(int damage)
 {
 	m_hp->Damage(damage);
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
 	if (m_hp->GetHp() == 0)
 	{
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
 		m_updateFunc = &EnemyMoveLR::BurstUpdate;
 		m_drawFunc = &EnemyMoveLR::BurstDraw;
 		m_idx = 0;
