@@ -9,14 +9,13 @@ namespace
 	constexpr float kScale = 1.0f;
 }
 
-HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1),m_pos(), m_size(), m_isHpGraph()
+HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1), m_isHpGraph()
 {
 	for (auto& hp : m_isHpGraph)
 	{
 		hp = true;
 	}
-	//m_pos = { Game::kMapScreenLeftX + 10,Game::kMapScreenTopY };
-	m_pos = { Game::kScreenWidth /5 ,Game::kMapScreenTopY };
+	m_rect = { { Game::kScreenWidth / 5 ,Game::kScreenHeight/3 - 10} ,{} };
 }
 
 HpBar::~HpBar()
@@ -28,7 +27,10 @@ void HpBar::Init(int handle)
 {
 	m_HpHandle = handle;
 
-	GetGraphSize(m_HpHandle, &m_size.w, &m_size.h);
+	GetGraphSize(m_HpHandle, &m_rect.size.w, &m_rect.size.h);
+
+	m_rect.size.w /= 5;
+	m_rect.size.h /= 2;
 
 	m_MaxHp = m_Hp = kHpMax;
 }
@@ -45,24 +47,75 @@ void HpBar::Update()
 
 void HpBar::Draw(bool isPlayer)
 {
-	int x = static_cast<int>(m_pos.x + m_size.w / 2);
-	int y = static_cast<int>(m_pos.y + m_size.h / 2);
+	int x = static_cast<int>(m_rect.center.x + m_rect.size.w / 2);
+	int y = static_cast<int>(m_rect.center.y + m_rect.size.h / 2);
 
 	//プレイヤーじゃないとき横にずらす
-	if (!isPlayer)	x += m_size.w + 10;
+	if (!isPlayer)	x = Game::kMapScreenRightX + m_rect.size.w + 10;
 
-	//HPバーの背景をつける
-	DrawBox(x - m_size.w/2, y- m_size.h/2, x - m_size.w/2 + m_size.w, y - m_size.h / 2 + kHpMax * m_size.h, 0x000000, true);
+	int idxX = m_Hp / 10;
+	int idxY = idxX / 5;
 
-	for (int i = 0; i < kHpMax; i++)
+	switch (m_Hp)
 	{
-		if (m_isHpGraph[i])
-		{
-			my::MyDrawRectRotaGraph(x, static_cast<int>(y + i * (m_size.h * kScale)),
-				0, 0, m_size.w, m_size.h, kScale, 0.0f, m_HpHandle, true,false);
-		}
+	case 20:
+	case 19:
+		idxX = 0;
+		idxY = 0;
+		break;
+	case 18:
+	case 17:
+		idxX = 1;
+		idxY = 0;
+		break;
+	case 16:
+	case 15:
+		idxX = 2;
+		idxY = 0;
+		break;
+	case 14:
+	case 13:
+		idxX = 3;
+		idxY = 0;
+		break;
+	case 12:
+	case 11:
+		idxX = 4;
+		idxY = 0;
+		break;
+	case 10:
+	case 9:
+		idxX = 0;
+		idxY = 1;
+		break;
+	case 8:
+	case 7:
+		idxX = 1;
+		idxY = 1;
+		break;
+	case 6:
+	case 5:
+		idxX = 2;
+		idxY = 1;
+		break;
+	case 4:
+	case 3:
+		idxX = 3;
+		idxY = 1;
+		break;
+	case 2:
+	case 1:
+	case 0:
+		idxX = 4;
+		idxY = 1;
+		break;
+	default:
+		break;
 	}
 
+	my::MyDrawRectRotaGraph(x, y,
+		idxX * m_rect.size.w, idxY* m_rect.size.h,
+		m_rect.size.w, m_rect.size.h, kScale, 0.0f, m_HpHandle, true,false);
 }
 
 void HpBar::Damage(int damage)

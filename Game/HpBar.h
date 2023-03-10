@@ -25,7 +25,7 @@ public:
 private:
 	virtual void SetHp(const int hp);
 
-	static constexpr int kHpMax = 28;
+	static constexpr int kHpMax = 20;
 
 	int m_MaxHp;
 	//Œ»İ‚ÌHP
@@ -34,9 +34,8 @@ private:
 	int m_HpHandle;
 
 	//HP‰æ‘œ•\¦À•W
-	Position2 m_pos;
 	//‰æ‘œ‚Ì•‚Æ‚‚³
-	Size m_size;
+	Rect m_rect;
 
 	//HP‰æ‘œ‚ğ‰½–‡•\¦‚·‚é‚©
 	bool m_isHpGraph[kHpMax];
