@@ -11,7 +11,7 @@
 #include "SceneManager.h"
 #include "GameplayingScene.h"
 #include "MonologueScene.h"
-#include "OptionScene.h"
+#include "PauseScene.h"
 
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
@@ -85,7 +85,16 @@ void TitleScene::NormalUpdat(const InputState& input)
 	if (input.IsTriggered(InputType::next))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
-		m_updateFunc = &TitleScene::FadeOutUpdat;
+		
+		if (m_selectNum == menuConfig)
+		{
+			m_manager.PushScene(new PauseScene(m_manager));
+			return;
+		}
+		else
+		{
+			m_updateFunc = &TitleScene::FadeOutUpdat;
+		}
 	}
 }
 
@@ -245,6 +254,7 @@ void TitleScene::MenuDraw(int X, int Y)
 {
 	SetFontSize(kMenuFontSize);
 	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
+	DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
 	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"おわり", m_color);
 	SetFontSize(0);
 }
