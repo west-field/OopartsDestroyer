@@ -30,6 +30,7 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 	m_handleMap[EnemyType::Boss] = my::MyLoadGraph(L"Data/FlyingObelisk.png");
 
 	m_burstHandle = my::MyLoadGraph(L"Data/player_burst.png");
+	m_bossBurstHandle = my::MyLoadGraph(L"Data/boss_burst.png");
 }
 EnemyFactory::~EnemyFactory()
 {
@@ -110,7 +111,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::Boss:
 		m_enemies.push_back(
 			std::make_shared<CutMan>(
-				m_player, pos, m_handleMap[EnemyType::Boss], m_burstHandle, m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_shotFactory));
 		break;
 	default:
 		break;

@@ -56,7 +56,8 @@ private:
 	std::shared_ptr<ShotFactory> m_shotFactory;			//ショット
 
 	std::map<EnemyType, int>m_handleMap;//敵の画像ハンドル
-	int m_burstHandle;
+	int m_burstHandle = -1;
+	int m_bossBurstHandle = -1;
 
 	int m_frame = 0;//敵作成までのフレーム数
 };
