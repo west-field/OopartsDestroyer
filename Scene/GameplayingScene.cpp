@@ -34,7 +34,7 @@ namespace
 }
 
 GameplayingScene::GameplayingScene(SceneManager& manager) :
-	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),m_drawFunc(&GameplayingScene::NormalDraw),
+	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),
 	m_add(), m_correction(), m_playerPosUp(), m_playerPosBottom()
 {
 	int se = 0, sh = 0, bit = 0;
@@ -46,12 +46,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	for (auto& hp : m_hp)
 	{
 		hp = std::make_shared<HpBar>();
-		hp->Init(my::MyLoadGraph(L"Data/hp.bmp"));
-	}
-	//プレイヤーの弾のグラフィック
-	for (auto& shot : m_shots)
-	{
-		shot = std::make_shared<RockBuster>(my::MyLoadGraph(L"Data/rockBuster.png"));
+		//hp->Init(my::MyLoadGraph(L"Data/hp.bmp"));
+		hp->Init(my::MyLoadGraph(L"Data/hpbar.png"));
 	}
 	//プレイヤー
 	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX- Game::kDrawSize /2),(Game::kMapScreenBottomY - Game::kDrawSize *5)},m_hp[Object_Player]);//プレイヤーの初期位置
@@ -64,9 +60,9 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
 	//Position2 pos = { -3026.0f,178.0f };//下移動梯子
-	//Position2 pos = { -5351.0f,-1235.0f };//ボス戦前
+	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -101,18 +97,17 @@ void GameplayingScene::Draw()
 
 	m_player->Draw();//プレイヤーを表示
 	m_enemyFactory->Draw();//エネミーを表示
-	for (auto& shot : m_shots)//ショットを表示
-	{
-		if (shot->IsExist())
-		{
-			shot->Draw();
-		}
-	}
+	
 	m_shotFactory->Draw();//敵ショット表示
 
-	(this->*m_drawFunc)();//HPバーの表示
+	m_hp[Object_Player]->Draw(true);//HPバーを表示
+	if (m_isBoss)
+	{
+		m_hp[Object_EnemyBoss]->Draw(false);
+	}
 
-	//枠を作る
+	//枠を表示
+	//m_map->DrawFrame();
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
 	DrawBox(Game::kMapScreenRightX, Game::kMapScreenTopY, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//右側
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenTopY - Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenTopY, m_framecolor, true);//上
@@ -135,18 +130,8 @@ void GameplayingScene::Draw()
 		,m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 + 2.0f
 		,m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos
 		,m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.5f
-		, 0x0000ff, true);
-
-	int num = 0;
-	for (auto& shot : m_shots)//ショットを表示
-	{
-		if (shot->IsExist())
-		{
-			num++;
-		}
-	}
+		, 0x0000ff, false);
 	int color = 0x000000;
-	DrawFormatString(150, 20, color, L"弾の数%d", num);
 	if (m_isPlayerCenterLR)
 	{
 		DrawFormatString(150, 40, 0xff00ff, L"lR,true");
@@ -241,22 +226,6 @@ void GameplayingScene::Draw()
 	//	//SetDrawBlendMode(DX_BLENDMODE_ADD, 192);//加算合成
 	//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
 	//}
-}
-
-bool GameplayingScene::createShot(Position2 pos, bool isPlayer, bool isLeft)
-{
-	for (auto& shot : m_shots)
-	{
-		if (!shot->IsExist())
-		{
-			shot->Start(pos, {0.0f,0.0f}, isLeft);
-			shot->PlayerShot(isPlayer);
-			shot->SetExist(true);
-			return true;
-		}
-	}
-
-	return false;
 }
 
 void GameplayingScene::MovePlayer(float MoveX, float MoveY)
@@ -850,46 +819,41 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	//ショット
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
 	{
-		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
+		m_shotFactory->Create(ShotType::RockBuster, m_player->GetRect().GetCenter(), { 0.0f,0.0f }, m_player->IsLeft(), true);
 		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
 
-	for (int i = 0; i < kShot; i++)
-	{
-		if (m_shots[i]->IsExist())//存在している弾だけ更新する
-		{
-			m_shots[i]->Update();
-			m_shots[i]->Movement({ kShotSpeed, m_correction.y });
-		}
-	}
-	m_shotFactory->Movement({ kShotSpeed, m_correction.y });
+	m_shotFactory->Movement({ m_correction.y, m_correction.y });
 
 	//自機の弾と、敵機の当たり判定
-	for (auto& shot : m_shots)
+	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
-		if (!shot->IsExist())	continue;
-		if (!shot->GetPlayerShot())	continue;//プレイヤーが撃った弾ではなかったら処理しない
-		for (auto& enemy : m_enemyFactory->GetEnemies())
+		if (!enemy->IsExist())	continue;
+		if (!enemy->IsCollidable())continue;//当たり判定対象になっていなかったら当たらない
+		for (auto& shot : m_shotFactory->GetShot())
 		{
-			if (!enemy->IsExist())	continue;
-			if (!enemy->IsCollidable())continue;//当たり判定対象になっていなかったら当たらない
+			if (!shot->IsExist())	continue;
+			if (!shot->IsPlayerShot())	continue;//プレイヤーが撃った弾ではなかったら処理しない
+
 			//敵に弾がヒットした
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
+				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
 				break;
 			}
 		}
 	}
+
 	//敵の弾と、プレイヤーの当たり判定
 	if (m_player->IsCollidable())
 	{
 		for (auto& shot : m_shotFactory->GetShot())
 		{
 			if (!shot->IsExist())	continue;
-			if (shot->GetPlayerShot())	continue;
+			if (shot->IsPlayerShot())	continue;
 			if (shot->GetRect().IsHit(m_player->GetRect()))
 			{
 				shot->SetExist(false);
@@ -949,6 +913,29 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		return;
 	}
 
+	if (m_isBoss)
+	{
+		if (m_soundVolume++ >= 255)
+		{
+			m_soundVolume = 255;
+		}
+		else
+		{
+			ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
+		}
+		//エネミーのHPが０になったらゲームクリア
+		for (auto& enemy : m_enemyFactory->GetEnemies())
+		{
+			if (!enemy->IsExist())
+			{
+				m_updateFunc = &GameplayingScene::FadeOutUpdat;
+				m_fadeColor = 0x000000;
+				m_crea = 0;
+				return;
+			}
+		}
+	}
+
 	if (quakeTimer_ > 0)
 	{
 		quakeX_ = -quakeX_;
@@ -963,8 +950,6 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 void GameplayingScene::MoveMapUpdat(const InputState& input)
 {
-	//プレイヤーの左座標と下座標と上座標
-	float playerPosLeft = 0.0f;
 	//移動する前にすべて消す
 	if (!m_isFirst)
 	{
@@ -976,10 +961,6 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			enemy->SetExist(false);
 		}
 		//ショットを削除する
-		for (auto& shot : m_shots)
-		{
-			shot->SetExist(false);
-		}
 		for (auto& shot : m_shotFactory->GetShot())
 		{
 			if (!shot->IsExist())	continue;
@@ -988,6 +969,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		m_correction = { 0.0f,0.0f };
 		m_playerPosUp =(m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 );
 		m_playerPosBottom= (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 );
+		if (m_isScreenMoveWidth)
+		{
+			m_soundVolume = 0;
+			//ボス戦BGMと入れ替える
+			ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
+			PlaySoundMem(m_bossBgm, DX_PLAYTYPE_LOOP, true);
+		}
 	}
 
 	//今いる場所が画面の下になるように移動させる
@@ -1042,6 +1030,9 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	//右に移動
 	else if (m_isScreenMoveWidth)
 	{
+		m_soundVolume += 4;
+		ChangeVolumeSoundMem(255 - m_soundVolume, m_BgmH);
+		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
 		//if (m_playerPosBottom > Game::kMapScreenLeftX)
 		//端についていないときは移動できる
@@ -1056,203 +1047,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		}
 		else
 		{
-			m_soundVolume -= 4;
-			if (m_soundVolume <= 0)
-			{
-				m_soundVolume = 0;
-				//ボス戦
-				m_updateFunc = &GameplayingScene::BossUpdate;
-				m_drawFunc = &GameplayingScene::BossDraw;
-				m_isScreenMoveWidth = false;
-				//ボス戦BGMと入れ替える
-				StopSoundMem(m_BgmH);
-				ChangeVolumeSoundMem(0, m_bossBgm);
-				PlaySoundMem(m_bossBgm, DX_PLAYTYPE_LOOP, true);
-				return;
-			}
-			ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
-		}
-	}
-}
-
-void GameplayingScene::BossUpdate(const InputState& input)
-{
-	if (m_soundVolume++ >= 255)
-	{
-		m_soundVolume = 255;
-	}
-	else
-	{
-		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
-	}
-	ScreenMove();
-	//Button::Update();
-	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
-	m_correction = { 0.0f,0.0f };
-	//左に移動
-	if (input.IsPressed(InputType::left))
-	{
-		if (input.IsTriggered(InputType::left))
-		{
-			m_player->SetLeft(true);
-		}
-		else
-		{
-			PlayerMoveX -= kPlayerMoveSpeed;
-
-			m_player->SetLeft(true);
-			m_player->Action(ActionType::grah_walk);
-		}
-	}
-	//右に移動
-	else if (input.IsPressed(InputType::right))
-	{
-		if (input.IsTriggered(InputType::right))
-		{
-			m_player->SetLeft(false);
-		}
-		else
-		{
-			//プレイヤーが画面中央にいる＆マップの表示できる範囲以内の時は動かせる
-			if (m_isPlayerCenterLR &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_screen &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenTopY) != MapEvent_pause &&
-				m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_pause)
-			{
-				MoveMap(-kPlayerMoveSpeed, 0.0f);
-			}
-			else
-			{
-				PlayerMoveX += kPlayerMoveSpeed;
-			}
-			m_player->SetLeft(false);
-			m_player->Action(ActionType::grah_walk);
-		}
-	}
-	//プレイヤージャンプ処理
-	if (!m_player->IsJump() && input.IsTriggered(InputType::junp))
-	{
-		//Button::PushButton(Button::ButtonType_A);
-		m_fallPlayerSpeed = -kJumpAcc;
-		m_player->Action(ActionType::grah_jump);
-		m_player->SetJump(true);
-		SoundManager::GetInstance().Play(SoundId::PlayerJump);
-	}
-	//プレイヤーがジャンプしていたら
-	if (m_player->IsJump())
-	{
-		// 落下処理
-		m_fallPlayerSpeed += 0.4f;
-		float camera = m_map->GetPos().y + Game::kMapChipNumY * Game::kDrawSize;
-		// 落下速度を移動量に加える
-		PlayerMoveY = m_fallPlayerSpeed;
-	}
-	// 移動量に基づいてキャラクタの座標を移動
-	MovePlayer(PlayerMoveX, PlayerMoveY);
-	m_player->Update();		//	プレイヤー更新
-	//エネミー
-	MoveBoss(m_correction.x, m_correction.y);
-	m_enemyFactory->Update();//エネミー更新
-
-	m_shotFactory->Update();//ショット更新
-
-	//ショット
-	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
-	{
-		createShot(m_player->GetRect().GetCenter(), true, m_player->IsLeft());
-		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
-		m_player->Action(ActionType::grah_attack);
-	}
-	for (int i = 0; i < kShot; i++)
-	{
-		if (m_shots[i]->IsExist())//存在している弾だけ更新する
-		{
-			m_shots[i]->Update();
-			m_shots[i]->Movement({ kShotSpeed, m_correction.y });
-		}
-	}
-
-	//自機の弾と、敵機の当たり判定
-	for (auto& shot : m_shots)
-	{
-		if (!shot->IsExist())	continue;
-		if (!shot->GetPlayerShot())	continue;//プレイヤーが撃った弾ではなかったら処理しない
-		for (auto& enemy : m_enemyFactory->GetEnemies())
-		{
-			if (!enemy->IsExist())	continue;
-			if (!enemy->IsCollidable())continue;//当たり判定対象になっていなかったら当たらない
-			//敵に弾がヒットした
-			if (shot->GetRect().IsHit(enemy->GetRect()))
-			{
-				shot->SetExist(false);
-				//enemy->Damage(shot->AttackPower());
-				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
-				enemy->Damage(shot->AttackPower());
-				break;
-			}
-		}
-	}
-	//敵の弾と、プレイヤーの当たり判定
-	if (m_player->IsCollidable())
-	{
-		for (auto& shot : m_shotFactory->GetShot())
-		{
-			if (!shot->IsExist())	continue;
-			if (shot->GetPlayerShot())	continue;
-			//ショットとプレイヤーの当たり判定
-			if (shot->GetRect().IsHit(m_player->GetRect()))
-			{
-				shot->SetExist(false);
-				m_player->Damage(shot->AttackPower());
-				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
-				return;
-			}
-		}
-	}
-	//プレイヤーと、敵の当たり判定
-	if (m_player->IsCollidable())
-	{
-		for (auto& enemy : m_enemyFactory->GetEnemies())
-		{
-			if (!enemy->IsExist())	continue;
-			if (!enemy->IsCollidable())continue;//当たり判定対象になっていなかったら当たらない
-			//敵とプレイヤーが当たった
-			if (enemy->GetRect().IsHit(m_player->GetRect()))
-			{
-				m_player->Damage(enemy->TouchAttackPower());
-				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
-				break;
-			}
-		}
-	}
-
-	//プレイヤーのHPが０になったらゲームオーバーにする
-	if (m_hp[Object_Player]->GetHp() <= 0)
-	{
-		m_updateFunc = &GameplayingScene::FadeOutUpdat;
-		m_fadeColor = 0xff0000;
-		m_crea = 1;
-		return;
-	}
-	//エネミーのHPが０になったらゲームクリア
-	for (auto& enemy : m_enemyFactory->GetEnemies())
-	{
-		if (!enemy->IsExist())
-		{
-			m_updateFunc = &GameplayingScene::FadeOutUpdat;
-			m_fadeColor = 0x000000;
-			m_crea = 0;
+			//ボス戦
+			m_isBoss = true;
+			m_isScreenMoveWidth = false;
+			StopSoundMem(m_BgmH);
+			m_updateFunc = &GameplayingScene::NormalUpdat;
 			return;
 		}
-	}
-	
-	//ポーズ画面
-	if (input.IsTriggered(InputType::pause))
-	{
-		SoundManager::GetInstance().Play(SoundId::MenuOpen);
-		m_manager.PushScene(new PauseScene(m_manager));
-		return;
 	}
 }
 
@@ -1274,17 +1075,5 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 			return;
 		}
 	}
-}
-
-void GameplayingScene::NormalDraw()
-{
-	m_hp[Object_Player]->Draw(true);//HPバーを表示
-}
-
-void GameplayingScene::BossDraw()
-{
-	//HPバーを表示
-	m_hp[Object_Player]->Draw(true);
-	m_hp[Object_EnemyBoss]->Draw(false);
 }
 

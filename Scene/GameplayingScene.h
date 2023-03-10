@@ -39,14 +39,6 @@ public:
 
     virtual void Update(const InputState& input);
     virtual void Draw();
-    /// <summary>
-    /// ショットを作る
-    /// </summary>
-    /// <param name="pos">発射位置</param>
-    /// <param name="isPlayer">プレイヤーが撃った弾か</param>
-    /// <param name="isLeft">左を向いているか</param>
-    /// <returns>true作れた false作れなかった</returns>
-    bool createShot(Position2 pos, bool isPlayer,bool isLeft);
 private:
     /// <summary>
     /// キャラクターとマップの当たり判定
@@ -105,20 +97,12 @@ private:
      void NormalUpdat(const InputState& input);
     //画面移動の更新
      void MoveMapUpdat(const InputState& input);
-     //ボス戦
-     void BossUpdate(const InputState& input);
     //画面のフェードアウト
      void FadeOutUpdat(const InputState& input);
-
-     //通常表示
-     void NormalDraw();
-     //ボス戦表示
-     void BossDraw();
 private:
     unsigned int m_fadeColor = 0x000000;//フェードの色（黒
     
     void (GameplayingScene::* m_updateFunc)(const InputState& input);
-    void (GameplayingScene::* m_drawFunc)();
 
     //マップ
     std::shared_ptr<Map> m_map; 
@@ -152,11 +136,7 @@ private:
         Object_Max
     };
     //HPバー
-    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;    
-    
-    //自機ショット
-    static constexpr int kShot = 15;                        //ショットの表示数
-    std::array<std::shared_ptr<ShotBase>, kShot> m_shots;   //ショット
+    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;
 
     //梯子を上っているときtrue
     bool m_isLadder = false;
@@ -167,6 +147,7 @@ private:
     //落ちているかどうか 落ちているときはジャンプできない
     bool m_isFall;
 
+    bool m_isBoss = false;
     //0:ゲームクリアか1:ゲームオーバーか
     int m_crea = 0;
     //画面移動する際一回だけエネミーを削除
@@ -175,7 +156,6 @@ private:
     int m_bossBgm = -1;
     //サウンドの音量
     int m_soundVolume;
-
 
     int tempScreenH_ = -1;//画面効果用スクリーンハンドル
     int quakeTimer_ = 0;//画面揺れタイマー
