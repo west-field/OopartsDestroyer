@@ -35,8 +35,9 @@ private:
 	void (CutMan::* m_drawFunc)();
 
 	int m_idx = 0;//‰æ‘œ‚Ì•\Ž¦”ÍˆÍ
-	int m_frame = 0;//ŽŸ‚Ì‰æ‘œ‚ÉˆÚ“®
-	int m_shotFrame;//ŽŸ‚Ì’e‚ðŒ‚‚Â‚Ü‚Å
+	int m_animFrame = 0;//ŽŸ‚Ì‰æ‘œ‚ÉˆÚ“®
+	int m_frame = 0;
+	int m_shotFrame = 20;//ŽŸ‚Ì’e‚ðŒ‚‚Â‚Ü‚Å
 	int m_JumpFrame;//ŽŸ‚ÌƒWƒƒƒ“ƒv‚Ü‚Å
 
 	float m_posTemp = 0.0f;//‰¼“ü‚ê

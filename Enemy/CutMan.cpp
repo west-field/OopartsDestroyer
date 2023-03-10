@@ -25,9 +25,9 @@ namespace
 	constexpr float kGravity = 0.8f;//重力
 	constexpr float kJumpAcc = -10.0f;//ジャンプ力
 	//爆発アニメーション
-	constexpr int burst_img_width = 32;//画像サイズX
-	constexpr int burst_img_height = 32;//画像サイズY
-	constexpr float burst_draw_scale = 1.0f;//拡大率
+	constexpr int burst_img_width = 100;//画像サイズX
+	constexpr int burst_img_height = 100;//画像サイズY
+	constexpr float burst_draw_scale = 1.2f;//拡大率
 	constexpr int burst_frame_num = 8;//アニメーション枚数
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
@@ -36,11 +36,12 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate),m_drawFunc(&CutMan::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
-	m_hp->MaxHp(28);
+	m_hp->MaxHp(1);
 	m_isLeft = true;
 	m_handle = handle;
 	m_burstHandle = burstH;
-	m_rect = { {pos.x,pos.y-8.0f},{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2),static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale)} };
+	m_rect = { {pos.x,pos.y-8.0f},
+		{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale)-20} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
@@ -87,6 +88,7 @@ void CutMan::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
+	
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
@@ -113,47 +115,48 @@ void CutMan::MoveUpdate()
 
 void CutMan::StopUpdate()
 {
-	if (m_frame++ > kAnimFrameSpeed)
+	if (m_animFrame++ > kAnimFrameSpeed)
 	{
 		m_idx = (m_idx + 1) % kGraphNum;
-		m_frame = 0;
+		m_animFrame = 0;
 	}
 
 	if (--m_ultimateTimer <= 0)
 	{
 		m_ultimateTimer = 0;
 	}
-	return;
 
-	//ダメージを受けたら弾を打つ
-	if (m_isOnDamage)
+	//1秒ごとに弾を打つ
+	if (m_frame++ == 60)
 	{
+		m_frame = 0;
+		m_isOnDamage = false;
+
+		//HPが半分を切ったら二回攻撃する
 		if (m_hp->GetHp() <= m_hp->GetMaxHp() / 2)
 		{
 			updateFunc = &CutMan::TwoShotUpdate;
-			m_isOnDamage = false;
 			return;
 		}
 		else
 		{
 			updateFunc = &CutMan::OneShotUpdate;
-			m_isOnDamage = false;
 			return;
 		}
 	}
-	//弾を打たないときは移動する
-	else if(m_JumpFrame++ >= kJumpInterval)
-	{
-		m_JumpFrame = 0;
-		
-		//左を向いていたら方向を変える
-		if (m_isLeft) m_vec.x *= -1.0f;
-		//ジャンプさせる
-		//m_vec.y = kJumpAcc - (GetRand(100) % 5);
-		m_posTemp = m_rect.center.y + ( kJumpAcc - (GetRand(100) % 5));
-		updateFunc = &CutMan::JumpUpdate;
-		return;
-	}
+	////弾を打たないときは移動する
+	//else if(m_JumpFrame++ >= kJumpInterval)
+	//{
+	//	m_JumpFrame = 0;
+	//	
+	//	//左を向いていたら方向を変える
+	//	if (m_isLeft) m_vec.x *= -1.0f;
+	//	//ジャンプさせる
+	//	//m_vec.y = kJumpAcc - (GetRand(100) % 5);
+	//	m_posTemp = m_rect.center.y + ( kJumpAcc - (GetRand(100) % 5));
+	//	updateFunc = &CutMan::JumpUpdate;
+	//	return;
+	//}
 }
 
 void CutMan::JumpUpdate()
@@ -201,10 +204,10 @@ void CutMan::OneShotUpdate()
 	else
 	{
 		vel.Normalize();
-		vel *= 2.0f;
+		//vel *= 2.0f;
 	}
 	//ショットを一回打つ
-	m_shotFactory->Create(ShotType::RockBuster, m_rect.center, vel, m_isLeft);
+	m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
 
 	//次の指示を待つ
 	m_JumpFrame = 0;
@@ -229,10 +232,10 @@ void CutMan::TwoShotUpdate()
 	//ショットを二回打つ
 	if (m_shotFrame-- % 10 == 0)
 	{
-		m_shotFactory->Create(ShotType::RockBuster, m_rect.center, vel, m_isLeft);
+		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
 	}
 
-	if (m_shotFrame == 0)
+	if (m_shotFrame <= 0)
 	{
 		m_shotFrame = 20;
 		//次の指示を待つ
@@ -258,7 +261,7 @@ void CutMan::NormalDraw()
 
 void CutMan::BurstUpdate()
 {
-	m_idx+=1;
+	m_idx += 1;
 	if (m_idx == burst_frame_num * burst_frame_speed)
 	{
 		m_isExist = false;
@@ -271,6 +274,10 @@ void CutMan::BurstDraw()
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 10), static_cast<int>(m_rect.center.y + 100),
+		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y + 100),
+		imgX, burst_img_height, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
 
 #ifdef _DEBUG
 	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);
