@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	InputState input;
 	SceneManager sceneManeger;
 	sceneManeger.ChangeScene(new TitleScene(sceneManeger));
-
+	
 	while (ProcessMessage() != -1)
 	{
 		LONGLONG  time = GetNowHiPerformanceCount();

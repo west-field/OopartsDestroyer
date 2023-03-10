@@ -1,6 +1,7 @@
 #include "Sound.h"
 #include <DxLib.h>
 #include <cassert>
+#include <string>
 
 SoundManager::SoundManager()
 {
