@@ -17,7 +17,7 @@ public:
 	virtual ~ShotBase();
 
 	//ショット開始
-	virtual void Start(Position2 pos, Vector2 vel, bool left) = 0;
+	virtual void Start(Position2 pos, Vector2 vel, bool left, bool isPlayer) = 0;
 	//更新
 	virtual void Update() = 0;
 	//描画
@@ -30,7 +30,7 @@ public:
 	void SetExist(bool isExist) { m_isExist = isExist; }
 	//プレイヤーが撃った弾か
 	virtual void PlayerShot(bool isPlayerShot) { m_isPlayerShot = isPlayerShot; }
-	virtual bool GetPlayerShot()const { return m_isPlayerShot; }
+	virtual bool IsPlayerShot()const { return m_isPlayerShot; }
 	//弾を移動
 	virtual void Movement(Vector2 vec);
 	

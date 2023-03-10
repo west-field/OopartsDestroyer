@@ -19,18 +19,20 @@ RockBuster::~RockBuster()
 	
 }
 
-void RockBuster::Start(Position2 pos, Vector2 vel,bool left)
+void RockBuster::Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)
 {
 	m_isExist = true;
 	m_isLeft = left;
 	m_rect.center = pos;
 	m_vel = vel;
+	m_isPlayerShot = isPlayer;
 	//if (m_isLeft) m_vel *= -1.0f;
 }
 
 void RockBuster::Update()
 {
 	if (!m_isExist)	return;
+	ShotBase::Movement({ 8.0f ,0.0f});
 	//âÊñ ÇÃäOÇ…èoÇΩÇÁè¡Ç¶ÇÈ
 	float hsize, wsize;
 

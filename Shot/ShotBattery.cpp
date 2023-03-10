@@ -5,7 +5,7 @@
 namespace
 {
 	constexpr int kShotFive = 2;
-	constexpr float kShotBatterySpeed = 7.0f;
+	constexpr float kShotBatterySpeed = 5.0f;
 }
 
 ShotBattery::ShotBattery(int handle):
@@ -17,12 +17,13 @@ ShotBattery::~ShotBattery()
 {
 }
 
-void ShotBattery::Start(Position2 pos, Vector2 vel, bool left)
+void ShotBattery::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 {
 	m_isExist = true;
 	m_isLeft = left;
 	m_rect.center = pos;
-	m_vel = vel;
+	m_vel = vel * kShotBatterySpeed;
+	m_isPlayerShot = isPlayer;
 	/*m_vel.x = vel.x*kShotBatterySpeed;
 	m_vel.y = vel.y*kShotBatterySpeed;*/
 	if (m_isLeft) m_vel *= -1.0f;
@@ -32,7 +33,7 @@ void ShotBattery::Update()
 {
 	int wsize = m_rect.size.w / 2;
 	int hsize = m_rect.size.h / 2;
-	
+	ShotBase::Movement(m_vel);
 	//ç∂ë§
 	if (m_rect.center.x - wsize < Game::kMapScreenLeftX)
 	{

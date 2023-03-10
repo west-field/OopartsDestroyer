@@ -105,10 +105,10 @@ void EnemyBattery::NormalUpdate()
 		vel.x = -1.0f;
 		vel.y = static_cast<float>(GetRand(100) - 50) / 50.0f;
 		vel.Normalize();
-		float speed = static_cast<float>(GetRand(60) + 20) / 20.0f;
-		vel *= speed;
+		//float speed = static_cast<float>(GetRand(60) + 20) / 20.0f;
+		//vel *= speed;
 
-		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft);//ŽÎ‚ß
+		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);//ŽÎ‚ß
 		num++;
 	}
 	else if (m_idx / anim_frame_speed == 0)

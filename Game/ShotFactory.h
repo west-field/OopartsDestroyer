@@ -23,7 +23,8 @@ public:
 	/// <param name="pos">作成者の位置</param>
 	/// <param name="vel">移動量</param>
 	/// <param name="isleft">左を向いているのか</param>
-	void Create(ShotType type, const Position2& pos, const Vector2& vel, bool isleft);
+	/// <param name="isPlayer">プレイヤーが撃った弾か</param>
+	void Create(ShotType type, const Position2& pos, const Vector2& vel, bool isleft, bool isPlayer);
 
 	/// <summary>
 	/// 当たり判定用にすべての敵の弾への参照
