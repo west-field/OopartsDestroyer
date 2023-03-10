@@ -137,7 +137,6 @@ void Map::Draw()
 #endif
 		}
 	}
-
 #ifdef _DEBUG
 	DrawFormatString(0,140, 0x000000, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
 #endif
@@ -264,6 +263,22 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 
 	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>( y * Game::kDrawSize) };
 
-	//return Vector2(x*Game::ChipSize,y*Game::ChipSize);
 	return aling;
+}
+
+void Map::DrawFrame()
+{
+	int startX = Game::kMapScreenLeftX - Game::ChipSize / 2 - 10;
+	int startY = Game::kMapScreenTopY - Game::ChipSize / 2 - 10;
+
+	for (int y = 0; y <= Game::kMapNumY + 1; y++)
+	{
+		for (int x = 0; x <= Game::kMapNumX + 1; x++)
+		{
+			if (y == 0 || y == Game::kMapNumY + 1 || x == 0 || x == Game::kMapNumX + 1)
+			{
+				my::MyDrawRectRotaGraph(startX + x * Game::kDrawSize, startY + y * Game::kDrawSize, 1 * Game::ChipSize, 7 * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
+			}
+		}
+	}
 }

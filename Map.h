@@ -61,6 +61,8 @@ public:
 	int GetMapChipParam(float X, float Y);
 	int GetMapEventParam(float X, float Y);
 	Vector2 GetMapChipPos(float X, float Y);
+
+	void DrawFrame();
 private:
 	MapData_t m_mapData;//マップデータ
 	int m_mapWidth;//マップの横幅
