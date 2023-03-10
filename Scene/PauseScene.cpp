@@ -35,11 +35,13 @@ void PauseScene::Update(const InputState& input)
 		{
 			if (i == m_selectNum)
 			{
-				m_pauseMenu[i].x = pw_start_x + 20;
+				m_pauseMenu[i].x = pw_start_x + 10;
+				m_pauseMenu[i].color = 0xaaffaa;
 			}
 			else
 			{
-				m_pauseMenu[i].x = pw_start_x + 10;
+				m_pauseMenu[i].x = pw_start_x + 20;
+				m_pauseMenu[i].color = 0xffffff;
 			}
 		}
 	}
@@ -73,8 +75,8 @@ void PauseScene::Draw()
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//ポーズ中メッセージ
-	DrawString(pw_start_x + 10, pw_start_y + 10, L"Pausing...", 0xffff88);
-	DrawString(m_pauseMenu[pauseKeyconfig].x, m_pauseMenu[pauseKeyconfig].y, L"KeyConfig", m_pauseMenu[pauseKeyconfig].color);
+	DrawString(pw_start_x + 10, pw_start_y + 10, L"ポーズ", 0xffff88);
+	DrawString(m_pauseMenu[pauseKeyconfig].x, m_pauseMenu[pauseKeyconfig].y, L"キーせってい", m_pauseMenu[pauseKeyconfig].color);
 	DrawString(m_pauseMenu[pauseBack].x, m_pauseMenu[pauseBack].y, L"戻る", m_pauseMenu[pauseBack].color);
 	//ポーズウィンドウ枠線
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);

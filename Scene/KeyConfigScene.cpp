@@ -178,7 +178,7 @@ void KeyConfigScene::Draw()
 		{
 			yoffset = 20;
 		}
-		DrawString(pw_start_x + 90, y + yoffset, L"▶", 0xff0000);
+		DrawString(pw_start_x + 80, y + yoffset, L"▶", 0xff0000);
 	}
 	//各キーの表示
 	DrawString(pw_start_x + 100, y, L"確定します", 0xffffff);

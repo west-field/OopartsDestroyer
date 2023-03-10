@@ -4,8 +4,8 @@
 
 enum Item
 {
-	pauseKeyconfig,
-	pauseBack,
+	pauseKeyconfig,//ÉLÅ[ê›íË
+	pauseBack,//ñﬂÇÈ
 
 	pauseMax
 };
@@ -44,8 +44,8 @@ public:
 	void Draw();
 
 	Element m_pauseMenu[pauseMax] = {
-		{pw_start_x + 20,pw_start_y + 30 + 20 * pauseKeyconfig,0xffffff},
-		{pw_start_x + 10,pw_start_y + 30 + 20 * pauseBack,0xffffff},
+		{kPosX		,kPosY + 20 * (pauseKeyconfig+1),0xaaffaa},
+		{kPosX + 10	,kPosY + 20 * (pauseBack+2),0xffffff},
 	};
 	int m_selectNum = 0;
 
