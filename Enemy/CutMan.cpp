@@ -42,7 +42,7 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	EnemyBase(player, pos, sFactory), updateFunc(&CutMan::StopUpdate), m_drawFunc(&CutMan::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
-	m_hp->MaxHp(1);
+	m_hp->Init(-1);
 	m_isLeft = true;
 	m_handle = handle;
 	m_bossBurstH = bossBurstH;
@@ -212,7 +212,6 @@ void CutMan::OneShotUpdate()
 	else
 	{
 		vel.Normalize();
-		//vel *= 2.0f;
 	}
 	//ƒVƒ‡ƒbƒg‚ðˆê‰ñ‘Å‚Â
 	m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft, false);

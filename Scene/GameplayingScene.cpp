@@ -98,18 +98,17 @@ void GameplayingScene::Draw()
 	
 	m_shotFactory->Draw();//敵ショット表示
 
-	m_hp[Object_Player]->Draw(true);//HPバーを表示
-	if (m_isBoss)
-	{
-		m_hp[Object_EnemyBoss]->Draw(false);
-	}
-
 	//枠を表示
-	//m_map->DrawFrame();
 	DrawBox(Game::kMapScreenLeftX, Game::kMapScreenTopY, Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//左側
 	DrawBox(Game::kMapScreenRightX, Game::kMapScreenTopY, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//右側
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenTopY - Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenTopY, m_framecolor, true);//上
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY + Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//下
+
+	m_hp[Object_Player]->Draw(true);//HPバーを表示
+	if (m_isBoss && m_hp[Object_EnemyBoss]->GetHp() > 0)
+	{
+		m_hp[Object_EnemyBoss]->Draw(false);
+	}
 
 	//倒した敵の数を表示
 	//DrawFormatString(Game::kScreenWidth/2, Game::kScreenHeight/3, 0x000000, L"%d", m_enemyKill);
@@ -725,6 +724,10 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
+	for (auto& hp : m_hp)
+	{
+		hp->Update();
+	}
 	ScreenMove();//プレイヤーがセンターに居るかどうか
 	//Button::Update();
 
@@ -930,6 +933,9 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 			if (!enemy->IsExist())
 			{
+				quakeX_ = 0.0f;
+				quakeTimer_ = 0;
+
 				m_updateFunc = &GameplayingScene::FadeOutUpdat;
 				m_fadeColor = 0x000000;
 				m_crea = 0;
@@ -937,19 +943,17 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			}
 		}
 	}
+	
+	if (quakeTimer_ > 0)
+	{
+		quakeX_ = -quakeX_;
+		quakeX_ *= 0.95f;
+		quakeTimer_--;
+	}
 	else
 	{
-		if (quakeTimer_ > 0)
-		{
-			quakeX_ = -quakeX_;
-			quakeX_ *= 0.95f;
-			quakeTimer_--;
-		}
-		else
-		{
-			quakeX_ = 0.0f;
-			quakeTimer_ = 0;
-		}
+		quakeX_ = 0.0f;
+		quakeTimer_ = 0;
 	}
 	
 }
@@ -1068,6 +1072,7 @@ void GameplayingScene::FadeOutUpdat(const InputState& input)
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
 	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
 	ChangeVolumeSoundMem(200 - m_fadeValue, m_bossBgm);
+
 	if(++m_fadeTimer == kFadeInterval)
 	{
 		switch (m_crea)

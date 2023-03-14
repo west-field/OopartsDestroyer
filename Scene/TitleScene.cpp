@@ -180,6 +180,7 @@ void TitleScene::BlockOut()
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat), m_blockMove(&TitleScene::BlockIn)
 {	
 	m_titleH = my::MyLoadGraph(L"Data/title.png");
+	m_ringH = my::MyLoadGraph(L"Data/ring.png");
 	m_blockH = my::MyLoadGraph(L"Data/map/mapchip.png");
 	SetBlock();
 	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
@@ -202,6 +203,7 @@ TitleScene::~TitleScene()
 {
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_titleH);
+	DeleteGraph(m_ringH);
 	DeleteGraph(m_blockH);
 	DeleteGraph(m_enemyH);
 }
@@ -211,6 +213,7 @@ TitleScene::Update(const InputState& input)
 {
 	//◇メンバ関数ポインタを呼び出す　演算子　->*
 	(this->*m_updateFunc)(input);
+	m_ringIdx++;
 }
 
 void TitleScene::Draw()
@@ -231,6 +234,7 @@ void TitleScene::Draw()
 
 	//タイトルロゴ表示
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
+	//my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), (m_ringIdx%2)*160, 0, 160, 160, 1.0f, 0.0f, m_ringH, true, false);
 
 	//メニュー項目を描画
 	m_color = 0x000000;

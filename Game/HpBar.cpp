@@ -6,7 +6,7 @@
 namespace
 {
 	//拡大率
-	constexpr float kScale = 1.0f;
+	constexpr float kScale = 4.0f;
 }
 
 HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1), m_isHpGraph()
@@ -15,7 +15,7 @@ HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1), m_isHpGraph()
 	{
 		hp = true;
 	}
-	m_rect = { { Game::kScreenWidth / 5 ,Game::kScreenHeight/3 - 10} ,{} };
+	m_rect = { { static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3} ,{} };
 }
 
 HpBar::~HpBar()
@@ -42,19 +42,8 @@ void HpBar::MaxHp(int maxHp)
 
 void HpBar::Update()
 {
-
-}
-
-void HpBar::Draw(bool isPlayer)
-{
-	int x = static_cast<int>(m_rect.center.x + m_rect.size.w / 2);
-	int y = static_cast<int>(m_rect.center.y + m_rect.size.h / 2);
-
-	//プレイヤーじゃないとき横にずらす
-	if (!isPlayer)	x = Game::kMapScreenRightX + m_rect.size.w + 10;
-
-	int idxX = m_Hp / 10;
-	int idxY = idxX / 5;
+	idxX = m_Hp / 10;
+	idxY = idxX / 5;
 
 	switch (m_Hp)
 	{
@@ -112,6 +101,15 @@ void HpBar::Draw(bool isPlayer)
 	default:
 		break;
 	}
+}
+
+void HpBar::Draw(bool isPlayer)
+{
+	int x = static_cast<int>(m_rect.center.x + m_rect.size.w / 2);
+	int y = static_cast<int>(m_rect.center.y + m_rect.size.h / 2);
+
+	//プレイヤーじゃないとき横にずらす
+	if (!isPlayer)	x = Game::kMapScreenRightX + m_rect.size.w + 10;
 
 	my::MyDrawRectRotaGraph(x, y,
 		idxX * m_rect.size.w, idxY* m_rect.size.h,

@@ -37,6 +37,9 @@ private:
 	//‰æ‘œ‚Ì•‚Æ‚‚³
 	Rect m_rect;
 
+	int idxX = 0;
+	int idxY = 0;
+
 	//HP‰æ‘œ‚ğ‰½–‡•\¦‚·‚é‚©
 	bool m_isHpGraph[kHpMax];
 };
