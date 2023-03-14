@@ -107,7 +107,7 @@ void Player::ScaleEnlarge(float scale)
 
 void Player::NormalUpdate()
 {
-	float chipSizeHalf = Game::kDrawSize / 2;
+	float chipSizeHalf = 0/*Game::kDrawSize / 2*/;
 	//âÊñ ÇÃç∂í[Ç…Ç¬Ç¢ÇΩÇÁÇªÇÍà»è„ìÆÇØÇ»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ
 	if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
 	{

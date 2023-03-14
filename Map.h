@@ -74,6 +74,9 @@ private:
 
 	int m_handle;//グラフィック
 
+	int m_trapH = -1;
+	int m_trapIdx = 0;
+
 	std::vector<int> m_enemyPos;
 	std::shared_ptr<EnemyFactory> m_enemies;
 	int m_frame = 0;

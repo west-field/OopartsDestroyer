@@ -59,8 +59,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -105,7 +105,7 @@ void GameplayingScene::Draw()
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY + Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//下
 
 	m_hp[Object_Player]->Draw(true);//HPバーを表示
-	if (m_isBoss && m_hp[Object_EnemyBoss]->GetHp() > 0)
+	if (m_isBoss && m_hp[Object_EnemyBoss]->GetHp() != 0)
 	{
 		m_hp[Object_EnemyBoss]->Draw(false);
 	}
@@ -822,7 +822,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
-	
+
+	m_correction *= -1.0f;
 	m_shotFactory->Movement({ m_correction.x, m_correction.y });
 
 	//自機の弾と、敵機の当たり判定
@@ -895,8 +896,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		float posX = m_add.x + m_player->GetRect().GetCenter().x;
 		float posY = m_add.y + m_player->GetRect().GetCenter().y;
 		//プレイヤーの上座標+10ぐらいが　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h - 10.0f) == MapEvent_death) &&
-			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h - 10.0f) == MapEvent_death))
+		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 - 10.0f) == MapEvent_death) &&
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 - 10.0f) == MapEvent_death))
 		{
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;

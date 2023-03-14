@@ -1,4 +1,5 @@
 #include "ShotBattery.h"
+#include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
 
@@ -61,6 +62,7 @@ void ShotBattery::Draw()
 		0, 0, m_rect.size.w, m_rect.size.h, 1.5f, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xaa00ff);
+	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenTopY, 0x000000,L"%3f,%3f", m_vel.x, m_vel.y);
 #endif
 }
 

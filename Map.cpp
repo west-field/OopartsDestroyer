@@ -8,6 +8,12 @@
 namespace
 {
 	constexpr float kScale = 1.0f;
+
+	constexpr int trap_img_width = 100;//画像サイズX
+	constexpr int trap_img_height = 100;//画像サイズY
+	constexpr float trap_draw_scale = 1.0f;//拡大率
+	constexpr int trap_frame_num = 61;//アニメーション枚数
+	constexpr int trap_frame_speed = 1;//アニメーションスピード
 }
 
 Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
@@ -15,11 +21,13 @@ Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
 	m_mapWidth(0),m_mapHeight(0)
 {
 	m_handle = my::MyLoadGraph(L"Data/map/mapchip.png");
+	m_trapH = my::MyLoadGraph(L"Data/trap.png");
 }
 
 Map::~Map()
 {
 	DeleteGraph(m_handle);
+	DeleteGraph(m_trapH);
 }
 
 void Map::Update()
@@ -86,6 +94,13 @@ void Map::Update()
 			}
 		}
 	}
+
+	m_trapIdx++;
+	if (m_trapIdx == trap_frame_num * trap_frame_speed)
+	{
+		m_trapIdx = 0;
+	}
+
 }
 
 void Map::Draw()
@@ -113,7 +128,19 @@ void Map::Draw()
 			}
 
 			auto chipId = GetChipId(static_cast<int>(MapLayer_map+m_stage), chipX, chipY);
-			if (chipId != 0)
+			auto eventChipId = GetChipId(static_cast<int>(MapLayer_event+m_stage), chipX, chipY);
+			if (eventChipId == 2)
+			{
+				int animNum = (m_trapIdx / trap_frame_speed);
+				if (animNum >= trap_frame_num)
+				{
+					animNum -= trap_frame_num;
+				}
+				int imgX = animNum % 8 * trap_img_width;
+				int imgY = animNum / 8 * trap_img_height;
+				my::MyDrawRectRotaGraph(X, Y, imgX, imgY, trap_img_width, trap_img_height, trap_draw_scale * Game::kScale, 0.0f, m_trapH, true, false);
+			}
+			else if (chipId != 0)
 			{
 				//マップチップ表示
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);

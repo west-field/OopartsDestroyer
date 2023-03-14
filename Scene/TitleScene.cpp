@@ -246,7 +246,9 @@ void TitleScene::Draw()
 
 	//歯車
 	int img = m_gearIdx / kGearSpeed * kGearSize;
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//タイトルロゴ表示
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
 
