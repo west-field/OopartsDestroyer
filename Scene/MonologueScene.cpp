@@ -17,10 +17,10 @@
 
 namespace
 {
-	constexpr int kButtonFontSize = 50;//フォントサイズ
+	constexpr int kButtonFontSize = 60;//フォントサイズ
 
 	constexpr int kButtonSize = 480;//ボタン一つのサイズ
-	constexpr float kButtonDrawScale = 0.1f;//拡大率
+	constexpr float kButtonDrawScale = 0.2f;//拡大率
 	constexpr int kButtonDrawSpeed = 10;//画像速度
 	//プレイヤーグラフィック
 	constexpr int kGraphSizeWidth = 32;		//サイズ
@@ -87,23 +87,10 @@ void MonologueScene::PlayerOnStage(const InputState& input)
 	{
 		vel = { 0.0f,0.0f };
 
-		if (button.buttonFram++ >= kButtonDrawSpeed)
-		{
-			button.buttonIdxX = (button.buttonIdxX + 1) % 3;
-			button.buttonFram = 0;
-		}
-		m_isButton = true;
-		if (input.IsTriggered(InputType::shot))
-		{
-			m_isShotFire = true;
-			m_isButton = false;
-			SoundManager::GetInstance().Play(SoundId::PlayeyShot);
-			m_shotPos = m_player.center;
-			m_idxY = 4;
-			m_idxX = 0;
-			m_updateFunc = &MonologueScene::PlayerMoveUpdate;
-			return;
-		}
+		m_isButtonShot = true;
+		m_isButtonJump = true;
+		m_updateFunc = &MonologueScene::ButtonOn;
+		return;
 	}
 	else
 	{
@@ -113,6 +100,45 @@ void MonologueScene::PlayerOnStage(const InputState& input)
 
 	m_player.center+=vel;
 	m_idxY = 1;
+}
+
+void MonologueScene::ButtonOn(const InputState& input)
+{
+	for (auto& button : m_button)
+	{
+		if (button.buttonFram++ >= kButtonDrawSpeed)
+		{
+			button.buttonIdxX = (button.buttonIdxX + 1) % 3;
+			button.buttonFram = 0;
+		}
+	}
+
+	if (input.IsTriggered(InputType::junp))
+	{
+		SoundManager::GetInstance().Play(SoundId::PlayerJump);
+		m_isButtonJump = false;
+		m_idxY = 3;
+		m_idxX = 0;
+	}
+	if (input.IsTriggered(InputType::shot))
+	{
+		m_isShotFire = true;
+		m_isButtonShot = false;
+		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
+		m_shotPos = m_player.center;
+		m_idxY = 4;
+		m_idxX = 0;
+	}
+
+	if (!m_isButtonShot)
+	{
+		m_shotPos += {8.0f, 0.0f};
+		if (!m_isButtonJump)
+		{
+			m_updateFunc = &MonologueScene::PlayerMoveUpdate;
+			return;
+		}
+	}
 }
 
 void MonologueScene::PlayerMoveUpdate(const InputState& input)
@@ -166,10 +192,15 @@ m_updateFunc(&MonologueScene::FadeInUpdat)
 	m_playerH = my::MyLoadGraph(L"Data/player.png");
 	m_player = { {0.0f,(Game::kMapScreenBottomY - Game::kDrawSize * 5)}, {kGraphSizeWidth, kGraphSizeHeight} };
 
-	button.buttonFram = 0;
-	button.buttonIdxX = 0;
-	button.buttonIdxY = 2;
-	button.buttonPos = { Game::kScreenWidth/2,m_player.center.y + m_player.size.h*2 };
+	m_button[Buttom_X].buttonFram = 0;
+	m_button[Buttom_X].buttonIdxX = 0;
+	m_button[Buttom_X].buttonIdxY = 2;
+	m_button[Buttom_X].buttonPos = { Game::kScreenWidth/2,m_player.center.y + kButtonSize*kButtonDrawScale };
+
+	m_button[Buttom_A].buttonFram = 0;
+	m_button[Buttom_A].buttonIdxX = 0;
+	m_button[Buttom_A].buttonIdxY = 0;
+	m_button[Buttom_A].buttonPos = { Game::kScreenWidth / 2,m_player.center.y + kButtonSize*2 * kButtonDrawScale };
 	m_buttonH = my::MyLoadGraph(L"Data/button.png");
 
 	Background::GetInstance().Init();
@@ -239,16 +270,30 @@ void MonologueScene::Draw()
 
 		my::MyDrawGraph(static_cast<int>(m_shotPos.x), static_cast<int>(m_shotPos.y), m_shotH, true);
 	}
-	if (m_isButton)
+	if (m_isButtonShot)
 	{
 		SetFontSize(kButtonFontSize);
-		DrawFormatString(static_cast<int>(button.buttonPos.x - 120)+3, 
-			static_cast<int>(button.buttonPos.y - (kButtonSize* kButtonDrawScale/2))+3, 0x000000, L"shot");
-		DrawFormatString(static_cast<int>(button.buttonPos.x - 120),
-			static_cast<int>(button.buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x0000ff, L"shot");
+		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize * 3) + 3,
+			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize* kButtonDrawScale/2))+3, 0x000000, L"shot");
+		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize*3),
+			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00aaff, L"shot");
 		SetFontSize(0);
-		my::MyDrawRectRotaGraph(static_cast<int>(button.buttonPos.x), static_cast<int>(button.buttonPos.y),
-			static_cast<int>(button.buttonIdxX * kButtonSize), static_cast<int>(button.buttonIdxY * kButtonSize),
+
+		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_X].buttonPos.x), static_cast<int>(m_button[Buttom_X].buttonPos.y),
+			static_cast<int>(m_button[Buttom_X].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_X].buttonIdxY * kButtonSize),
+			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
+	}
+	if (m_isButtonJump)
+	{
+		SetFontSize(kButtonFontSize);
+		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3) + 3,
+			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)) + 3, 0x000000, L"jump");
+		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3),
+			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00ffaa, L"jump");
+		SetFontSize(0);
+
+		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_A].buttonPos.x), static_cast<int>(m_button[Buttom_A].buttonPos.y),
+			static_cast<int>(m_button[Buttom_A].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_A].buttonIdxY * kButtonSize),
 			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
 	}
 

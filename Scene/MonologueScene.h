@@ -22,6 +22,7 @@ private:
 	void FadeOutUpdat(const InputState& input);
 
 	void PlayerOnStage(const InputState& input);//画面に入ってくる
+	void ButtonOn(const InputState& input);//二つボタンを押すまで
 	void PlayerMoveUpdate(const InputState& input);//プレイヤー移動させる
 
 	//Update用メンバ関数ポインタ
@@ -50,9 +51,16 @@ private:
 		int buttonIdxY = 0;
 		int buttonFram = 0;
 	};
-	ButtonImg button;
+	enum ButtomType
+	{
+		Buttom_X,
+		Buttom_A,
+		Buttom_Max,
+	};
+	ButtonImg m_button[Buttom_Max];
 	int m_buttonH = -1;
-	bool m_isButton = false;
+	bool m_isButtonShot = false;
+	bool m_isButtonJump = false;
 
 public:
 	MonologueScene(SceneManager& manager);
