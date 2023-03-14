@@ -53,7 +53,7 @@ public:
 	/// 指定のサウンドを鳴らす
 	/// </summary>
 	/// <param name="name">サウンド名</param>
-	void Play(SoundId id, int volume = 255);
+	void Play(SoundId id, int volume = 200);
 
 	/// <summary>
 	/// サウンドの音量を変える

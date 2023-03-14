@@ -158,7 +158,7 @@ void GameoverScene::MojiDraw()
 void GameoverScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));
