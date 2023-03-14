@@ -82,10 +82,12 @@ void TitleScene::NormalUpdat(const InputState& input)
 			if (i == m_selectNum)
 			{
 				SelectMenu[i].x = kMovedPosX;//移動位置に移動する
+				SelectMenu[i].color = 0xffa0aa;//色を変える
 			}
 			else
 			{
 				SelectMenu[i].x = kOriginalPosX;//元の位置に戻す
+				SelectMenu[i].color = 0xaaa0ff;//元の色に戻す
 			}
 		}
 	}
@@ -246,17 +248,21 @@ void TitleScene::Draw()
 
 	//歯車
 	int img = m_gearIdx / kGearSpeed * kGearSize;
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);//加算合成
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//タイトルロゴ表示
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
 
 	//メニュー項目を描画
-	m_color = 0x000000;
-	MenuDraw(5, 5);
-	m_color = 0xaaa0ff;
-	MenuDraw(0,0);
+	SetFontSize(kMenuFontSize);
+	DrawString(SelectMenu[menuGameStart].x + 5, SelectMenu[menuGameStart].y + 5, L"ゲームスタート", 0x000000);
+	DrawString(SelectMenu[menuGameStart].x, SelectMenu[menuGameStart].y, L"ゲームスタート", SelectMenu[menuGameStart].color);
+	DrawString(SelectMenu[menuConfig].x + 5, SelectMenu[menuConfig].y + 5, L"せってい", 0x000000);
+	DrawString(SelectMenu[menuConfig].x, SelectMenu[menuConfig].y , L"せってい", SelectMenu[menuConfig].color);
+	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"おわり", 0x000000);
+	DrawString(SelectMenu[menuGameEnd].x , SelectMenu[menuGameEnd].y, L"おわり", SelectMenu[menuGameEnd].color);
+	SetFontSize(0);
 
 #ifdef _DEBUG
 
@@ -269,13 +275,4 @@ void TitleScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-}
-
-void TitleScene::MenuDraw(int X, int Y)
-{
-	SetFontSize(kMenuFontSize);
-	DrawString(SelectMenu[menuGameStart].x + X, SelectMenu[menuGameStart].y + Y, L"ゲームスタート", m_color);
-	DrawString(SelectMenu[menuConfig].x + X, SelectMenu[menuConfig].y + Y, L"せってい", m_color);
-	DrawString(SelectMenu[menuGameEnd].x + X, SelectMenu[menuGameEnd].y + Y, L"おわり", m_color);
-	SetFontSize(0);
 }

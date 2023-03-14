@@ -5,30 +5,6 @@
 #include <array>
 #include "../Util/Geometry.h"
 
-//メニュー項目
-enum MenuItem
-{
-	menuGameStart,	//ゲームスタート
-	menuConfig,		//設定
-	menuGameEnd,	//ゲーム終了
-
-	menuNum			//項目の数
-};
-//メニュー要素
-struct MenuElement
-{
-	int x;
-	int y;				//座標
-};
-
-namespace
-{
-	constexpr int kMenuFontSize = 50;//文字のサイズ
-	constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize*2;    //メニュー文字のx位置
-	constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize*2;    //メニュー文字のy位置
-	constexpr int kMovedPosX = kOriginalPosX - kMenuFontSize;//メニュー文字の移動したx位置
-}
-
 class EnemyMoveLeft;
 class Player;
 class HpBar;
@@ -41,7 +17,6 @@ class InputState;
 class TitleScene : public Scene
 {
 private:
-	int m_selectNum = 0;//選択しているメニュー項目
 	unsigned int m_color = 0x000000;
 	//フェードインの時のUpdate関数
 	void FadeInUpdat(const InputState& input);
@@ -60,11 +35,35 @@ private:
 	int m_titleH = -1;
 	int m_gearH = -1;
 	int m_gearIdx = 0;
-	MenuElement SelectMenu[menuNum] = {
-		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart },
-		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
-		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd+5}
+
+	static constexpr int kMenuFontSize = 50;//文字のサイズ
+	static constexpr int kOriginalPosX = Game::kScreenWidth / 3 + kMenuFontSize * 2;    //メニュー文字のx位置
+	static constexpr int kOriginalPosY = Game::kScreenHeight / 2 + kMenuFontSize * 2;    //メニュー文字のy位置
+	static constexpr int kMovedPosX = kOriginalPosX - kMenuFontSize;//メニュー文字の移動したx位置
+
+	//メニュー項目
+	enum MenuItem
+	{
+		menuGameStart,	//ゲームスタート
+		menuConfig,		//設定
+		menuGameEnd,	//ゲーム終了
+
+		menuNum			//項目の数
 	};
+	//メニュー要素
+	struct MenuElement
+	{
+		int x;
+		int y;				//座標
+		unsigned int color;//色
+	};
+	MenuElement SelectMenu[menuNum] = {
+		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart,0xffa0aa },
+		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig,0xaaa0ff},
+		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd+5,0xaaa0ff}
+	};
+	int m_selectNum = 0;//選択しているメニュー項目
+	
 	int m_scroll = 0;
 
 	//ブロックの画像
@@ -95,6 +94,5 @@ public:
 
 	void Update(const InputState& input);
 	virtual void Draw() override;
-	void MenuDraw(int X,int Y);
 };
 //x224,y160
