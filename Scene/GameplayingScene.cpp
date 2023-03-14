@@ -895,9 +895,9 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 		float posX = m_add.x + m_player->GetRect().GetCenter().x;
 		float posY = m_add.y + m_player->GetRect().GetCenter().y;
-		//プレイヤーの上座標+10ぐらいが　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 - 10.0f) == MapEvent_death) &&
-			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 - 10.0f) == MapEvent_death))
+		//プレイヤーの上座標が　death判定の部分に触れたら
+		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2) == MapEvent_death) &&
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2) == MapEvent_death))
 		{
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
