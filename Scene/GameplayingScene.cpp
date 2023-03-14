@@ -308,7 +308,7 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 	float Dummy = 0.0f;
 	float hsize, wsize;
 	float moveX = 0.0f;
-	float moveY = 1.0f;
+	float moveY = 0.5f;
 
 	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{

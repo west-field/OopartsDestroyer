@@ -234,21 +234,22 @@ void TitleScene::Draw()
 {
 	//背景
 	Background::GetInstance().Draw(0);
-	//ブロック
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fade);
-	my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
-		m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,
-		m_blocks.size.w, m_blocks.size.h, Game::kScale, 0.0f, m_blockH, true, false);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	//敵
-	for (auto& enemy : m_enemy)
-	{
-		enemy->Draw();
-	}
+	////ブロック
+	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fade);
+	//my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
+	//	m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,
+	//	m_blocks.size.w, m_blocks.size.h, Game::kScale, 0.0f, m_blockH, true, false);
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	////敵
+	//for (auto& enemy : m_enemy)
+	//{
+	//	enemy->Draw();
+	//}
 
 	//歯車
 	int img = m_gearIdx / kGearSpeed * kGearSize;
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);//加算合成
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//タイトルロゴ表示
