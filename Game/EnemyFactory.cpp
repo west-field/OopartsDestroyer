@@ -111,7 +111,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::Boss:
 		m_enemies.push_back(
 			std::make_shared<CutMan>(
-				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory));
 		break;
 	default:
 		break;

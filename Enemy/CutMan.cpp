@@ -12,7 +12,7 @@ namespace
 
 	constexpr float kSpeed = 4.0f;	//移動スピード
 	constexpr int kGraphNum = 13;	//グラフィックの数
-	constexpr int kGraphSizeWidth = 2600/kGraphNum;		//サイズ
+	constexpr int kGraphSizeWidth = 2600 / kGraphNum;		//サイズ
 	constexpr int kGraphSizeHeight = 400;	//サイズ
 	constexpr float kDrawScale = 0.5f;		//拡大率
 	constexpr int kAnimFrameSpeed = 5;	//グラフィックアニメーションスピード
@@ -24,29 +24,37 @@ namespace
 	//ジャンプ
 	constexpr float kGravity = 0.8f;//重力
 	constexpr float kJumpAcc = -10.0f;//ジャンプ力
-	//爆発アニメーション
-	constexpr int burst_img_width = 100;//画像サイズX
-	constexpr int burst_img_height = 100;//画像サイズY
-	constexpr float burst_draw_scale = 1.2f;//拡大率
+	//通常爆発アニメーション
+	constexpr int burst_img_width = 32;//画像サイズX
+	constexpr int burst_img_height = 32;//画像サイズY
+	constexpr float burst_draw_scale = 1.0f;//拡大率
 	constexpr int burst_frame_num = 8;//アニメーション枚数
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	//ボス爆発アニメーション
+	constexpr int boss_burst_img_width = 100;//画像サイズX
+	constexpr int boss_burst_img_height = 100;//画像サイズY
+	constexpr float boss_burst_draw_scale = 2.0f;//拡大率
+	constexpr int boss_burst_frame_num = 61;//アニメーション枚数
+	constexpr int boss_burst_frame_speed = 1;//アニメーションスピード
 }
 
-CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, int burstH,std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),updateFunc(&CutMan::StopUpdate),m_drawFunc(&CutMan::NormalDraw),
+CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory) :
+	EnemyBase(player, pos, sFactory), updateFunc(&CutMan::StopUpdate), m_drawFunc(&CutMan::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
 	m_hp->MaxHp(1);
 	m_isLeft = true;
 	m_handle = handle;
+	m_bossBurstH = bossBurstH;
 	m_burstHandle = burstH;
-	m_rect = { {pos.x,pos.y-8.0f},
-		{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale)-20} };
+	m_rect = { {pos.x,pos.y - 8.0f},
+		{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale) - 20} };
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
 CutMan::~CutMan()
 {
+	DeleteGraph(m_bossBurstH);
 }
 
 void CutMan::Update()
@@ -88,7 +96,7 @@ void CutMan::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
-	
+
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
@@ -163,7 +171,7 @@ void CutMan::JumpUpdate()
 {
 	m_rect.center.y += m_vec.y;
 
-	if (m_rect.center.y <= m_posTemp) 
+	if (m_rect.center.y <= m_posTemp)
 	{
 		updateFunc = &CutMan::DownUpdate;
 		return;
@@ -176,7 +184,7 @@ void CutMan::DownUpdate()
 
 	m_rect.center.x += m_vec.x;
 
-	if(!m_isJump)
+	if (!m_isJump)
 	{
 		//プレイヤーの方向にジャンプ
 		if (m_player->GetRect().GetCenter().x > m_rect.center.x)
@@ -207,7 +215,7 @@ void CutMan::OneShotUpdate()
 		//vel *= 2.0f;
 	}
 	//ショットを一回打つ
-	m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
+	m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft, false);
 
 	//次の指示を待つ
 	m_JumpFrame = 0;
@@ -232,7 +240,7 @@ void CutMan::TwoShotUpdate()
 	//ショットを二回打つ
 	if (m_shotFrame-- % 10 == 0)
 	{
-		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
+		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft, false);
 	}
 
 	if (m_shotFrame <= 0)
@@ -262,7 +270,7 @@ void CutMan::NormalDraw()
 void CutMan::BurstUpdate()
 {
 	m_idx += 1;
-	if (m_idx == burst_frame_num * burst_frame_speed)
+	if (m_idx == (boss_burst_frame_num * 2) * boss_burst_frame_speed)
 	{
 		m_isExist = false;
 	}
@@ -270,16 +278,30 @@ void CutMan::BurstUpdate()
 
 void CutMan::BurstDraw()
 {
-	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
 
+	int animNum = (m_idx / burst_frame_speed);
+	int imgX = (animNum % burst_frame_num) * burst_img_width;
+	int imgY = 0;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 20), static_cast<int>(m_rect.center.y + 50),
+		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y + 50),
+		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 20), static_cast<int>(m_rect.center.y - 50),
+		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y - 50),
+		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+
+	animNum = (m_idx / boss_burst_frame_speed);
+	if (animNum >= boss_burst_frame_num)
+	{
+		animNum -= boss_burst_frame_num;
+	}
+	imgX = animNum % 8 * boss_burst_img_width;
+	imgY = animNum / 8 * boss_burst_img_height;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 10), static_cast<int>(m_rect.center.y + 100),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
-	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y + 100),
-		imgX, burst_img_height, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
-
+		imgX, imgY, boss_burst_img_width, boss_burst_img_height, boss_burst_draw_scale * Game::kScale, 0.0f, m_bossBurstH, true, false);
 #ifdef _DEBUG
-	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0xaaaaaa, L"%d", m_idx);
+	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0x000000, L"%d", animNum);
+	DrawFormatStringF(m_rect.center.x, m_rect.center.y - 20, 0x000000, L"X%d,Y%d", imgX / boss_burst_img_width, imgY / boss_burst_img_height);
 #endif
 }

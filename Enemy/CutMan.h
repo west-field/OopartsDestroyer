@@ -8,7 +8,7 @@
 class CutMan :public EnemyBase
 {
 public :
-	CutMan(std::shared_ptr<Player>player, const Position2& pos,int handle,int burstH, std::shared_ptr<ShotFactory> sFactory);
+	CutMan(std::shared_ptr<Player>player, const Position2& pos,int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory);
 	virtual ~CutMan();
 	virtual void Update()override;
 	virtual void Draw()override;
@@ -34,10 +34,15 @@ private:
 	void (CutMan::* updateFunc)();
 	void (CutMan::* m_drawFunc)();
 
+	int m_bossBurstH = -1;//ボス爆発画像
+
 	int m_idx = 0;//画像の表示範囲
-	int m_animFrame = 0;//次の画像に移動
-	int m_frame = 0;
-	int m_shotFrame = 20;//次の弾を撃つまで
+	
+	int m_animFrame = 0;//次の画像に移動(ボス
+	
+	int m_frame = 0;//次の攻撃をするまでの時間
+	
+	int m_shotFrame = 20;//二回攻撃するとき次の弾を撃つまで
 	int m_JumpFrame;//次のジャンプまで
 
 	float m_posTemp = 0.0f;//仮入れ
