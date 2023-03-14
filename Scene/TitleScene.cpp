@@ -42,23 +42,20 @@ void TitleScene::FadeInUpdat(const InputState& input)
 void TitleScene::NormalUpdat(const InputState& input)
 {
 	//îwåi
-	Background::GetInstance().Update();//m_scroll = m_scroll + 1;
-	//ÉuÉçÉbÉN
-	(this->*m_blockMove)();
+	Background::GetInstance().Update();
 	//ìG
 	int i = 0;
-	for (auto& enemy : m_enemy)
+	for (int i = 0;i < 3;i++)
 	{
-		if (enemy->IsExist())
+		if (m_enemy[i]->IsExist())
 		{
-			enemy->Update();
-			if (enemy->GetRect().GetCenter().x <= -enemy->GetRect().GetSize().w)
+			m_enemy[i]->Update();
+			if (m_enemy[i]->GetRect().GetCenter().x <= -m_enemy[i]->GetRect().GetSize().w)
 			{
-				enemy->SetPos(Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
-					static_cast<float>(Game::kDrawSize * (i + 2))});
+				m_enemy[i]->SetPos(Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
+					static_cast<float>(Game::kDrawSize * (i + GetRand(50)/3))});
 			}
 		}
-		i++;
 	}
 	
 	//ÉÅÉjÉÖÅ[
@@ -128,71 +125,10 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 	}
 }
 
-void TitleScene::SetBlock()
-{
-	int numY = GetRand(100) % 4;
-	int numX = GetRand(100) % 10 + 1;
-	m_blocks.size.w = m_blocks.size.h = Game::ChipSize * 2;
-	
-	int num = numX % 2;
-	switch (num)
-	{
-	case 0:
-		m_blocks.idxX = numX - 1;
-		break;
-	case 1:
-		m_blocks.idxX = numX;
-		break;
-	default:
-		break;
-	}
-	num = numY % 2;
-	switch (num)
-	{
-	case 0:
-		m_blocks.idxY = numY;
-		break;
-	case 1:
-		m_blocks.idxY = numY - 1;
-		break;
-	default:
-		break;
-	}
-
-	int screenSizeX = Game::kScreenWidth / Game::kDrawSize;
-	int tempX = GetRand(screenSizeX);
-	int screenSizeY = Game::kScreenHeight / Game::kDrawSize;
-	int tempY = GetRand(screenSizeY);
-	m_blocks.pos = { static_cast<float>(tempX * Game::kDrawSize - Game::kDrawSize / 2),static_cast<float>(tempY * Game::kDrawSize -Game::kDrawSize / 2 )};
-}
-
-void TitleScene::BlockIn()
-{
-	m_fade = 255 * m_frame / 60;
-	if (m_frame++ == 60)
-	{
-		m_blockMove=&TitleScene::BlockOut;
-	}
-}
-
-void TitleScene::BlockOut()
-{
-	m_fade = 255 * m_frame / 60;
-	if (m_frame-- == 0)
-	{
-		m_fade = 0;
-		m_frame = 0;
-		SetBlock();
-		m_blockMove = &TitleScene::BlockIn;
-	}
-}
-
-TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat), m_blockMove(&TitleScene::BlockIn)
+TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
 {	
 	m_titleH = my::MyLoadGraph(L"Data/title.png");
 	m_gearH = my::MyLoadGraph(L"Data/gear.png");
-	m_blockH = my::MyLoadGraph(L"Data/map/mapchip.png");
-	SetBlock();
 	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
 	m_hp = std::make_shared<HpBar>();
 	m_player = std::make_shared<Player>(Position2{ 0.0f,0.0f },m_hp);
@@ -200,7 +136,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	for (int i = 0; i < 3; i++)
 	{
 		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
-			Position2{ static_cast<float>(Game::kScreenWidth - Game::kDrawSize * (i + 2)),
+			Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
 					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot);
 	}
 	Background::GetInstance().Init();
@@ -214,7 +150,6 @@ TitleScene::~TitleScene()
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_titleH);
 	DeleteGraph(m_gearH);
-	DeleteGraph(m_blockH);
 	DeleteGraph(m_enemyH);
 }
 
@@ -234,17 +169,11 @@ void TitleScene::Draw()
 {
 	//îwåi
 	Background::GetInstance().Draw(0);
-	////ÉuÉçÉbÉN
-	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fade);
-	//my::MyDrawRectRotaGraph(static_cast<int>(m_blocks.pos.x), static_cast<int>(m_blocks.pos.y),
-	//	m_blocks.idxX*Game::ChipSize, m_blocks.idxY*Game::ChipSize,
-	//	m_blocks.size.w, m_blocks.size.h, Game::kScale, 0.0f, m_blockH, true, false);
-	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	////ìG
-	//for (auto& enemy : m_enemy)
-	//{
-	//	enemy->Draw();
-	//}
+	//ìG
+	for (auto& enemy : m_enemy)
+	{
+		enemy->Draw();
+	}
 
 	//éïé‘
 	int img = m_gearIdx / kGearSpeed * kGearSize;
@@ -266,9 +195,6 @@ void TitleScene::Draw()
 	SetFontSize(0);
 
 #ifdef _DEBUG
-
-	DrawFormatString(0, 0,  0x000000, L"X%dY%d", m_blocks.idxX,m_blocks.idxY);
-	DrawFormatString(0, 20,  0x000000, L"x%3f,y%3f", m_blocks.pos.x, m_blocks.pos.y);
 	DrawFormatString(0, 40,  0x000000, L"m_gearIdx%d", m_gearIdx);
 #endif
 

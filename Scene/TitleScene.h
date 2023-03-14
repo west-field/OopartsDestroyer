@@ -25,10 +25,6 @@ private:
 	//フェードアウトの時のUpdate関数
 	void FadeOutUpdat(const InputState& input);
 
-	void SetBlock();
-	void BlockIn();
-	void BlockOut();
-
 	//Update用メンバ関数ポインタ
 	void (TitleScene::* m_updateFunc)(const InputState& input);
 
@@ -65,20 +61,6 @@ private:
 	int m_selectNum = 0;//選択しているメニュー項目
 	
 	int m_scroll = 0;
-
-	//ブロックの画像
-	int m_blockH = -1;
-	//ブロックを表示するために必要なもの
-	struct Block
-	{
-		int idxX = 0;
-		int idxY = 0;
-		Size size = {};
-		Position2 pos = {};
-	};
-	Block m_blocks;
-
-	void (TitleScene::*m_blockMove)();
 
 	int m_frame;
 	int m_fade;
