@@ -9,12 +9,8 @@ namespace
 	constexpr float kScale = 4.0f;
 }
 
-HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1), m_isHpGraph()
+HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1)
 {
-	for (auto& hp : m_isHpGraph)
-	{
-		hp = true;
-	}
 	m_rect = { { static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3} ,{} };
 }
 
@@ -119,14 +115,6 @@ void HpBar::Draw(bool isPlayer)
 void HpBar::Damage(int damage)
 {
 	SetHp(m_Hp - damage);
-
-	for (int i = 0; i < kHpMax; i++)
-	{
-		if (kHpMax - m_Hp - 1 >= i)
-		{
-			m_isHpGraph[i] = false;
-		}
-	}
 }
 
 void HpBar::Heal(const int heal)

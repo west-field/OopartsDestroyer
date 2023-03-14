@@ -39,8 +39,5 @@ private:
 
 	int idxX = 0;
 	int idxY = 0;
-
-	//HP‰æ‘œ‚ð‰½–‡•\Ž¦‚·‚é‚©
-	bool m_isHpGraph[kHpMax];
 };
 
