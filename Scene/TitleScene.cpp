@@ -19,6 +19,14 @@
 #include "../Enemy/EnemyMoveLeft.h"
 #include "../Game/ShotFactory.h"
 
+namespace
+{
+	constexpr int kGearSize = 160;//画像サイズ
+	constexpr float kGearScale = 2.0f;//表示拡大率
+	constexpr int kGearNum = 2;//アニメーション枚数
+	constexpr int kGearSpeed = 10;//アニメーションスピード
+}
+
 void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//◇どんどん明るくなる
@@ -180,7 +188,7 @@ void TitleScene::BlockOut()
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat), m_blockMove(&TitleScene::BlockIn)
 {	
 	m_titleH = my::MyLoadGraph(L"Data/title.png");
-	m_ringH = my::MyLoadGraph(L"Data/ring.png");
+	m_gearH = my::MyLoadGraph(L"Data/gear.png");
 	m_blockH = my::MyLoadGraph(L"Data/map/mapchip.png");
 	SetBlock();
 	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
@@ -203,7 +211,7 @@ TitleScene::~TitleScene()
 {
 	DeleteSoundMem(m_BgmH);
 	DeleteGraph(m_titleH);
-	DeleteGraph(m_ringH);
+	DeleteGraph(m_gearH);
 	DeleteGraph(m_blockH);
 	DeleteGraph(m_enemyH);
 }
@@ -213,7 +221,11 @@ TitleScene::Update(const InputState& input)
 {
 	//◇メンバ関数ポインタを呼び出す　演算子　->*
 	(this->*m_updateFunc)(input);
-	m_ringIdx++;
+	m_gearIdx++;
+	if (m_gearIdx == kGearNum * kGearSpeed)
+	{
+		m_gearIdx = 0;
+	}
 }
 
 void TitleScene::Draw()
@@ -232,9 +244,11 @@ void TitleScene::Draw()
 		enemy->Draw();
 	}
 
+	//歯車
+	int img = m_gearIdx / kGearSpeed * kGearSize;
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
 	//タイトルロゴ表示
 	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
-	//my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), (m_ringIdx%2)*160, 0, 160, 160, 1.0f, 0.0f, m_ringH, true, false);
 
 	//メニュー項目を描画
 	m_color = 0x000000;
@@ -246,6 +260,7 @@ void TitleScene::Draw()
 
 	DrawFormatString(0, 0,  0x000000, L"X%dY%d", m_blocks.idxX,m_blocks.idxY);
 	DrawFormatString(0, 20,  0x000000, L"x%3f,y%3f", m_blocks.pos.x, m_blocks.pos.y);
+	DrawFormatString(0, 40,  0x000000, L"m_gearIdx%d", m_gearIdx);
 #endif
 
 

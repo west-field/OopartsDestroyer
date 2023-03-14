@@ -58,8 +58,8 @@ private:
 	void (TitleScene::* m_updateFunc)(const InputState& input);
 
 	int m_titleH = -1;
-	int m_ringH = -1;
-	int m_ringIdx = 0;
+	int m_gearH = -1;
+	int m_gearIdx = 0;
 	MenuElement SelectMenu[menuNum] = {
 		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart },
 		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig},
