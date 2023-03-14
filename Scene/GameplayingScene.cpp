@@ -271,8 +271,8 @@ void GameplayingScene::MovePlayer(float MoveX, float MoveY)
 	m_player->Movement({ MoveX,0.0f });//移動
 
 	// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
-	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit) ||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w * 0.5f, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h * 0.5f + 1.0f) == MapEvent_hit))
+	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_add.y + m_player->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit) ||
+		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_add.y + m_player->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit))
 	{
 		//当たり判定のある場所に来たら音を鳴らす
 		if (m_player->IsJump())
@@ -610,7 +610,7 @@ void GameplayingScene::Ladder(const InputState& input)
 	float PlayerMoveY = 0.0f;
 
 	LadderAlign();
-	Vector2 lader = m_map->GetMapChipPos(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY);
+	Vector2 lader = m_map->GetMapChipPos(posX , posY);
 	//上キーで梯子を上がれる
 	if (input.IsPressed(InputType::up))
 	{
@@ -672,7 +672,7 @@ void GameplayingScene::LadderAlign()
 	//プレイヤーの位置を梯子の位置にする
 	//移動する量＝プレイヤーの位置ー梯子の位置
 	//梯子の位置
-	Vector2 lader = m_map->GetMapChipPos(posX + m_player->GetRect().GetSize().w / 2 - kPullPos, posY);
+	Vector2 lader = m_map->GetMapChipPos(posX, posY);
 	//移動させる量
 	Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
 						(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };
@@ -822,8 +822,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		SoundManager::GetInstance().Play(SoundId::PlayeyShot);
 		m_player->Action(ActionType::grah_attack);
 	}
-
-	m_shotFactory->Movement({ m_correction.y, m_correction.y });
+	
+	m_shotFactory->Movement({ m_correction.x, m_correction.y });
 
 	//自機の弾と、敵機の当たり判定
 	for (auto& enemy : m_enemyFactory->GetEnemies())
