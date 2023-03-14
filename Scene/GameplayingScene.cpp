@@ -46,7 +46,6 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	for (auto& hp : m_hp)
 	{
 		hp = std::make_shared<HpBar>();
-		//hp->Init(my::MyLoadGraph(L"Data/hp.bmp"));
 		hp->Init(my::MyLoadGraph(L"Data/hpbar.png"));
 	}
 	//プレイヤー
@@ -60,9 +59,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -3026.0f,178.0f };//下移動梯子
-	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
+	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	//Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -217,15 +215,13 @@ void GameplayingScene::Draw()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	DrawGraphF(quakeX_, 0, tempScreenH_, true);
-	//if (quakeTimer_ > 0)
-	//{
-	//	//GraphFilter(tempScreenH_, DX_GRAPH_FILTER_GAUSS, 16, 1400);//画面をぼかす
-	//	SetDrawBlendMode(DX_BLENDMODE_ADD, 192);//加算合成
-	//	DrawGraph(quakeX_, 0, tempScreenH_, true);
-	//	//GraphFilter(tempScreenH_, DX_GRAPH_FILTER_GAUSS, 32, 2000);//画面をぼかす
-	//	//SetDrawBlendMode(DX_BLENDMODE_ADD, 192);//加算合成
-	//	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
-	//}
+	if (quakeTimer_ > 0)
+	{
+		//当たった時光らせる
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
+		DrawGraph(quakeX_, 0, tempScreenH_, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
+	}
 }
 
 void GameplayingScene::MovePlayer(float MoveX, float MoveY)
@@ -718,7 +714,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 void GameplayingScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameplayingScene::PlayerOnScreen;
@@ -915,9 +911,9 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 	if (m_isBoss)
 	{
-		if (m_soundVolume++ >= 255)
+		if (m_soundVolume++ >= 200)
 		{
-			m_soundVolume = 255;
+			m_soundVolume = 200;
 		}
 		else
 		{
@@ -926,6 +922,12 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		//エネミーのHPが０になったらゲームクリア
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
+			if(!enemy->IsCollidable() && quakeTimer_ == 0)
+			{
+				quakeX_ = 10.0f;
+				quakeTimer_ = 61*2;
+			}
+
 			if (!enemy->IsExist())
 			{
 				m_updateFunc = &GameplayingScene::FadeOutUpdat;
@@ -935,17 +937,21 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			}
 		}
 	}
-
-	if (quakeTimer_ > 0)
-	{
-		quakeX_ = -quakeX_;
-		quakeX_ *= 0.95f;
-		quakeTimer_--;
-	}
 	else
 	{
-		quakeX_ = 0.0f;
+		if (quakeTimer_ > 0)
+		{
+			quakeX_ = -quakeX_;
+			quakeX_ *= 0.95f;
+			quakeTimer_--;
+		}
+		else
+		{
+			quakeX_ = 0.0f;
+			quakeTimer_ = 0;
+		}
 	}
+	
 }
 
 void GameplayingScene::MoveMapUpdat(const InputState& input)
@@ -1031,7 +1037,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	else if (m_isScreenMoveWidth)
 	{
 		m_soundVolume += 4;
-		ChangeVolumeSoundMem(255 - m_soundVolume, m_BgmH);
+		ChangeVolumeSoundMem(200 - m_soundVolume, m_BgmH);
 		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
 		//if (m_playerPosBottom > Game::kMapScreenLeftX)
@@ -1060,8 +1066,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 void GameplayingScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(255 - m_fadeValue, m_BgmH);
-	ChangeVolumeSoundMem(255 - m_fadeValue, m_bossBgm);
+	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(200 - m_fadeValue, m_bossBgm);
 	if(++m_fadeTimer == kFadeInterval)
 	{
 		switch (m_crea)

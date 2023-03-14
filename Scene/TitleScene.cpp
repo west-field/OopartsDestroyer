@@ -23,7 +23,7 @@ void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//‚Ç‚ñ‚Ç‚ñ–¾‚é‚­‚È‚é
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(255 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &TitleScene::NormalUpdat;
@@ -101,7 +101,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 void TitleScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(255 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		//Œ»İ‘I‘ğ’†‚Ìó‘Ô‚É‚æ‚Á‚Äˆ—‚ğ•ªŠò
@@ -179,7 +179,7 @@ void TitleScene::BlockOut()
 
 TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat), m_blockMove(&TitleScene::BlockIn)
 {	
-	m_titleH = my::MyLoadGraph(L"Data/Title 1.png");
+	m_titleH = my::MyLoadGraph(L"Data/title.png");
 	m_blockH = my::MyLoadGraph(L"Data/map/mapchip.png");
 	SetBlock();
 	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
