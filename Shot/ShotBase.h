@@ -32,7 +32,7 @@ public:
 	virtual void PlayerShot(bool isPlayerShot) { m_isPlayerShot = isPlayerShot; }
 	virtual bool IsPlayerShot()const { return m_isPlayerShot; }
 	//’e‚ðˆÚ“®
-	virtual void Movement(Vector2 vec);
+	virtual void Movement(Vector2 vec) = 0;
 	
 	virtual const Rect& GetRect()const;
 

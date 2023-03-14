@@ -1,5 +1,6 @@
 #pragma once
 #include "ShotBase.h"
+
 class ShotBattery : public ShotBase
 {
 public:
@@ -9,6 +10,7 @@ public:
 	virtual void Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)override;
 	virtual void Update()override;
 	virtual void Draw()override;
+	virtual void Movement(Vector2 vec);
 	virtual const int AttackPower()const override;
 private:
 	

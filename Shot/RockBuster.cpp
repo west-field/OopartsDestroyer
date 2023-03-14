@@ -32,7 +32,7 @@ void RockBuster::Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)
 void RockBuster::Update()
 {
 	if (!m_isExist)	return;
-	ShotBase::Movement({ 8.0f ,0.0f});
+	Movement({ 8.0f ,0.0f});
 	//âÊñ ÇÃäOÇ…èoÇΩÇÁè¡Ç¶ÇÈ
 	float hsize, wsize;
 
@@ -70,6 +70,13 @@ void RockBuster::Draw()
 #ifdef _DEBUG
 	m_rect.Draw(0xaa00ff);
 #endif
+}
+
+void RockBuster::Movement(Vector2 vec)
+{
+	if (vec.x != 8.0f)	return;
+	if (m_isLeft) vec *= -1.0f;
+	m_rect.center += vec;
 }
 
 const int RockBuster::AttackPower() const

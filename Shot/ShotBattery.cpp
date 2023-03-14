@@ -32,7 +32,7 @@ void ShotBattery::Update()
 {
 	int wsize = m_rect.size.w / 2;
 	int hsize = m_rect.size.h / 2;
-	ShotBase::Movement(m_vel);
+	Movement(m_vel);
 	//ç∂ë§
 	if (m_rect.center.x - wsize < Game::kMapScreenLeftX)
 	{
@@ -64,6 +64,12 @@ void ShotBattery::Draw()
 	m_rect.Draw(0xaa00ff);
 	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenTopY, 0x000000,L"%3f,%3f", m_vel.x, m_vel.y);
 #endif
+}
+
+void ShotBattery::Movement(Vector2 vec)
+{
+	if (m_isLeft) vec *= -1.0f;
+	m_rect.center += vec;
 }
 
 const int ShotBattery::AttackPower() const

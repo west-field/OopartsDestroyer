@@ -1,6 +1,5 @@
 #pragma once
 #include "ShotBase.h"
-#include "../Util/Geometry.h"
 
 class RockBuster : public ShotBase
 {
@@ -9,8 +8,9 @@ public:
 	virtual ~RockBuster();
 
 	virtual void Start(Position2 pos, Vector2 vel, bool left, bool isPlayer) override;
-	virtual void Update();
-	virtual void Draw();
+	virtual void Update()override;
+	virtual void Draw()override;
+	virtual void Movement(Vector2 vec)override;
 	virtual const int AttackPower()const;
 private:
 };
