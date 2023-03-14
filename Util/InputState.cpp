@@ -47,12 +47,10 @@ InputState::InputState()
 	tempMapTable_ = m_inputMapTable;
 
 	//入力タイプの名前テーブルを作る
-	m_inputNameTable[InputType::next] = L"next";
-	m_inputNameTable[InputType::prev] = L"prev";
-	m_inputNameTable[InputType::pause] = L"pause";
-	m_inputNameTable[InputType::keyconf] = L"keyconf";
-	m_inputNameTable[InputType::junp] = L"junp";
-	m_inputNameTable[InputType::shot] = L"shot";
+	m_inputNameTable[InputType::next] = L"次へ";
+	m_inputNameTable[InputType::pause] = L"ポーズ";
+	m_inputNameTable[InputType::junp] = L"ジャンプ";
+	m_inputNameTable[InputType::shot] = L"ショット";
 
 	m_currentInput.resize(static_cast<int>(InputType::max));
 	m_lastInput.resize(static_cast<int>(InputType::max));
