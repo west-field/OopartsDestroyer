@@ -22,10 +22,8 @@ void ShotBattery::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 	m_isExist = true;
 	m_isLeft = left;
 	m_rect.center = pos;
-	m_vel = vel * kShotBatterySpeed;
+	m_vel = vel* kShotBatterySpeed;
 	m_isPlayerShot = isPlayer;
-	/*m_vel.x = vel.x*kShotBatterySpeed;
-	m_vel.y = vel.y*kShotBatterySpeed;*/
 	if (m_isLeft) m_vel *= -1.0f;
 }
 
@@ -41,6 +39,16 @@ void ShotBattery::Update()
 	}
 	//âEë§
 	if (m_rect.center.x + wsize > Game::kMapScreenRightX)
+	{
+		m_isExist = false;
+	}
+	//è„í[
+	if (m_rect.center.y + hsize < Game::kMapScreenTopY)
+	{
+		m_isExist = false;
+	}
+	//â∫í[
+	if (m_rect.center.y - hsize > Game::kMapScreenBottomY)
 	{
 		m_isExist = false;
 	}
