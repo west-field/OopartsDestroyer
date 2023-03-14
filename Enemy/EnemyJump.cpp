@@ -129,7 +129,7 @@ void EnemyJump::DownUpdate()
 
 	m_rect.center.x += m_vec.x;
 
-	if (m_chipId != 0)
+	if (m_chipId == 1)
 	{
 		m_chipId = 0;
 		m_idx = 0;

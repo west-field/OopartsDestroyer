@@ -119,7 +119,7 @@ void EnemyMoveLR::LeftUpdate()
 	//¶‚ÉˆÚ“®‚·‚é
 	m_rect.center.x -= kEnemyMoveSpeed;
 	//•Ç‚É‚Ô‚Â‚©‚Á‚½
-	if (m_chipId != 0)
+	if (m_chipId == 1)
 	{
 		m_chipId = 0;
 		//”¼–Ú
@@ -136,7 +136,7 @@ void EnemyMoveLR::RightUpdate()
 	m_idx = 2;
 	//‰E‚ÉˆÚ“®
 	m_rect.center.x += kEnemyMoveSpeed;
-	if (m_chipId != 0)
+	if (m_chipId == 1)
 	{
 		m_chipId = 0;
 		m_idx = 1;
