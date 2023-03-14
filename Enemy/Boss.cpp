@@ -1,4 +1,4 @@
-#include "CutMan.h"
+#include "Boss.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../Game/ShotFactory.h"
@@ -38,8 +38,8 @@ namespace
 	constexpr int boss_burst_frame_speed = 1;//アニメーションスピード
 }
 
-CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), updateFunc(&CutMan::StopUpdate), m_drawFunc(&CutMan::NormalDraw),
+Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory) :
+	EnemyBase(player, pos, sFactory), updateFunc(&Boss::StopUpdate), m_drawFunc(&Boss::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
 	m_hp->Init(-1);
@@ -52,31 +52,31 @@ CutMan::CutMan(std::shared_ptr<Player>player, const Position2& pos, int handle, 
 	//m_vec = { kSpeed, kJumpAcc };
 }
 
-CutMan::~CutMan()
+Boss::~Boss()
 {
 	DeleteGraph(m_bossBurstH);
 }
 
-void CutMan::Update()
+void Boss::Update()
 {
 	if (!m_isExist)return;
 	(this->*updateFunc)();
 }
 
-void CutMan::Draw()
+void Boss::Draw()
 {
 	if (!m_isExist)return;
 	(this->*m_drawFunc)();
 }
 
-void CutMan::Movement(Vector2 vec)
+void Boss::Movement(Vector2 vec)
 {
 	if (!m_isExist)	return;
 	//画面と一緒に移動
 	m_rect.center += vec;
 }
 
-void CutMan::EnemyMovement(Vector2 vec)
+void Boss::EnemyMovement(Vector2 vec)
 {
 	if (!m_isExist)	return;
 	//ジャンプしているとき
@@ -87,12 +87,12 @@ void CutMan::EnemyMovement(Vector2 vec)
 	}
 }
 
-int CutMan::TouchAttackPower() const
+int Boss::TouchAttackPower() const
 {
 	return kCutManTouchAttackPower;
 }
 
-void CutMan::Damage(int damage)
+void Boss::Damage(int damage)
 {
 	m_hp->Damage(damage);
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
@@ -100,28 +100,28 @@ void CutMan::Damage(int damage)
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
-		updateFunc = &CutMan::BurstUpdate;
-		m_drawFunc = &CutMan::BurstDraw;
+		updateFunc = &Boss::BurstUpdate;
+		m_drawFunc = &Boss::BurstDraw;
 		m_idx = 0;
 	}
 }
 
-bool CutMan::IsCollidable() const
+bool Boss::IsCollidable() const
 {
-	return (updateFunc != &CutMan::BurstUpdate) && m_ultimateTimer == 0;
+	return (updateFunc != &Boss::BurstUpdate) && m_ultimateTimer == 0;
 }
 
-void CutMan::MoveUpdate()
+void Boss::MoveUpdate()
 {
 	//左を向いていたら方向を変える
 	if (m_isLeft) m_vec.x *= -1.0f;
 	//ジャンプさせる
 	m_vec.y = kJumpAcc - (GetRand(100) % 5);
-	updateFunc = &CutMan::JumpUpdate;
+	updateFunc = &Boss::JumpUpdate;
 	return;
 }
 
-void CutMan::StopUpdate()
+void Boss::StopUpdate()
 {
 	if (m_animFrame++ > kAnimFrameSpeed)
 	{
@@ -143,12 +143,12 @@ void CutMan::StopUpdate()
 		//HPが半分を切ったら二回攻撃する
 		if (m_hp->GetHp() <= m_hp->GetMaxHp() / 2)
 		{
-			updateFunc = &CutMan::TwoShotUpdate;
+			updateFunc = &Boss::TwoShotUpdate;
 			return;
 		}
 		else
 		{
-			updateFunc = &CutMan::OneShotUpdate;
+			updateFunc = &Boss::OneShotUpdate;
 			return;
 		}
 	}
@@ -162,23 +162,23 @@ void CutMan::StopUpdate()
 	//	//ジャンプさせる
 	//	//m_vec.y = kJumpAcc - (GetRand(100) % 5);
 	//	m_posTemp = m_rect.center.y + ( kJumpAcc - (GetRand(100) % 5));
-	//	updateFunc = &CutMan::JumpUpdate;
+	//	updateFunc = &Boss::JumpUpdate;
 	//	return;
 	//}
 }
 
-void CutMan::JumpUpdate()
+void Boss::JumpUpdate()
 {
 	m_rect.center.y += m_vec.y;
 
 	if (m_rect.center.y <= m_posTemp)
 	{
-		updateFunc = &CutMan::DownUpdate;
+		updateFunc = &Boss::DownUpdate;
 		return;
 	}
 }
 
-void CutMan::DownUpdate()
+void Boss::DownUpdate()
 {
 	m_vec.y += kGravity;//下に落ちる
 
@@ -195,12 +195,12 @@ void CutMan::DownUpdate()
 		{
 			m_isLeft = true;
 		}
-		updateFunc = &CutMan::StopUpdate;
+		updateFunc = &Boss::StopUpdate;
 		return;
 	}
 }
 
-void CutMan::OneShotUpdate()
+void Boss::OneShotUpdate()
 {
 	//自機狙い弾を作る　自機狙いベクトル=終点(プレイヤー座標)　-　始点(敵機自身の座標)
 	auto vel = m_player->GetRect().GetCenter() - m_rect.center;
@@ -218,11 +218,11 @@ void CutMan::OneShotUpdate()
 
 	//次の指示を待つ
 	m_JumpFrame = 0;
-	updateFunc = &CutMan::StopUpdate;
+	updateFunc = &Boss::StopUpdate;
 	return;
 }
 
-void CutMan::TwoShotUpdate()
+void Boss::TwoShotUpdate()
 {
 	//自機狙い弾を作る　自機狙いベクトル=終点(プレイヤー座標)　-　始点(敵機自身の座標)
 	auto vel = m_player->GetRect().GetCenter() - m_rect.center;
@@ -247,12 +247,12 @@ void CutMan::TwoShotUpdate()
 		m_shotFrame = 20;
 		//次の指示を待つ
 		m_JumpFrame = 0;
-		updateFunc = &CutMan::StopUpdate;
+		updateFunc = &Boss::StopUpdate;
 		return;
 	}
 }
 
-void CutMan::NormalDraw()
+void Boss::NormalDraw()
 {
 	//無敵時間点滅させる
 	if ((m_ultimateTimer / 10) % 2 == 1)	return;
@@ -266,7 +266,7 @@ void CutMan::NormalDraw()
 #endif
 }
 
-void CutMan::BurstUpdate()
+void Boss::BurstUpdate()
 {
 	m_idx += 1;
 	if (m_idx == (boss_burst_frame_num * 2) * boss_burst_frame_speed)
@@ -275,7 +275,7 @@ void CutMan::BurstUpdate()
 	}
 }
 
-void CutMan::BurstDraw()
+void Boss::BurstDraw()
 {
 
 	int animNum = (m_idx / burst_frame_speed);

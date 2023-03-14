@@ -191,10 +191,10 @@ void GameoverScene::MojiDraw()
 	SetFontSize(0);
 
 	SetFontSize(kMenuFontSize);
-	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"最初から", 0x000000);
-	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"最初から", SelectMenu[menuRestart].color);
 	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"タイトルに戻る", 0x000000);
 	DrawString(SelectMenu[menuGameEnd].x, SelectMenu[menuGameEnd].y, L"タイトルに戻る", SelectMenu[menuGameEnd].color);
+	DrawString(SelectMenu[menuRestart].x + 5, SelectMenu[menuRestart].y + 5, L"最初から", 0x000000);
+	DrawString(SelectMenu[menuRestart].x, SelectMenu[menuRestart].y, L"最初から", SelectMenu[menuRestart].color);
 	SetFontSize(0);
 }
 

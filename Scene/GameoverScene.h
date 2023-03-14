@@ -57,8 +57,8 @@ private:
     //メニュー項目
     enum MenuItem
     {
-        menuRestart,	//リスタート
         menuGameEnd,	//ゲーム終了
+        menuRestart,	//リスタート
 
         menuNum			//項目の数
     };
@@ -70,8 +70,8 @@ private:
         unsigned int color;//色
     };
     MenuElement SelectMenu[menuNum] = {
-        { kMovedPosX, kOriginalPosY + kMenuFontSize * menuRestart,0xffa0aa  },
-        { kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd + 5,0xaaa0ff}
+        { kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameEnd,0xffa0aa  },
+        { kOriginalPosX, kOriginalPosY + kMenuFontSize * menuRestart + 5,0xaaa0ff}
     };
     int m_selectNum = 0;//選択しているメニュー項目
 };

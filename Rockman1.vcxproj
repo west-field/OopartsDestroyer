@@ -143,8 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Enemy\EnemyMoveUD.cpp" />
-    <ClCompile Include="Enemy\CutMan.cpp" />
+    <ClCompile Include="Enemy\Boss.cpp" />
     <ClCompile Include="Enemy\EnemyJump.cpp" />
     <ClCompile Include="Enemy\EnemyMoveLR.cpp" />
     <ClCompile Include="Enemy\EnemyBase.cpp" />
@@ -161,12 +160,9 @@
     <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Scene\GameplayingScene.cpp" />
     <ClCompile Include="Scene\KeyConfigScene.cpp" />
-    <ClCompile Include="Scene\OperateScene.cpp" />
-    <ClCompile Include="Scene\OptionScene.cpp" />
     <ClCompile Include="Scene\PauseScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Secne.cpp" />
-    <ClCompile Include="Scene\ShotChangeScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Game\ShotFactory.cpp" />
     <ClCompile Include="Shot\ShotBattery.cpp" />
@@ -178,8 +174,7 @@
     <ClCompile Include="Util\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Enemy\EnemyMoveUD.h" />
-    <ClInclude Include="Enemy\CutMan.h" />
+    <ClInclude Include="Enemy\Boss.h" />
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
     <ClInclude Include="Scene\MonologueScene.h" />
@@ -196,12 +191,9 @@
     <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Scene\GameplayingScene.h" />
     <ClInclude Include="Scene\KeyConfigScene.h" />
-    <ClInclude Include="Scene\OperateScene.h" />
-    <ClInclude Include="Scene\OptionScene.h" />
     <ClInclude Include="Scene\PauseScene.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\Secne.h" />
-    <ClInclude Include="Scene\ShotChangeScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="Game\ShotFactory.h" />
     <ClInclude Include="Shot\ShotBattery.h" />

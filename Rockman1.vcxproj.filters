@@ -66,12 +66,6 @@
     <ClCompile Include="Scene\KeyConfigScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\OperateScene.cpp">
-      <Filter>Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\OptionScene.cpp">
-      <Filter>Screen</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\PauseScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
@@ -79,9 +73,6 @@
       <Filter>Screen</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Secne.cpp">
-      <Filter>Screen</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\ShotChangeScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
@@ -117,14 +108,11 @@
     <ClCompile Include="Shot\ShotBattery.cpp">
       <Filter>Shot</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy\CutMan.cpp">
+    <ClCompile Include="Enemy\Boss.cpp">
       <Filter>Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Util\Graph.cpp">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy\EnemyMoveUD.cpp">
-      <Filter>Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Scene\MonologueScene.cpp">
       <Filter>Screen</Filter>
@@ -167,12 +155,6 @@
     <ClInclude Include="Scene\KeyConfigScene.h">
       <Filter>Screen</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\OperateScene.h">
-      <Filter>Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\OptionScene.h">
-      <Filter>Screen</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\PauseScene.h">
       <Filter>Screen</Filter>
     </ClInclude>
@@ -180,9 +162,6 @@
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="Scene\Secne.h">
-      <Filter>Screen</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\ShotChangeScene.h">
       <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="Scene\TitleScene.h">
@@ -218,14 +197,11 @@
     <ClInclude Include="Shot\ShotBattery.h">
       <Filter>Shot</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy\CutMan.h">
+    <ClInclude Include="Enemy\Boss.h">
       <Filter>Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Util\Graph.h">
       <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy\EnemyMoveUD.h">
-      <Filter>Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Scene\MonologueScene.h">
       <Filter>Screen</Filter>

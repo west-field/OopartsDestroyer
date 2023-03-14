@@ -8,8 +8,7 @@
 #include "../Enemy/EnemyBattery.h"
 #include "../Enemy/EnemyJump.h"
 #include "../Enemy/EnemyMoveLR.h"
-#include "../Enemy/EnemyMoveUD.h"
-#include "../Enemy/CutMan.h"
+#include "../Enemy/Boss.h"
 #include "Player.h"
 
 namespace
@@ -110,7 +109,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		break;
 	case EnemyType::Boss:
 		m_enemies.push_back(
-			std::make_shared<CutMan>(
+			std::make_shared<Boss>(
 				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory));
 		break;
 	default:

@@ -5,11 +5,11 @@
 /// <summary>
 /// カットマン（ボス） 攻撃力,接触:4
 /// </summary>
-class CutMan :public EnemyBase
+class Boss :public EnemyBase
 {
 public :
-	CutMan(std::shared_ptr<Player>player, const Position2& pos,int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory);
-	virtual ~CutMan();
+	Boss(std::shared_ptr<Player>player, const Position2& pos,int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory);
+	virtual ~Boss();
 	virtual void Update()override;
 	virtual void Draw()override;
 
@@ -31,8 +31,8 @@ private:
 	void BurstUpdate();
 	void BurstDraw();
 
-	void (CutMan::* updateFunc)();
-	void (CutMan::* m_drawFunc)();
+	void (Boss::* updateFunc)();
+	void (Boss::* m_drawFunc)();
 
 	int m_bossBurstH = -1;//ボス爆発画像
 

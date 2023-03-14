@@ -10,7 +10,6 @@
 
 #include "SceneManager.h"
 #include "GameplayingScene.h"
-#include "OptionScene.h"
 
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
