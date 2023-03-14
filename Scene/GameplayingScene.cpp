@@ -105,13 +105,13 @@ void GameplayingScene::Draw()
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY + Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//下
 
 	m_hp[Object_Player]->Draw(true);//HPバーを表示
-	if (m_isBoss && m_hp[Object_EnemyBoss]->GetHp() != 0)
+	if (m_isBoss)
 	{
-		m_hp[Object_EnemyBoss]->Draw(false);
+		if (m_hp[Object_EnemyBoss]->GetHp() > 0)
+		{
+			m_hp[Object_EnemyBoss]->Draw(false);
+		}
 	}
-
-	//倒した敵の数を表示
-	//DrawFormatString(Game::kScreenWidth/2, Game::kScreenHeight/3, 0x000000, L"%d", m_enemyKill);
 
 #ifdef _DEBUG
 	for (auto& enemy : m_enemyFactory->GetEnemies())
@@ -841,7 +841,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
-				m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
+				if (m_isBoss)
+				{
+					m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
+				}
 				break;
 			}
 		}
@@ -982,9 +985,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		m_playerPosBottom= (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 );
 		if (m_isScreenMoveWidth)
 		{
-			m_soundVolume = 0;
 			//ボス戦BGMと入れ替える
-			ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
+			ChangeVolumeSoundMem(0, m_bossBgm);
 			PlaySoundMem(m_bossBgm, DX_PLAYTYPE_LOOP, true);
 		}
 	}
