@@ -107,7 +107,7 @@ void Player::ScaleEnlarge(float scale)
 
 void Player::NormalUpdate()
 {
-	float chipSizeHalf = 0/*Game::kDrawSize / 2*/;
+	float chipSizeHalf = Game::kDrawSize / 2;
 	//âÊñ ÇÃç∂í[Ç…Ç¬Ç¢ÇΩÇÁÇªÇÍà»è„ìÆÇØÇ»Ç¢ÇÊÇ§Ç…Ç∑ÇÈ
 	if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
 	{
@@ -119,14 +119,14 @@ void Player::NormalUpdate()
 		m_rect.center.x = Game::kMapScreenRightX - chipSizeHalf;
 	}
 	//âÊñ ÇÃè„í[Ç…Ç¬Ç¢ÇΩÇÁÇªÇÍà»è„ìÆÇØÇ»Ç¢ÇÊÇ§Ç…
-	if (m_rect.center.y < Game::kMapScreenTopY - chipSizeHalf)
+	if (m_rect.center.y < Game::kMapScreenTopY + chipSizeHalf)
 	{
-		m_rect.center.y = Game::kMapScreenTopY - chipSizeHalf;
+		m_rect.center.y = Game::kMapScreenTopY + chipSizeHalf;
 	}
 	//âÊñ ÇÃâ∫í[Ç…Ç¬Ç¢ÇΩÇÁÇªÇÍà»è„ìÆÇØÇ»Ç¢ÇÊÇ§Ç…
-	else if (m_rect.center.y > Game::kMapScreenBottomY + chipSizeHalf)
+	else if (m_rect.center.y > Game::kMapScreenBottomY - chipSizeHalf)
 	{
-		m_rect.center.y = Game::kMapScreenBottomY + chipSizeHalf;
+		m_rect.center.y = Game::kMapScreenBottomY - chipSizeHalf;
 	}
 
 	if (m_frame++ > kFrameSpeed)
