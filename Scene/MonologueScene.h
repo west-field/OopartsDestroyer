@@ -5,11 +5,6 @@
 #include <array>
 #include "../Util/Geometry.h"
 
-class EnemyMoveLeft;
-class Player;
-class HpBar;
-class ShotFactory;
-
 class InputState;
 /// <summary>
 /// モノローグシーン
@@ -26,7 +21,8 @@ private:
 	//フェードアウトの時のUpdate関数
 	void FadeOutUpdat(const InputState& input);
 
-	void SetBlock();
+	void PlayerOnStage(const InputState& input);//画面に入ってくる
+	void PlayerMoveUpdate(const InputState& input);//プレイヤー移動させる
 
 	//Update用メンバ関数ポインタ
 	void (MonologueScene::* m_updateFunc)(const InputState& input);
@@ -36,9 +32,28 @@ private:
 
 	int m_scroll = 0;
 
-	std::shared_ptr<Player>m_player;
-	std::shared_ptr<HpBar>m_hp;
-	std::shared_ptr<ShotFactory>m_shot;
+	Rect m_player = {};
+	int m_playerH = -1;
+	bool m_isPlayer = false;
+	int m_frame = 0;
+	int m_idxX = 0;
+	int m_idxY = 0;
+
+	bool m_isShotFire = true;
+	int m_shotH = -1;
+	Position2 m_shotPos = {};
+
+	struct ButtonImg
+	{
+		Position2 buttonPos;//ボタンの位置
+		int buttonIdxX = 0;
+		int buttonIdxY = 0;
+		int buttonFram = 0;
+	};
+	ButtonImg button;
+	int m_buttonH = -1;
+	bool m_isButton = false;
+
 public:
 	MonologueScene(SceneManager& manager);
 	virtual ~MonologueScene();
