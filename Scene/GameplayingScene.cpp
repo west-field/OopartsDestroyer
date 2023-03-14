@@ -59,8 +59,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
-	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
+	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	//Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -218,7 +218,7 @@ void GameplayingScene::Draw()
 	{
 		//当たった時光らせる
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
-		DrawGraph(quakeX_, 0, tempScreenH_, true);
+		DrawGraph(static_cast<int>(quakeX_), 0, tempScreenH_, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
 	}
 }

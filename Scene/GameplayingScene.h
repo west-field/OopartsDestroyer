@@ -26,6 +26,7 @@ enum MapEvent
     MapEvent_ladder,//梯子
     MapEvent_screen,//読み込める範囲
     MapEvent_pause,//一時停止する
+    MapEvent_restart,//リスタート地点
 };
 
 /// <summary>
