@@ -10,56 +10,59 @@
 
 InputState::InputState()
 {
-	m_inputMapTable[InputType::next] = { {InputCategory::keybd,KEY_INPUT_RETURN},
+	defaultMapTable_[InputType::next] = { {InputCategory::keybd,KEY_INPUT_RETURN},
 										//{InputCategory::pad,PAD_INPUT_R},//スタートボタン
 										{InputCategory::pad,PAD_INPUT_A},//A
 										{InputCategory::mouse,MOUSE_INPUT_LEFT} };
 
-	m_inputMapTable[InputType::prev] = { {InputCategory::keybd,KEY_INPUT_ESCAPE},
-										{InputCategory::pad,PAD_INPUT_B} };
-
-	m_inputMapTable[InputType::pause] = { {InputCategory::keybd,KEY_INPUT_P},
+	defaultMapTable_[InputType::pause] = { {InputCategory::keybd,KEY_INPUT_P},
 										{InputCategory::pad,PAD_INPUT_L} };//セレクトボタン
 
-	m_inputMapTable[InputType::keyconf] = { {InputCategory::keybd,KEY_INPUT_K},
-											{InputCategory::pad,PAD_INPUT_Y} };//左ショルダー
+	defaultMapTable_[InputType::prev] = { {InputCategory::keybd,KEY_INPUT_ESCAPE},
+										{InputCategory::pad,PAD_INPUT_B} };//B
 
-	m_inputMapTable[InputType::up] = { {InputCategory::keybd,KEY_INPUT_UP},
+	defaultMapTable_[InputType::up] = { {InputCategory::keybd,KEY_INPUT_UP},
 											{InputCategory::pad,PAD_INPUT_UP} };//上
 
-	m_inputMapTable[InputType::down] = { {InputCategory::keybd,KEY_INPUT_DOWN},
+	defaultMapTable_[InputType::down] = { {InputCategory::keybd,KEY_INPUT_DOWN},
 											{InputCategory::pad,PAD_INPUT_DOWN} };//下
 
-	m_inputMapTable[InputType::left] = { {InputCategory::keybd , KEY_INPUT_LEFT},
+	defaultMapTable_[InputType::left] = { {InputCategory::keybd , KEY_INPUT_LEFT},
 											{InputCategory::pad , PAD_INPUT_LEFT} };//左
 
-	m_inputMapTable[InputType::right] = { {InputCategory::keybd , KEY_INPUT_RIGHT},
+	defaultMapTable_[InputType::right] = { {InputCategory::keybd , KEY_INPUT_RIGHT},
 											{InputCategory::pad , PAD_INPUT_RIGHT} };//右
 
-	m_inputMapTable[InputType::junp] = {{InputCategory::keybd , KEY_INPUT_SPACE},
+	defaultMapTable_[InputType::junp] = {{InputCategory::keybd , KEY_INPUT_SPACE},
 										{InputCategory::pad , PAD_INPUT_A} };//A
-	m_inputMapTable[InputType::shot] = { {InputCategory::keybd , KEY_INPUT_Z},
+
+	defaultMapTable_[InputType::shot] = { {InputCategory::keybd , KEY_INPUT_Z},
 										{InputCategory::pad , PAD_INPUT_3} };//X
 	
+	inputMapTable_ = defaultMapTable_;
 	LoadKeyInfo();
-	//SaveKeyInfo();
 	//一時マップテーブルにコピー
-	tempMapTable_ = m_inputMapTable;
+	tempMapTable_ = inputMapTable_;
 
 	//入力タイプの名前テーブルを作る
-	m_inputNameTable[InputType::next] = L"次へ";
-	m_inputNameTable[InputType::pause] = L"ポーズ";
-	m_inputNameTable[InputType::junp] = L"ジャンプ";
-	m_inputNameTable[InputType::shot] = L"ショット";
+	inputNameTable_[InputType::next] = L"次へ";
+	inputNameTable_[InputType::pause] = L"ポーズ";
+	inputNameTable_[InputType::prev] = L"戻る";
+	inputNameTable_[InputType::up] = L"上";
+	inputNameTable_[InputType::down] = L"下";
+	inputNameTable_[InputType::left] = L"左移動";
+	inputNameTable_[InputType::right] = L"右移動";
+	inputNameTable_[InputType::junp] = L"ジャンプ";
+	inputNameTable_[InputType::shot] = L"ショット";
 
-	m_currentInput.resize(static_cast<int>(InputType::max));
-	m_lastInput.resize(static_cast<int>(InputType::max));
+	currentInput_.resize(static_cast<int>(InputType::max));
+	lastInput_.resize(static_cast<int>(InputType::max));
 }
 
 void
 InputState::Update()
 {
-	m_lastInput = m_currentInput;//直前の入力情報を記憶しておく
+	lastInput_ = currentInput_;//直前の入力情報を記憶しておく
 
 	char keystate[256];
 	GetHitKeyStateAll(keystate);//全キー情報取得
@@ -68,23 +71,24 @@ InputState::Update()
 	//このinputの中身は、keybd,KEY_INPUT_RETURNなどのセット(InputInfo)が入っている
 	//keymap.secondには、この入力情報セットが入っている
 	//keymap.firstには、対応するゲーム入力名の"InputType::next"などが入っている
-	for (const auto& keymap : m_inputMapTable)
+	for (const auto& keymap : inputMapTable_)
 	{
 		for (const auto& input : keymap.second)
 		{
 			if (input.cat == InputCategory::keybd)
 			{
-				m_currentInput[static_cast<int>(keymap.first)] = keystate[input.id];
+				currentInput_[static_cast<int>(keymap.first)] = keystate[input.id];
 			}
 			else if (input.cat == InputCategory::pad)
 			{
-				m_currentInput[static_cast<int>(keymap.first)] = padState & input.id;
+				currentInput_[static_cast<int>(keymap.first)] = padState & input.id;
 			}
 			else if (input.cat == InputCategory::mouse)
 			{
-				m_currentInput[static_cast<int>(keymap.first)] = mouseState & input.id;
+				currentInput_[static_cast<int>(keymap.first)] = mouseState & input.id;
 			}
-			if (m_currentInput[static_cast<int>(keymap.first)])
+			//3つの入力のうちのどれかがtrueだったらもう「入力されている」とみなして、breakする。
+			if (currentInput_[static_cast<int>(keymap.first)])
 			{
 				break;
 			}
@@ -95,24 +99,25 @@ InputState::Update()
 bool
 InputState::IsPressed(InputType type) const
 {
-	return m_currentInput[static_cast<int>(type)];
+	return currentInput_[static_cast<int>(type)];
 }
 
 bool
 InputState::IsTriggered(InputType type) const
 {
-	return IsPressed(type) && !m_lastInput[static_cast<int>(type)];
+	return IsPressed(type) && !lastInput_[static_cast<int>(type)];
 }
 
-void InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
+void
+InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
 {
 	//入力種別(割り当て先)がなければ、無効なので無視する。
-	if (m_inputMapTable.count(type) == 0)
+	if (tempMapTable_.count(type) == 0)
 	{
 		return;
 	}
 	bool isRewrite = false;
-	for (auto& inputInfo : m_inputMapTable[type])
+	for (auto& inputInfo : tempMapTable_[type])
 	{
 		if (inputInfo.cat == cat)//カテゴリがヒットしたら
 		{
@@ -125,25 +130,25 @@ void InputState::RewriteInputInfo(InputType type, InputCategory cat, int id)
 	if (!isRewrite)
 	{
 		//もしカテゴリが存在しなかったら、ここで追加しておく
-		m_inputMapTable[type].push_back({ cat,id });
+		tempMapTable_[type].push_back({ cat,id });
 	}
 }
 
 void
 InputState::CommitChangedInputInfo()
 {
-	m_inputMapTable = tempMapTable_;
+	inputMapTable_ = tempMapTable_;
 }
 
 void
 InputState::RollbackChangedInputInfo()
 {
-	tempMapTable_ = m_inputMapTable;
+	tempMapTable_ = inputMapTable_;
 }
 
 void InputState::ResetInputInfo()
 {
-	m_inputMapTable = defaultMapTable_;
+	inputMapTable_ = defaultMapTable_;
 	tempMapTable_ = defaultMapTable_;
 }
 
@@ -159,10 +164,10 @@ void InputState::SaveKeyInfo()const
 	}
 
 	//仮想キータイプの数を書き込む
-	int keytypeNum = m_inputMapTable.size();
+	int keytypeNum = inputMapTable_.size();
 	fwrite(&keytypeNum, sizeof(keytypeNum), 1, fp);
 	//仮想キータイプ(next,prevなど)のループ
-	for (const auto& key : m_inputMapTable)
+	for (const auto& key : inputMapTable_)
 	{
 		int keytype = static_cast<int> (key.first);
 		//仮想キー番号
@@ -186,7 +191,7 @@ void InputState::LoadKeyInfo()
 	}
 	int keyTypeNum = 0;
 	FileRead_read(&keyTypeNum, sizeof(keyTypeNum), handle);
-	m_inputMapTable.clear();
+	inputMapTable_.clear();
 	for (int i = 0; i < keyTypeNum; i++)
 	{
 		int inputType = 0;
@@ -197,8 +202,8 @@ void InputState::LoadKeyInfo()
 
 		std::vector<InputInfo> inputInfoes(dataSize);
 		FileRead_read(inputInfoes.data(), sizeof(InputInfo) * dataSize, handle);
-		m_inputMapTable[static_cast<InputType>(inputType)] = inputInfoes;
+		inputMapTable_[static_cast<InputType>(inputType)] = inputInfoes;
 	}
-	tempMapTable_ = m_inputMapTable;
+	tempMapTable_ = inputMapTable_;
 	FileRead_close(handle);
 }

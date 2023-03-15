@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../game.h"
 #include "../Util/InputState.h"
+#include "../Util/Sound.h"
 #include "SceneManager.h"
 #include "KeyConfigScene.h"
 
@@ -31,6 +32,7 @@ void PauseScene::Update(const InputState& input)
 
 	if (isPress)
 	{
+		SoundManager::GetInstance().Play(SoundId::Cursor);
 		for (int i = 0; i < pauseMax; i++)
 		{
 			if (i == m_selectNum)
@@ -48,6 +50,7 @@ void PauseScene::Update(const InputState& input)
 
 	if (input.IsTriggered(InputType::next))
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		switch (m_selectNum)
 		{
 		case pauseKeyconfig:
@@ -62,6 +65,7 @@ void PauseScene::Update(const InputState& input)
 	}
 	if (input.IsTriggered(InputType::prev))
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_selectNum = pauseBack;
 		m_manager.PopScene();
 		return;

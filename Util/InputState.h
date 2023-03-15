@@ -7,9 +7,8 @@
 enum class InputType
 {
 	next,//次へ行くボタン
-	prev,//前に戻るボタン
 	pause,//ポーズボタン
-	keyconf,//キーコンフィグ
+	prev,//戻る
 	up,//上
 	down,//下
 	left,//左
@@ -40,6 +39,7 @@ struct InputInfo
 	int id;
 };
 
+//フレンド用にプロトタイプ宣言
 class KeyConfigScene;
 
 /// <summary>
@@ -53,17 +53,16 @@ private:
 	//キー(first)=InputType
 	//値(second)=std::vector<InputInfo>
 	using InputMap_t = std::map<InputType, std::vector<InputInfo>>;
-
-	InputMap_t m_inputMapTable;//実際の入力とゲームボタンの対応テーブル
+	InputMap_t inputMapTable_;//実際の入力とゲームボタンの対応テーブル
 
 	InputMap_t tempMapTable_;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
 	InputMap_t defaultMapTable_;//リセット用キーマップテーブル
 
-	//入力
-	std::map<InputType, std::wstring> m_inputNameTable;
+	//入力タイプとその名前の対応テーブル
+	std::map<InputType, std::wstring> inputNameTable_;
 
-	std::vector<bool> m_currentInput;
-	std::vector<bool> m_lastInput;
+	std::vector<bool> currentInput_;//現在の入力情報(押しているか押していないか)
+	std::vector<bool> lastInput_;//直前の入力情報(直前押しているか押していないか)
 
 public:
 	InputState();
@@ -73,14 +72,14 @@ public:
 	/// （注意）毎フレームUpdateを呼ばないと入力状況は更新されない
 	/// </summary>
 	void Update();
-	
+
 	/// <summary>
 	/// 押されてたらtrueになる
 	/// </summary>
 	/// <param name="type">InputType</param>
 	/// <returns>押されていたらtrue,押されてないならfalse</returns>
 	bool IsPressed(InputType type) const;
-	
+
 	/// <summary>
 	/// 押した瞬間にtrueになる
 	/// </summary>
@@ -94,7 +93,7 @@ public:
 	/// <param name="type">ゲームにおける入力種別</param>
 	/// <param name="cat">入力カテゴリ</param>
 	/// <param name="id">実際の入力</param>
-	void RewriteInputInfo(InputType type,InputCategory cat,int id);
+	void RewriteInputInfo(InputType type, InputCategory cat, int id);
 
 	/// <summary>
 	/// 現在編集中のキーコンフィグを確定する
@@ -118,4 +117,3 @@ public:
 
 	void LoadKeyInfo();
 };
-

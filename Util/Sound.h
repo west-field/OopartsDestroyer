@@ -30,7 +30,7 @@ class SoundManager
 {
 private:
 	SoundManager();
-	~SoundManager();
+	
 	//コピーも代入も禁止する
 	SoundManager(const SoundManager&) = delete;
 	void operator= (const SoundManager&) = delete;
@@ -39,6 +39,7 @@ private:
 	
 	std::unordered_map<SoundId, int> nameAndHandleTable_;
 public:
+	~SoundManager();
 	/// <summary>
 	/// SoundManager使用者はGetInstance()を通した参照からしか利用できない
 	/// </summary>
