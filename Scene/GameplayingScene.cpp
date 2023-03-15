@@ -206,6 +206,8 @@ void GameplayingScene::Draw()
 
 	DrawFormatString(500, 500, 0x000000, L"playerPosUp.%3f", m_playerPosUp);
 	DrawFormatString(500, 520, 0x000000, L"playerPosBottom.%3f", m_playerPosBottom);
+
+	DrawFormatString(500, 540, 0x000000, L"m_soundVolume.%d", m_soundVolume);
 #endif
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
@@ -991,7 +993,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		if (m_isScreenMoveWidth)
 		{
 			//ボス戦BGMと入れ替える
-			ChangeVolumeSoundMem(0, m_bossBgm);
+			m_soundVolume = 0;
+			ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 			PlaySoundMem(m_bossBgm, DX_PLAYTYPE_LOOP, true);
 		}
 	}
@@ -1048,7 +1051,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	//右に移動
 	else if (m_isScreenMoveWidth)
 	{
-		m_soundVolume += 4;
+		m_soundVolume++;
 		ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_soundVolume, m_BgmH);
 		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
