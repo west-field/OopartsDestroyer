@@ -20,7 +20,7 @@ void KeyConfigScene::Update(const InputState& input)
 	auto& configInput = const_cast<InputState&>(input);
 	if (!isEditing)
 	{
-		const int nameCount = input.inputNameTable_.size() + 2;
+		const int nameCount = static_cast<int>(input.inputNameTable_.size() + 2);
 
 		if (input.IsTriggered(InputType::up))
 		{
@@ -32,9 +32,12 @@ void KeyConfigScene::Update(const InputState& input)
 		}
 	}
 
-	//この時もう、「確定します」を選択している
+	//この時もう、「決定」を選択している
 	if (currentInputIndex_ == input.inputNameTable_.size())
 	{
+#ifdef _DEBUG
+		DrawString(0, 0, L"確定", 0x000000);
+#endif
 		if (input.IsTriggered(InputType::next))
 		{
 			configInput.CommitChangedInputInfo();
@@ -44,6 +47,9 @@ void KeyConfigScene::Update(const InputState& input)
 	}
 	if (currentInputIndex_ == input.inputMapTable_.size() + 1)
 	{
+#ifdef _DEBUG
+		DrawString(0, 0, L"リセット", 0x000000);
+#endif
 		if (input.IsTriggered(InputType::next))
 		{
 			configInput.ResetInputInfo();
@@ -216,7 +222,10 @@ std::wstring KeyConfigScene::PadName(int id)
 		path += L"↓";
 		break;
 	case static_cast<int>(PAD_INPUT_L):
-		path += L"STAT";
+		path += L"BACK";
+		break;
+	case static_cast<int>(PAD_INPUT_R):
+		path += L"START";
 		break;
 
 	default:
