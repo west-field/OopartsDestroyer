@@ -61,7 +61,8 @@ void Map::Update()
 #endif
 			//‰æ–Ê‚É“ü‚Á‚½‚çˆê“x‚¾‚¯¶¬
 			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] != 0 ||
-				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] != 0)
+				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] != 0 ||
+				pos.y >= Game::kMapScreenBottomY && pos.y <= Game::kMapScreenBottomY - size && m_enemyPos[address] != 0)
 			{
 				switch (chipId)
 				{
