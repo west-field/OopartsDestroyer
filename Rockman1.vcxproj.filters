@@ -117,6 +117,9 @@
     <ClCompile Include="Scene\MonologueScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\SoundSettingScene.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -204,6 +207,9 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Scene\MonologueScene.h">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SoundSettingScene.h">
       <Filter>Screen</Filter>
     </ClInclude>
   </ItemGroup>

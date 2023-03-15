@@ -147,15 +147,18 @@ void KeyConfigScene::Draw()
 		{
 			if (elem.cat == InputCategory::keybd)
 			{
-				DrawFormatString(x, y, color, L"key=%d", elem.id);
+				//DrawFormatString(x, y, color, L"key=%d", elem.id);
+				DrawFormatString(x, y, color, KeyName( elem.id).c_str());
 			}
 			else if (elem.cat == InputCategory::pad)
 			{
-				DrawFormatString(x, y, color, L"pad=%d", elem.id);
+				//DrawFormatString(x, y, color, L"pad=%d", elem.id);
+				DrawFormatString(x, y, color, PadName(elem.id).c_str());
 			}
 			else if (elem.cat == InputCategory::mouse)
 			{
-				DrawFormatString(x, y, color, L"mouse=%d", elem.id);
+				//DrawFormatString(x, y, color, L"mouse=%d", elem.id);
+				DrawFormatString(x, y, color, MouseName(elem.id).c_str());
 			}
 			x += 100;
 		}
@@ -181,4 +184,121 @@ void KeyConfigScene::Draw()
 
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 }
+
+std::wstring KeyConfigScene::PadName(int id)
+{
+	std::wstring path = L"pad=";
+
+	switch (id)
+	{
+	case static_cast<int>(PAD_INPUT_1):
+		path += L"A";
+		break;
+	case static_cast<int>(PAD_INPUT_2):
+		path += L"B";
+		break;
+	case static_cast<int>(PAD_INPUT_3):
+		path += L"X";
+		break;
+	case static_cast<int>(PAD_INPUT_4):
+		path += L"Y";
+		break;
+	case static_cast<int>(PAD_INPUT_LEFT):
+		path += L"←";
+		break;
+	case static_cast<int>(PAD_INPUT_RIGHT):
+		path += L"→";
+		break;
+	case static_cast<int>(PAD_INPUT_UP):
+		path += L"↑";
+		break;
+	case static_cast<int>(PAD_INPUT_DOWN):
+		path += L"↓";
+		break;
+	case static_cast<int>(PAD_INPUT_L):
+		path += L"STAT";
+		break;
+
+	default:
+		path += id;
+		break;
+	}
+
+	return path;
+}
+
+std::wstring KeyConfigScene::KeyName(int id)
+{
+	std::wstring path = L"key=";
+
+	switch (id)
+	{
+	case static_cast<int>(KEY_INPUT_A):
+		path += L"A";
+		break;
+	case static_cast<int>(KEY_INPUT_P):
+		path += L"P";
+		break;
+	case static_cast<int>(KEY_INPUT_C):
+		path += L"C";
+		break;
+	case static_cast<int>(KEY_INPUT_X):
+		path += L"X";
+		break;
+	case static_cast<int>(KEY_INPUT_Z):
+		path += L"Z";
+		break;
+	case static_cast<int>(KEY_INPUT_S):
+		path += L"S";
+		break;
+	case static_cast<int>(KEY_INPUT_ESCAPE):
+		path += L"ESC";
+		break;
+	case static_cast<int>(KEY_INPUT_LEFT):
+		path += L"←";
+		break;
+	case static_cast<int>(KEY_INPUT_RIGHT):
+		path += L"→";
+		break;
+	case static_cast<int>(KEY_INPUT_UP):
+		path += L"↑";
+		break;
+	case static_cast<int>(KEY_INPUT_DOWN):
+		path += L"↓";
+		break;
+	case static_cast<int>(KEY_INPUT_SPACE):
+		path += L"SPACE";
+		break;
+	case static_cast<int>(KEY_INPUT_RETURN):
+		path += L"ENTER";
+		break;
+
+	default:
+		path += id;
+		break;
+	}
+
+	return path;
+}
+
+std::wstring KeyConfigScene::MouseName(int id)
+{
+	std::wstring path = L"mouse=";
+
+	switch (id)
+	{
+	case static_cast<int>(MOUSE_INPUT_LEFT):
+		path += L"左クリック";
+		break;
+	case static_cast<int>(MOUSE_INPUT_RIGHT):
+		path += L"右クリック";
+		break;
+	default:
+		path += id;
+		break;
+	}
+
+	return path;
+}
+
 

@@ -12,14 +12,14 @@ InputState::InputState()
 {
 	defaultMapTable_[InputType::next] = { {InputCategory::keybd,KEY_INPUT_RETURN},
 										//{InputCategory::pad,PAD_INPUT_R},//スタートボタン
-										{InputCategory::pad,PAD_INPUT_A},//A
+										{InputCategory::pad,PAD_INPUT_1},//A
 										{InputCategory::mouse,MOUSE_INPUT_LEFT} };
 
 	defaultMapTable_[InputType::pause] = { {InputCategory::keybd,KEY_INPUT_P},
-										{InputCategory::pad,PAD_INPUT_L} };//セレクトボタン
+										{InputCategory::pad,PAD_INPUT_L} };//
 
 	defaultMapTable_[InputType::prev] = { {InputCategory::keybd,KEY_INPUT_ESCAPE},
-										{InputCategory::pad,PAD_INPUT_B} };//B
+										{InputCategory::pad,PAD_INPUT_2} };//B
 
 	defaultMapTable_[InputType::up] = { {InputCategory::keybd,KEY_INPUT_UP},
 											{InputCategory::pad,PAD_INPUT_UP} };//上
@@ -34,7 +34,7 @@ InputState::InputState()
 											{InputCategory::pad , PAD_INPUT_RIGHT} };//右
 
 	defaultMapTable_[InputType::junp] = {{InputCategory::keybd , KEY_INPUT_SPACE},
-										{InputCategory::pad , PAD_INPUT_A} };//A
+										{InputCategory::pad , PAD_INPUT_1} };//A
 
 	defaultMapTable_[InputType::shot] = { {InputCategory::keybd , KEY_INPUT_Z},
 										{InputCategory::pad , PAD_INPUT_3} };//X
@@ -45,9 +45,7 @@ InputState::InputState()
 	tempMapTable_ = inputMapTable_;
 
 	//入力タイプの名前テーブルを作る
-	inputNameTable_[InputType::next] = L"次へ";
 	inputNameTable_[InputType::pause] = L"ポーズ";
-	inputNameTable_[InputType::prev] = L"戻る";
 	inputNameTable_[InputType::up] = L"上";
 	inputNameTable_[InputType::down] = L"下";
 	inputNameTable_[InputType::left] = L"左移動";
