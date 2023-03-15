@@ -39,8 +39,8 @@ private:
 	
 	std::unordered_map<SoundId, int> nameAndHandleTable_;
 
-	int m_volumeSE = 255;
-	int m_volumeBGM = 255;
+	int m_volumeSE = 200;
+	int m_volumeBGM = 200;
 public:
 	~SoundManager();
 	/// <summary>
