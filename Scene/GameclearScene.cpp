@@ -76,7 +76,7 @@ void GameclearScene::FadeInUpdat(const InputState& input)
 void GameclearScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new TitleScene(m_manager));
@@ -113,9 +113,9 @@ void GameclearScene::NormalUpdat(const InputState& input)
 
 void GameclearScene::MojiUpdate(const InputState& input)
 {
-	if (m_soundVolume++ >= 200)
+	if (m_soundVolume++ >= SoundManager::GetInstance().GetBGMVolume())
 	{
-		m_soundVolume = 200;
+		m_soundVolume = SoundManager::GetInstance().GetBGMVolume();
 	}
 	ChangeVolumeSoundMem(m_soundVolume, m_BgmH);
 

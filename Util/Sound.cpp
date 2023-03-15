@@ -39,13 +39,38 @@ int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 
 void SoundManager::Play(SoundId id, int volume)
 {
-	SetVolume(volume, id);
 	PlaySoundMem(nameAndHandleTable_[id], DX_PLAYTYPE_BACK);
 }
 
-void SoundManager::SetVolume(int volume, SoundId id)
+void SoundManager::PlayBGM(int soundH)
 {
-	ChangeVolumeSoundMem(volume, nameAndHandleTable_[id]);
+	PlaySoundMem(soundH, DX_PLAYTYPE_LOOP);
+	ChangeVolumeSoundMem(m_volumeBGM,soundH);
+}
+
+void SoundManager::SetSEVolume(int volume)
+{
+	for (auto& record : nameAndHandleTable_)
+	{
+		ChangeVolumeSoundMem(volume, record.second);
+	}
+	m_volumeSE = volume;
+}
+
+int SoundManager::GetSEVolume() const
+{
+	return m_volumeSE;
+}
+
+void SoundManager::SetBGMVolume(int volume,int soundH)
+{
+	ChangeVolumeSoundMem(volume,soundH);
+	m_volumeBGM = volume;
+}
+
+int SoundManager::GetBGMVolume() const
+{
+	return m_volumeBGM;
 }
 
 void SoundManager::StopBgm(SoundId id)

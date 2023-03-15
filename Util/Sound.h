@@ -38,6 +38,9 @@ private:
 	int LoadSoundFile(SoundId id,const wchar_t* fileName);
 	
 	std::unordered_map<SoundId, int> nameAndHandleTable_;
+
+	int m_volumeSE = 255;
+	int m_volumeBGM = 255;
 public:
 	~SoundManager();
 	/// <summary>
@@ -55,13 +58,25 @@ public:
 	/// </summary>
 	/// <param name="name">サウンド名</param>
 	void Play(SoundId id, int volume = 200);
+	/// <summary>
+	/// BGMを鳴らす
+	/// </summary>
+	/// <param name="soundH">サウンドハンドル</param>
+	void PlayBGM(int soundH);
 
 	/// <summary>
-	/// サウンドの音量を変える
+	/// SEのボリュームを設定する
 	/// </summary>
 	/// <param name="volume">音量</param>
-	/// <param name="name">サウンド名</param>
-	void SetVolume(int volume, SoundId id);
+	void SetSEVolume(int volume);
+	int GetSEVolume()const;
+	/// <summary>
+	/// BGMのボリュームを設定する
+	/// </summary>
+	/// <param name="volume">音量</param>
+	/// <param name="soundH">サウンドハンドル</param>
+	void SetBGMVolume(int volume,int soundH);
+	int GetBGMVolume()const;
 
 	/// <summary>
 	/// サウンドを止める

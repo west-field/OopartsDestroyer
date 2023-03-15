@@ -31,7 +31,7 @@ void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//◇どんどん明るくなる
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &TitleScene::NormalUpdat;
@@ -95,7 +95,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 		
 		if (m_selectNum == menuConfig)
 		{
-			m_manager.PushScene(new PauseScene(m_manager));
+			m_manager.PushScene(new PauseScene(m_manager,m_BgmH));
 			return;
 		}
 		else
@@ -108,7 +108,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 void TitleScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		//現在選択中の状態によって処理を分岐
@@ -186,12 +186,11 @@ void TitleScene::Draw()
 
 	//メニュー項目を描画
 	SetFontSize(kMenuFontSize);
-	DrawString(SelectMenu[menuGameStart].x + 5, SelectMenu[menuGameStart].y + 5, L"ゲームスタート", 0x000000);
-	DrawString(SelectMenu[menuGameStart].x, SelectMenu[menuGameStart].y, L"ゲームスタート", SelectMenu[menuGameStart].color);
-	DrawString(SelectMenu[menuConfig].x + 5, SelectMenu[menuConfig].y + 5, L"せってい", 0x000000);
-	DrawString(SelectMenu[menuConfig].x, SelectMenu[menuConfig].y , L"せってい", SelectMenu[menuConfig].color);
-	DrawString(SelectMenu[menuGameEnd].x + 5, SelectMenu[menuGameEnd].y + 5, L"おわり", 0x000000);
-	DrawString(SelectMenu[menuGameEnd].x , SelectMenu[menuGameEnd].y, L"おわり", SelectMenu[menuGameEnd].color);
+	for (auto& menu : SelectMenu)
+	{
+		DrawString(menu.x+5, menu.y+5, menu.name, 0x000000);
+		DrawString(menu.x, menu.y, menu.name, menu.color);
+	}
 	SetFontSize(0);
 
 #ifdef _DEBUG

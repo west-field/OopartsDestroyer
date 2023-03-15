@@ -713,7 +713,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 void GameplayingScene::FadeInUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &GameplayingScene::PlayerOnScreen;
@@ -912,15 +912,20 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	if (input.IsTriggered(InputType::pause))
 	{
 		SoundManager::GetInstance().Play(SoundId::MenuOpen);
-		m_manager.PushScene(new PauseScene(m_manager));
+		int sound = m_BgmH;
+		if (m_isBoss)
+		{
+			sound = m_bossBgm;
+		}
+		m_manager.PushScene(new PauseScene(m_manager, sound));
 		return;
 	}
 
 	if (m_isBoss)
 	{
-		if (m_soundVolume++ >= 200)
+		if (m_soundVolume++ >= SoundManager::GetInstance().GetBGMVolume())
 		{
-			m_soundVolume = 200;
+			m_soundVolume = SoundManager::GetInstance().GetBGMVolume();
 		}
 		else
 		{
@@ -1044,7 +1049,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	else if (m_isScreenMoveWidth)
 	{
 		m_soundVolume += 4;
-		ChangeVolumeSoundMem(200 - m_soundVolume, m_BgmH);
+		ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_soundVolume, m_BgmH);
 		ChangeVolumeSoundMem(m_soundVolume, m_bossBgm);
 		//プレイヤーの左座標がフィールドの左座標よりも大きいとき
 		//if (m_playerPosBottom > Game::kMapScreenLeftX)
@@ -1073,8 +1078,8 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 void GameplayingScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * m_fadeTimer / kFadeInterval;
-	ChangeVolumeSoundMem(200 - m_fadeValue, m_BgmH);
-	ChangeVolumeSoundMem(200 - m_fadeValue, m_bossBgm);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue, m_bossBgm);
 
 	if(++m_fadeTimer == kFadeInterval)
 	{

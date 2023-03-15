@@ -33,7 +33,7 @@ void MonologueScene::FadeInUpdat(const InputState& input)
 {
 	//ÅûÇ«ÇÒÇ«ÇÒñæÇÈÇ≠Ç»ÇÈ
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (--m_fadeTimer == 0)
 	{
 		m_updateFunc = &MonologueScene::NormalUpdat;
@@ -61,7 +61,7 @@ void MonologueScene::NormalUpdat(const InputState& input)
 void MonologueScene::FadeOutUpdat(const InputState& input)
 {
 	m_fadeValue = 255 * static_cast<int>(m_fadeTimer) / static_cast<int>(kFadeInterval);
-	ChangeVolumeSoundMem(200 - m_fadeValue,m_BgmH);
+	ChangeVolumeSoundMem(SoundManager::GetInstance().GetBGMVolume() - m_fadeValue,m_BgmH);
 	if (++m_fadeTimer == kFadeInterval)
 	{
 		m_manager.ChangeScene(new GameplayingScene(m_manager));
