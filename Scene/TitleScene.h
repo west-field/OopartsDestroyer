@@ -52,11 +52,12 @@ private:
 		int x;
 		int y;				//座標
 		unsigned int color;//色
+		const wchar_t* name;//名前
 	};
 	MenuElement SelectMenu[menuNum] = {
-		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart,0xffa0aa },
-		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig,0xaaa0ff},
-		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd+5,0xaaa0ff}
+		{ kMovedPosX, kOriginalPosY + kMenuFontSize * menuGameStart,0xffa0aa,L"ゲームスタート"},
+		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuConfig,0xaaa0ff,L"せってい"},
+		{ kOriginalPosX, kOriginalPosY + kMenuFontSize * menuGameEnd+5,0xaaa0ff,L"おわり"}
 	};
 	int m_selectNum = 0;//選択しているメニュー項目
 	

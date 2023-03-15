@@ -5,8 +5,9 @@
 #include "../Util/Sound.h"
 #include "SceneManager.h"
 #include "KeyConfigScene.h"
+#include "SoundSettingScene.h"
 
-PauseScene::PauseScene(SceneManager& manager) : Scene(manager)
+PauseScene::PauseScene(SceneManager& manager,int soundH) : Scene(manager), m_soundH(soundH)
 {
 
 }
@@ -56,6 +57,9 @@ void PauseScene::Update(const InputState& input)
 		case pauseKeyconfig:
 			m_manager.PushScene(new KeyConfigScene(m_manager, input));
 			return;
+		case pauseSound:
+			m_manager.PushScene(new SoundSettingScene(m_manager,m_soundH));
+			return;
 		case pauseBack:
 			m_manager.PopScene();
 			return;
@@ -80,8 +84,10 @@ void PauseScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//ポーズ中メッセージ
 	DrawString(pw_start_x + 10, pw_start_y + 10, L"ポーズ", 0xffff88);
-	DrawString(m_pauseMenu[pauseKeyconfig].x, m_pauseMenu[pauseKeyconfig].y, L"キーせってい", m_pauseMenu[pauseKeyconfig].color);
-	DrawString(m_pauseMenu[pauseBack].x, m_pauseMenu[pauseBack].y, L"戻る", m_pauseMenu[pauseBack].color);
+	for (auto& menu : m_pauseMenu)
+	{
+		DrawString(menu.x, menu.y, menu.name, menu.color);
+	}
 	//ポーズウィンドウ枠線
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 }
