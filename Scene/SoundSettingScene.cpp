@@ -117,13 +117,14 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input)
 			{
 				soundVolume = 255;
 			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)
 		{
-			if (m_waitInterval-- <= 1)
+			if (m_waitInterval-- <= 3)
 			{
-				m_waitInterval = 1;
+				m_waitInterval = 3;
 			}
 		}
 		m_puressTime++;
@@ -142,19 +143,21 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input)
 			{
 				soundVolume = 0;
 			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)
 		{
-			if (m_waitInterval-- <= 1)
+			if (m_waitInterval-- <= 3)
 			{
-				m_waitInterval = 1;
+				m_waitInterval = 3;
 			}
 		}
 		m_puressTime++;
 	}
 	if (input.IsTriggered(InputType::next) || input.IsTriggered(InputType::prev))
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_soundChange[soundTypeBGM].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;
@@ -169,24 +172,59 @@ void SoundSettingScene::SEVolumeChange(const InputState& input)
 	//SE
 	if (input.IsPressed(InputType::up))
 	{
-		soundVolume = soundMgr.GetBGMVolume() + 1;
-		if (soundVolume >= 255)
+		if (input.IsTriggered(InputType::up))
 		{
-			soundVolume = 255;
+			m_puressTime = 0;
+			m_waitInterval = 60;
 		}
-		soundMgr.SetSEVolume(soundVolume);
+		if (m_puressTime % m_waitInterval == 0)
+		{
+			soundVolume = soundMgr.GetSEVolume() + 1;
+			if (soundVolume >= 255)
+			{
+				soundVolume = 255;
+			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+			soundMgr.SetSEVolume(soundVolume);
+		}
+		if (m_puressTime % 10 == 0)
+		{
+			if (m_waitInterval-- <= 3)
+			{
+				m_waitInterval = 3;
+			}
+		}
+		m_puressTime++;
 	}
 	if (input.IsPressed(InputType::down))
 	{
-		soundVolume = soundMgr.GetBGMVolume() - 1;
-		if (soundVolume <= 0)
+		if (input.IsTriggered(InputType::down))
 		{
-			soundVolume = 0;
+			m_puressTime = 0;
+			m_waitInterval = 60;
 		}
-		soundMgr.SetSEVolume(soundVolume);
+		if (m_puressTime % m_waitInterval == 0)
+		{
+			soundVolume = soundMgr.GetSEVolume() - 1;
+			if (soundVolume <= 0)
+			{
+				soundVolume = 0;
+			}
+			SoundManager::GetInstance().Play(SoundId::Cursor);
+			soundMgr.SetSEVolume(soundVolume);
+		}
+		if (m_puressTime % 10 == 0)
+		{
+			if (m_waitInterval-- <= 3)
+			{
+				m_waitInterval = 3;
+			}
+		}
+		m_puressTime++;
 	}
 	if (input.IsTriggered(InputType::next) || input.IsTriggered(InputType::prev))
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_soundChange[soundTypeSE].color = 0xaaffaa;
 		m_updateFunc = &SoundSettingScene::NormalUpdate;
 		return;
