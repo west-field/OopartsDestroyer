@@ -100,14 +100,14 @@ void KeyConfigScene::Update(const InputState& input)
 void KeyConfigScene::Draw()
 {
 	int pw_width = 450;
-	int pw_height = 350;
+	int pw_height = 450;
 	int pw_start_x = (640 - pw_width) / 2 + 50;
 	int pw_start_y = (480 - pw_height) / 2 + 50;
 
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0x008800, true);
-	DrawString(pw_start_x + 10, pw_start_y + 10, L"keyconfig...", 0xffffaa);
+	DrawString(pw_start_x + 10, pw_start_y + 10, L"キー設定...", 0xffffaa);
 
-	auto y = pw_start_y + 30;
+	auto y = pw_start_y + 40;
 	int idx = 0;
 	bool isInputTypeSelected = false;
 	for (const auto& name : inputState_.inputNameTable_)
@@ -163,7 +163,7 @@ void KeyConfigScene::Draw()
 			x += 100;
 		}
 
-		y += 18;
+		y += 50;
 		idx++;
 	}
 	y += 20;
@@ -177,10 +177,10 @@ void KeyConfigScene::Draw()
 		DrawString(pw_start_x + 90, y + yoffset, L"▶", 0xff0000);
 	}
 	//各キーの表示
-	DrawString(pw_start_x + 100, y, L"確定します", 0xffffff);
+	DrawString(pw_start_x + 110, y, L"決定(戻る)", 0xffffff);
 
 	y += 20;
-	DrawString(pw_start_x + 100, y, L"キーリセット", 0xffffff);
+	DrawString(pw_start_x + 110, y, L"キーリセット", 0xffffff);
 
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 }
