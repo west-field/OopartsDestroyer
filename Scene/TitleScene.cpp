@@ -139,7 +139,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	{
 		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
 			Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
-					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot,m_item);
+					static_cast<float>(Game::kDrawSize * (i + GetRand(50) / 3)) }, m_enemyH, 0, m_shot,m_item);
 	}
 	Background::GetInstance().Init();
 	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
