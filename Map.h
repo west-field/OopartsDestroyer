@@ -8,19 +8,19 @@ class EnemyFactory;
 
 enum MapLayer
 {
-	MapLayer_bg,	//èƒŒæ™¯
-	MapLayer_map,	//ãƒãƒƒãƒ—
-	MapLayer_enemy,	//ã‚¨ãƒãƒŸãƒ¼
-	MapLayer_event	//å½“ãŸã‚Šåˆ¤å®š
+	MapLayer_bg,	//”wŒi
+	MapLayer_map,	//ƒ}ƒbƒv
+	MapLayer_enemy,	//ƒGƒlƒ~[
+	MapLayer_event	//“–‚½‚è”»’è
 };
 
-//ãƒãƒƒãƒ—ã®åºƒã•Ã—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ•°ãªã®ã§ã€2ã¤ã®ãƒ™ã‚¯ã‚¿ãƒ¼ã‚’å…¥ã‚Œå­ã«ã—ã¦ã„ã‚‹
+//ƒ}ƒbƒv‚ÌL‚³~ƒŒƒCƒ„[”‚È‚Ì‚ÅA2‚Â‚ÌƒxƒNƒ^[‚ğ“ü‚êq‚É‚µ‚Ä‚¢‚é
 using MapData_t = std::vector<std::vector<unsigned char>>;
 
 class Map
 {
 public:
-	Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage);
+	Map(std::shared_ptr<EnemyFactory> enemyFactory, int stage);
 	virtual ~Map();
 	void Update();
 	void Draw();
@@ -30,49 +30,49 @@ public:
 	void SetPos(Position2 pos);
 
 	/// <summary>
-	/// ãƒ˜ãƒƒãƒ€ãƒ¼ã‚’èª­ã¿è¾¼ã‚€
+	/// ƒwƒbƒ_[‚ğ“Ç‚İ‚Ş
 	/// </summary>
-	/// <param name="filePath">èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«å</param>
+	/// <param name="filePath">“Ç‚İ‚Şƒtƒ@ƒCƒ‹–¼</param>
 	void Load(const wchar_t* filePath);
 
 	/// <summary>
-	/// ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿ã®å‚ç…§ã‚’è¿”ã™
+	/// ƒ}ƒbƒvƒf[ƒ^‚ÌQÆ‚ğ•Ô‚·
 	/// </summary>
-	/// <returns>ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿</returns>
+	/// <returns>ƒ}ƒbƒvƒf[ƒ^</returns>
 	const MapData_t& GetMapData()const;
 
 	/// <summary>
-	/// ãƒãƒƒãƒ—ã®IDã‚’å–å¾—ã™ã‚‹é–¢æ•°
+	/// ƒ}ƒbƒv‚ÌID‚ğæ“¾‚·‚éŠÖ”
 	/// </summary>
-	/// <param name="layerId">ãƒ¬ã‚¤ãƒ¤ãƒ¼</param>
-	/// <param name="chipX">ãƒãƒƒãƒ—ã®å ´æ‰€æ¨ª</param>
-	/// <param name="chipY">ãƒãƒƒãƒ—ã®å ´æ‰€ç¸¦</param>
-	/// <returns>ãƒãƒƒãƒ—ã®ID</returns>
+	/// <param name="layerId">ƒŒƒCƒ„[</param>
+	/// <param name="chipX">ƒ`ƒbƒv‚ÌêŠ‰¡</param>
+	/// <param name="chipY">ƒ`ƒbƒv‚ÌêŠc</param>
+	/// <returns>ƒ}ƒbƒv‚ÌID</returns>
 	const int GetChipId(int layerId, int chipX, int chipY)const;
 
 	/// <summary>
-	/// ãƒãƒƒãƒ—ã®ã‚µã‚¤ã‚ºã‚’å…¥æ‰‹ã™ã‚‹
+	/// ƒ}ƒbƒv‚ÌƒTƒCƒY‚ğ“üè‚·‚é
 	/// </summary>
 	/// <param name="width"></param>
 	/// <param name="height"></param>
 	void GetMapSize(int& width, int& height);
 
-	//ãƒãƒƒãƒ—ãƒãƒƒãƒ—ã®å€¤ã‚’å–å¾—ã™ã‚‹é–¢æ•°
+	//ƒ}ƒbƒvƒ`ƒbƒv‚Ì’l‚ğæ“¾‚·‚éŠÖ”
 	int GetMapChipParam(float X, float Y);
 	int GetMapEventParam(float X, float Y);
 	Vector2 GetMapChipPos(float X, float Y);
 
 	void DrawFrame();
 private:
-	MapData_t m_mapData;//ãƒãƒƒãƒ—ãƒ‡ãƒ¼ã‚¿
-	int m_mapWidth;//ãƒãƒƒãƒ—ã®æ¨ªå¹…
-	int m_mapHeight;//ãƒãƒƒãƒ—ã®ç¸¦å¹…
+	MapData_t m_mapData;//ƒ}ƒbƒvƒf[ƒ^
+	int m_mapWidth;//ƒ}ƒbƒv‚Ì‰¡•
+	int m_mapHeight;//ƒ}ƒbƒv‚Ìc•
 
 	Position2 m_camera;
 
 	int m_stage;
 
-	int m_handle;//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯
+	int m_handle;//ƒOƒ‰ƒtƒBƒbƒN
 
 	int m_trapH = -1;
 	int m_trapIdx = 0;
@@ -82,4 +82,5 @@ private:
 	int m_frame = 0;
 	int num = 0;
 };
+
 

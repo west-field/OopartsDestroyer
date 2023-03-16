@@ -151,6 +151,7 @@
     <ClCompile Include="Game\ItemFactory.cpp" />
     <ClCompile Include="Item\HealItem.cpp" />
     <ClCompile Include="Item\ItemBase.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Scene\MonologueScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
     <ClCompile Include="Util\Graph.cpp" />
@@ -159,7 +160,6 @@
     <ClCompile Include="Game\HpBar.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Scene\GameclearScene.cpp" />
     <ClCompile Include="Scene\GameoverScene.cpp" />
     <ClCompile Include="Scene\GameplayingScene.cpp" />
@@ -184,6 +184,7 @@
     <ClInclude Include="Game\ItemFactory.h" />
     <ClInclude Include="Item\HealItem.h" />
     <ClInclude Include="Item\ItemBase.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Scene\MonologueScene.h" />
     <ClInclude Include="Scene\SoundSettingScene.h" />
     <ClInclude Include="Util\Graph.h" />
@@ -194,7 +195,6 @@
     <ClInclude Include="Enemy\EnemyMoveLeft.h" />
     <ClInclude Include="Game\HpBar.h" />
     <ClInclude Include="Game\Player.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="Scene\GameclearScene.h" />
     <ClInclude Include="Scene\GameoverScene.h" />
     <ClInclude Include="Scene\GameplayingScene.h" />

@@ -16,9 +16,9 @@ namespace
 	constexpr int trap_frame_speed = 1;//アニメーションスピード
 }
 
-Map::Map(std::shared_ptr<EnemyFactory> enemyFactory,int stage) :
-	m_handle(-1),m_camera(),m_enemies(enemyFactory),m_stage(stage),
-	m_mapWidth(0),m_mapHeight(0)
+Map::Map(std::shared_ptr<EnemyFactory> enemyFactory, int stage) :
+	m_handle(-1), m_camera(), m_enemies(enemyFactory), m_stage(stage),
+	m_mapWidth(0), m_mapHeight(0)
 {
 	m_handle = my::MyLoadGraph(L"Data/map/mapchip.png");
 	m_trapH = my::MyLoadGraph(L"Data/trap.png");
@@ -81,9 +81,9 @@ void Map::Update()
 				case static_cast<int>(EnemyType::MoveLeftRight):
 					m_enemies->Create(EnemyType::MoveLeftRight, Position2(pos.x, pos.y));
 					break;
-				/*case static_cast<int>(EnemyType::MoveShot):
-					m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
-					break;*/
+					/*case static_cast<int>(EnemyType::MoveShot):
+						m_enemies->Create(EnemyType::MoveShot, Position2(pos.x, pos.y));
+						break;*/
 				case static_cast<int>(EnemyType::Boss):
 					m_enemies->Create(EnemyType::Boss, Position2(pos.x, pos.y));
 					break;
@@ -122,14 +122,14 @@ void Map::Draw()
 			auto bgChipId = GetChipId(static_cast<int>(MapLayer_bg + m_stage), chipX, chipY);
 			if (bgChipId != 0)
 			{
-				DrawBox(X- Game::kDrawSize /2, Y- Game::kDrawSize /2, X- Game::kDrawSize /2+Game::kDrawSize, Y- Game::kDrawSize /2+Game::kDrawSize, 0xffffff, true);
+				DrawBox(X - Game::kDrawSize / 2, Y - Game::kDrawSize / 2, X - Game::kDrawSize / 2 + Game::kDrawSize, Y - Game::kDrawSize / 2 + Game::kDrawSize, 0xffffff, true);
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 				my::MyDrawRectRotaGraph(X, Y, (bgChipId % 16) * Game::ChipSize, (bgChipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
 
-			auto chipId = GetChipId(static_cast<int>(MapLayer_map+m_stage), chipX, chipY);
-			auto eventChipId = GetChipId(static_cast<int>(MapLayer_event+m_stage), chipX, chipY);
+			auto chipId = GetChipId(static_cast<int>(MapLayer_map + m_stage), chipX, chipY);
+			auto eventChipId = GetChipId(static_cast<int>(MapLayer_event + m_stage), chipX, chipY);
 			if (eventChipId == 2)
 			{
 				int animNum = (m_trapIdx / trap_frame_speed);
@@ -146,7 +146,7 @@ void Map::Draw()
 				//マップチップ表示
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
 			}
-			
+
 #ifdef _DEBUG
 			auto enemyId = GetChipId(static_cast<int>(MapLayer_enemy + m_stage), chipX, chipY);
 			if (enemyId != 0)
@@ -166,7 +166,7 @@ void Map::Draw()
 		}
 	}
 #ifdef _DEBUG
-	DrawFormatString(0,140, 0x000000, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
+	DrawFormatString(0, 140, 0x000000, L"m_camera.x%3f,y%3f", m_camera.x, m_camera.y);
 #endif
 }
 
@@ -289,7 +289,7 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 		y = 0;
 	}
 
-	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>( y * Game::kDrawSize) };
+	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>(y * Game::kDrawSize) };
 
 	return aling;
 }
