@@ -18,8 +18,8 @@ namespace
 	constexpr int Y = 125;
 }
 
-EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
-	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory)
+EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar> hp):
+	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory),m_hp(hp)
 {
 	//ìGÇÃâÊëúÇÉçÅ[ÉhÇ∑ÇÈ
 	m_handleMap[EnemyType::MoveLeft] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
@@ -110,7 +110,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::Boss:
 		m_enemies.push_back(
 			std::make_shared<Boss>(
-				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory, m_itemFactory));
+				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory, m_itemFactory,m_hp));
 		break;
 	default:
 		break;

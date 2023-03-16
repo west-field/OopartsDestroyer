@@ -56,7 +56,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	//アイテム工場
 	m_itemFactory = std::make_shared<ItemFactory>();
 	//敵工場
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_itemFactory);//プレイヤーとショットと敵を倒した数を渡す
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_itemFactory, m_hp[Object_EnemyBoss]);//プレイヤーとショットと敵を倒した数を渡す
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
 	m_map->Load(L"Data/map/map.fmf");
@@ -853,10 +853,6 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				shot->SetExist(false);
 				enemy->Damage(shot->AttackPower());
-				if (m_isBoss)
-				{
-					m_hp[Object_EnemyBoss]->Damage(shot->AttackPower());
-				}
 				break;
 			}
 		}

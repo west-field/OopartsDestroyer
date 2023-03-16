@@ -5,6 +5,7 @@
 #include "../Util/Geometry.h"
 
 class Player;
+class HpBar;
 class EnemyBase;
 class ShotFactory;
 class ItemFactory;
@@ -32,7 +33,7 @@ enum class EnemyType
 class EnemyFactory
 {
 public:
-	EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
+	EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar> hp);
 	virtual ~EnemyFactory();
 
 	void Update();//更新
@@ -54,6 +55,7 @@ public:
 private:
 	std::list<std::shared_ptr<EnemyBase>> m_enemies;	//エネミーを作成
 	std::shared_ptr<Player> m_player;					//プレイヤー
+	std::shared_ptr<HpBar> m_hp;					//プレイヤー
 	std::shared_ptr<ShotFactory> m_shotFactory;			//ショット
 	std::shared_ptr<ItemFactory> m_itemFactory;			//ショット
 
