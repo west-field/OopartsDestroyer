@@ -162,7 +162,7 @@ void InputState::SaveKeyInfo()const
 	}
 
 	//仮想キータイプの数を書き込む
-	int keytypeNum = inputMapTable_.size();
+	int keytypeNum = static_cast<int>(inputMapTable_.size());
 	fwrite(&keytypeNum, sizeof(keytypeNum), 1, fp);
 	//仮想キータイプ(next,prevなど)のループ
 	for (const auto& key : inputMapTable_)
@@ -170,7 +170,7 @@ void InputState::SaveKeyInfo()const
 		int keytype = static_cast<int> (key.first);
 		//仮想キー番号
 		fwrite(&keytype, sizeof(keytype), 1, fp);
-		int dataSize = key.second.size();
+		int dataSize = static_cast<int>(key.second.size());
 		//いくつ実入力データがあるのか
 		fwrite(&dataSize, sizeof(dataSize), 1, fp);
 
