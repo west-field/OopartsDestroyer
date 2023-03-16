@@ -7,7 +7,12 @@ namespace
 	constexpr int kHealSizeX = 32;
 	constexpr int kHealSizeY = 32;
 
-	constexpr float kHealScale = 1.0f;
+	constexpr float kHealScale = 1.5f;
+
+	constexpr int kHealCardAnimNum = 8;
+	constexpr int kHealCardAnimSpeed = 10;
+	constexpr int kHealCardSizeX = 192 / kHealCardAnimNum;
+	constexpr int kHealCardSizeY = 24;
 
 	constexpr int kHeal = 2;
 }
@@ -25,6 +30,8 @@ HealItem::~HealItem()
 
 void HealItem::Update()
 {
+	m_idx = (m_idx + 1) % (kHealCardAnimSpeed * kHealCardAnimNum);
+
 	if (m_addBlend > 100 )
 	{
 		add = -2;
@@ -50,6 +57,7 @@ void HealItem::Update()
 void HealItem::Draw(Vector2 vel)
 {
 	m_rect.center -= vel;
+#if false
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0, 0, kHealSizeX, kHealSizeY,
 		kHealScale, 0.0f, m_handle, true, false);
 
@@ -57,6 +65,12 @@ void HealItem::Draw(Vector2 vel)
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0, 0, kHealSizeX, kHealSizeY,
 		kHealScale, 0.0f, m_handle, true, false);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+#else
+	int img = (m_idx / kHealCardAnimSpeed) * kHealCardSizeX;
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0,
+		kHealCardSizeX, kHealCardSizeY,kHealScale, 0.0f, m_handle, true, false);
+#endif
+
 
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffff);

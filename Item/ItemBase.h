@@ -23,7 +23,5 @@ protected:
 	Rect m_rect;
 	//‘¶İ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	bool m_isExist = true;
-	//‰ÁZ‡¬—p
-	int m_addBlend = 0;
 };
 

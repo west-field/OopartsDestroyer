@@ -13,6 +13,10 @@ public:
     //‰ñ•œ—Ê
     virtual int GetHeal()const;
 private:
+    //‰ÁZ‡¬—p
+    int m_addBlend = 0;
     int add = 1;
+
+    int m_idx = 0;
 };
 

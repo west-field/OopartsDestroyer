@@ -8,7 +8,8 @@
 
 ItemFactory::ItemFactory()
 {
-	m_handleMap[ItemType::Heal] = my::MyLoadGraph(L"Data/heal.png");
+	//m_handleMap[ItemType::Heal] = my::MyLoadGraph(L"Data/heal.png");
+	m_handleMap[ItemType::Heal] = my::MyLoadGraph(L"Data/Card.png");
 }
 
 ItemFactory::~ItemFactory()
