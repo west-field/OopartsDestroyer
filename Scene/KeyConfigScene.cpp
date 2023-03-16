@@ -1,7 +1,7 @@
 ﻿#include "KeyConfigScene.h"
 #include <DxLib.h>
 #include "../game.h"
-#include "../Util/InputState.h"
+#include "../InputState.h"
 #include "../Util/Sound.h"
 #include "SceneManager.h"
 

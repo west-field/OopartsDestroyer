@@ -14,12 +14,16 @@ namespace
 {
 	const TCHAR* const kMoji[GameclearScene::kMojiNum] =
 	{
-		L"ÉQ",
-		L"Å[",
-		L"ÉÄ",
-		L"ÉN",
-		L"Éä",
-		L"ÉA",
+		L"G",
+		L"a",
+		L"m",
+		L"e",
+		L" ",
+		L"C",
+		L"l",
+		L"e",
+		L"a",
+		L"r",
 	};
 
 	constexpr float kMojiNum = 30.0f;

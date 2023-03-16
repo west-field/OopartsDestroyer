@@ -20,7 +20,7 @@ public:
     void Update(const InputState& input);
     void Draw();
 
-    static constexpr int kMojiNum = 7;
+    static constexpr int kMojiNum = 9;
 private:
     unsigned int m_fadeColor = 0xff0000;//フェードの色（赤
 
