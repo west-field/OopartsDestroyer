@@ -88,6 +88,7 @@ void EnemyJump::Damage(int damage)
 		}
 		return;
 	}
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
 bool EnemyJump::IsCollidable() const

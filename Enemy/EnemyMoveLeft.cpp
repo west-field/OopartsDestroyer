@@ -89,6 +89,7 @@ void EnemyMoveLeft::Damage(int damage)
 		}
 		return;
 	}
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
 bool EnemyMoveLeft::IsCollidable() const

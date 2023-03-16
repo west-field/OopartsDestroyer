@@ -71,7 +71,7 @@ int EnemyMoveLR::TouchAttackPower() const
 void EnemyMoveLR::Damage(int damage)
 {
 	m_hp->Damage(damage);
-	SoundManager::GetInstance().Play(SoundId::EnemyHit);
+	
 	//m_ultimateTimer = kUltimateFrame;//–³“GŽžŠÔ
 	if (m_hp->GetHp() == 0)
 	{
@@ -85,6 +85,7 @@ void EnemyMoveLR::Damage(int damage)
 		}
 		return;
 	}
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
 bool EnemyMoveLR::IsCollidable() const
