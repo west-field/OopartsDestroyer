@@ -82,7 +82,7 @@ void EnemyBattery::Damage(int damage)
 		m_updateFunc = &EnemyBattery::BurstUpdate;
 		m_drawFunc = &EnemyBattery::BurstDraw;
 		m_idx = 0;
-		if (GetRand(100) % 3 == 0)
+		if (GetRand(100) % 3 == 0 && m_isLeft)
 		{
 			m_itemFactory->Create(ItemType::Heal, m_rect.center);
 		}

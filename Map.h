@@ -78,6 +78,7 @@ private:
 	int m_trapIdx = 0;
 
 	std::vector<int> m_enemyPos;
+	//std::vector<bool> m_enemyPos;
 	std::shared_ptr<EnemyFactory> m_enemies;
 	int m_frame = 0;
 	int num = 0;
