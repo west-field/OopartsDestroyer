@@ -36,7 +36,7 @@ namespace
 
 GameplayingScene::GameplayingScene(SceneManager& manager) :
 	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),
-	m_add(), m_correction(), m_playerPosUp(), m_playerPosBottom()
+	m_add(), m_correction(), m_playerPos()
 {
 	int se = 0, sh = 0, bit = 0;
 	GetScreenState(&se, &sh, &bit);
@@ -208,8 +208,7 @@ void GameplayingScene::Draw()
 	DrawFormatString(500, 100, 0x000000, L"梯子.x%3f,y%3f", lader.x, lader.y);
 	DrawFormatString(500, 120, 0x000000, L"移動.x%3f,y%3f", aling.x, aling.y);
 
-	DrawFormatString(500, 500, 0x000000, L"playerPosUp.%3f", m_playerPosUp);
-	DrawFormatString(500, 520, 0x000000, L"playerPosBottom.%3f", m_playerPosBottom);
+	DrawFormatString(500, 500, 0x000000, L"playerPos.%3f", m_playerPos);
 
 	DrawFormatString(500, 540, 0x000000, L"m_soundVolume.%d", m_soundVolume);
 #endif
@@ -1012,8 +1011,16 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			item->SetExist(false);
 		}
 		m_correction = { 0.0f,0.0f };
-		m_playerPosUp =(m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 );
-		m_playerPosBottom= (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 );
+		if (m_isScreenMoveUp) 
+		{
+			//プレイヤーの下座標を取得する
+			m_playerPos = (m_player->GetRect().GetCenter().y - m_player->GetRect().GetSize().h / 2 );
+		}
+		else if (m_isScreenMoveDown)
+		{
+			//プレイヤーの上座標を取得する
+			m_playerPos = (m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2);
+		}
 		if (m_isScreenMoveWidth)
 		{
 			//ボス戦BGMと入れ替える
@@ -1033,7 +1040,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	if (m_isScreenMoveUp)
 	{
 		//プレイヤーの下座標がフィールドの下座標よりも小さいとき
-		if (m_playerPosBottom+ m_correction.y < Game::kMapScreenBottomY)
+		if (m_playerPos + m_correction.y < Game::kMapScreenBottomY)
 		{
 			m_map->Movement({ 0.0f,moveY });//mapを移動させる
 			MoveEnemy( 0.0f,moveY);//エネミーを移動させる
@@ -1055,7 +1062,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 	{
 		moveY *= -1.0f;
 		//プレイヤーの上座標がフィールドの上座標よりも大きいとき
-		if (m_playerPosUp+ m_correction.y > Game::kMapScreenTopY)
+		if (m_playerPos+ m_correction.y > Game::kMapScreenTopY)
 		{
 			m_map->Movement({ 0.0f,moveY });
 			MoveEnemy(0.0f, moveY);

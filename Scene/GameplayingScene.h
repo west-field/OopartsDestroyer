@@ -120,8 +120,7 @@ private:
     bool m_isScreenMoveUp = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
     bool m_isScreenMoveDown = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
     bool m_isScreenMoveWidth = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
-    float m_playerPosUp;
-    float m_playerPosBottom;
+    float m_playerPos;//移動するときの基準になるプレイヤーの位置
 
     //ショット
     std::shared_ptr <ShotFactory> m_shotFactory;
@@ -151,6 +150,7 @@ private:
     //落ちているかどうか 落ちているときはジャンプできない
     bool m_isFall;
 
+    //ボス戦に入ったかどうか
     bool m_isBoss = false;
     //0:ゲームクリアか1:ゲームオーバーか
     int m_crea = 0;
