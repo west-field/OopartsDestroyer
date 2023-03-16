@@ -174,7 +174,7 @@
     <ClCompile Include="Shot\ShotBase.cpp" />
     <ClCompile Include="Util\DrawFunctions.cpp" />
     <ClCompile Include="Util\Geometry.cpp" />
-    <ClCompile Include="Util\InputState.cpp" />
+    <ClCompile Include="InputState.cpp" />
     <ClCompile Include="Util\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +209,7 @@
     <ClInclude Include="Shot\ShotBase.h" />
     <ClInclude Include="Util\DrawFunctions.h" />
     <ClInclude Include="Util\Geometry.h" />
-    <ClInclude Include="Util\InputState.h" />
+    <ClInclude Include="InputState.h" />
     <ClInclude Include="Util\Sound.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

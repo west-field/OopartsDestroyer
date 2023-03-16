@@ -4,7 +4,7 @@
 #include "../game.h"
 
 #include "../Util/Sound.h"
-#include "../Util/InputState.h"
+#include "../InputState.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/Graph.h"
 

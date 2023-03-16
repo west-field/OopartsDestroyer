@@ -1,6 +1,6 @@
 #include "SoundSettingScene.h"
 #include <Dxlib.h>
-#include "../Util/InputState.h"
+#include "../InputState.h"
 #include "../Util/Sound.h"
 #include "SceneManager.h"
 

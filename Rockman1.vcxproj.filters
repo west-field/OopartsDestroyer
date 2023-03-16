@@ -48,9 +48,6 @@
     <ClCompile Include="Util\Geometry.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="Util\InputState.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="Util\Sound.cpp">
       <Filter>Util</Filter>
     </ClCompile>
@@ -132,6 +129,9 @@
     <ClCompile Include="Game\ItemFactory.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="InputState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -147,9 +147,6 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Geometry.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\InputState.h">
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Sound.h">
@@ -232,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="Game\ItemFactory.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="InputState.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
