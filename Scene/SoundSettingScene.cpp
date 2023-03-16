@@ -117,7 +117,6 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input)
 			{
 				soundVolume = 255;
 			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)
@@ -143,7 +142,6 @@ void SoundSettingScene::BGMVolumeChange(const InputState& input)
 			{
 				soundVolume = 0;
 			}
-			SoundManager::GetInstance().Play(SoundId::Cursor);
 			soundMgr.SetBGMVolume(soundVolume, m_soundH);
 		}
 		if (m_puressTime % 10 == 0)

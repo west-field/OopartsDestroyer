@@ -140,8 +140,8 @@ void Boss::StopUpdate()
 		m_frame = 0;
 		m_isOnDamage = false;
 
-		//HP‚ª”¼•ª‚ðØ‚Á‚½‚ç“ñ‰ñUŒ‚‚·‚é
-		if (m_hp->GetHp() <= m_hp->GetMaxHp() / 2)
+		//HP‚ª3•ª‚Ì2‚ðØ‚Á‚½‚ç“ñ‰ñUŒ‚‚·‚é
+		if (m_hp->GetHp() <= (m_hp->GetMaxHp() / 3) * 2)
 		{
 			updateFunc = &Boss::TwoShotUpdate;
 			return;

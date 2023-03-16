@@ -24,10 +24,12 @@ void KeyConfigScene::Update(const InputState& input)
 
 		if (input.IsTriggered(InputType::up))
 		{
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			currentInputIndex_ = ((currentInputIndex_ - 1) + nameCount) % nameCount;
 		}
 		else if (input.IsTriggered(InputType::down))
 		{
+			SoundManager::GetInstance().Play(SoundId::Cursor);
 			currentInputIndex_ = (currentInputIndex_ + 1) % nameCount;
 		}
 	}
@@ -36,10 +38,11 @@ void KeyConfigScene::Update(const InputState& input)
 	if (currentInputIndex_ == input.inputNameTable_.size())
 	{
 #ifdef _DEBUG
-		DrawString(0, 0, L"確定", 0x000000);
+		numSize = input.inputMapTable_.size();
 #endif
 		if (input.IsTriggered(InputType::next))
 		{
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			configInput.CommitChangedInputInfo();
 			m_manager.PopScene();
 			return;
@@ -48,10 +51,11 @@ void KeyConfigScene::Update(const InputState& input)
 	if (currentInputIndex_ == input.inputMapTable_.size() - 1)
 	{
 #ifdef _DEBUG
-		DrawString(0, 0, L"リセット", 0x000000);
+		numSize = input.inputMapTable_.size() - 1;
 #endif
 		if (input.IsTriggered(InputType::next))
 		{
+			SoundManager::GetInstance().Play(SoundId::Determinant);
 			configInput.ResetInputInfo();
 			return;
 		}
@@ -59,6 +63,7 @@ void KeyConfigScene::Update(const InputState& input)
 	//nextボタンでエディット中かそうじゃないかを決定する
 	if (input.IsTriggered(InputType::next))
 	{
+		SoundManager::GetInstance().Play(SoundId::Determinant);
 		isEditing = !isEditing;
 		return;
 	}
@@ -100,9 +105,6 @@ void KeyConfigScene::Update(const InputState& input)
 			configInput.RewriteInputInfo(currentType, InputCategory::mouse, mouseState);
 		}
 	}
-#ifdef _DEBUG
-	 numSize = input.inputMapTable_.size() - 1;
-#endif
 }
 
 void KeyConfigScene::Draw()

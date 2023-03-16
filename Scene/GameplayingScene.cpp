@@ -729,7 +729,7 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
-#if true
+#if false
 	m_updateFunc = &GameplayingScene::FadeOutUpdat;
 	m_fadeColor = 0x000000;
 	m_crea = 1;
