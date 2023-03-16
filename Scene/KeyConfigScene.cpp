@@ -45,7 +45,7 @@ void KeyConfigScene::Update(const InputState& input)
 			return;
 		}
 	}
-	if (currentInputIndex_ == input.inputMapTable_.size() + 1)
+	if (currentInputIndex_ == input.inputMapTable_.size() - 1)
 	{
 #ifdef _DEBUG
 		DrawString(0, 0, L"リセット", 0x000000);
@@ -100,7 +100,9 @@ void KeyConfigScene::Update(const InputState& input)
 			configInput.RewriteInputInfo(currentType, InputCategory::mouse, mouseState);
 		}
 	}
-
+#ifdef _DEBUG
+	 numSize = input.inputMapTable_.size() - 1;
+#endif
 }
 
 void KeyConfigScene::Draw()
@@ -189,6 +191,11 @@ void KeyConfigScene::Draw()
 	DrawString(pw_start_x + 110, y, L"キーリセット", 0xffffff);
 
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
+
+#ifdef _DEBUG
+	DrawFormatString(0, 0, 0x000000, L"位置%d", currentInputIndex_);
+	DrawFormatString(0, 20, 0x000000, L"    %d", numSize);
+#endif
 }
 
 std::wstring KeyConfigScene::PadName(int id)

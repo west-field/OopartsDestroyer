@@ -23,5 +23,9 @@ private:
     const InputState& inputState_;
     int currentInputIndex_;//現在選択中のインデックス
     bool isEditing = false;//現在特定のにゅうりょくは編集中です。
+
+#ifdef _DEBUG
+    int numSize = 0;
+#endif
 };
 
