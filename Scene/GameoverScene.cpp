@@ -28,6 +28,7 @@ namespace
 
 	constexpr float kMojiNum = 30.0f;
 	constexpr float kMoveNum = 2.0f;
+	constexpr int kMojiSize = 90;
 	constexpr int kMenuFontSize = 50;
 }
 GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>player) :

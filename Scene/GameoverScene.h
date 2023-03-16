@@ -46,7 +46,6 @@ private:
         float add;
     };
     
-    static constexpr int kMojiSize = 80;
     std::array<Moji, kMojiNum> m_moji;
     int  m_soundVolume = 0;
 

@@ -729,6 +729,12 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
+#if true
+	m_updateFunc = &GameplayingScene::FadeOutUpdat;
+	m_fadeColor = 0x000000;
+	m_crea = 1;
+	return;
+#endif
 	for (auto& hp : m_hp)
 	{
 		hp->Update();
@@ -906,27 +912,26 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	}
 
 	//ゲームオーバー判定
+	//プレイヤーのHPが０になったらゲームオーバーにする
+	if (m_hp[Object_Player]->GetHp() <= 0)
 	{
-		//プレイヤーのHPが０になったらゲームオーバーにする
-		if (m_hp[Object_Player]->GetHp() <= 0)
-		{
-			m_updateFunc = &GameplayingScene::FadeOutUpdat;
-			m_fadeColor = 0xff0000;
-			m_crea = 1; 
-			return;
-		}
-		float posX = m_add.x + m_player->GetRect().GetCenter().x;
-		float posY = m_add.y + m_player->GetRect().GetCenter().y;
-		//プレイヤーの上座標が　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 + 10) == MapEvent_death) &&
-			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 + 10) == MapEvent_death))
-		{
-			m_updateFunc = &GameplayingScene::FadeOutUpdat;
-			m_fadeColor = 0xff0000;
-			m_crea = 1;
-			return;
-		}
+		m_updateFunc = &GameplayingScene::FadeOutUpdat;
+		m_fadeColor = 0xff0000;
+		m_crea = 1;
+		return;
 	}
+	float posX = m_add.x + m_player->GetRect().GetCenter().x;
+	float posY = m_add.y + m_player->GetRect().GetCenter().y;
+	//プレイヤーの上座標が　death判定の部分に触れたら
+	if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h / 2 + 10) == MapEvent_death) &&
+		(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h / 2 + 10) == MapEvent_death))
+	{
+		m_updateFunc = &GameplayingScene::FadeOutUpdat;
+		m_fadeColor = 0xff0000;
+		m_crea = 1;
+		return;
+	}
+
 	//ポーズ画面
 	if (input.IsTriggered(InputType::pause))
 	{

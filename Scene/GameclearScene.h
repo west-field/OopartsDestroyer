@@ -4,7 +4,6 @@
 #include <memory>//スマートポインタをつかうため
 #include <array>
 class Player;
-
 /// <summary>
 /// ゲームクリアシーン
 /// </summary>
@@ -41,7 +40,6 @@ private:
         float add = 0.0f;
     };
 
-    static constexpr int kMojiSize = 80;
     std::array<Moji, kMojiNum> m_moji;
     int m_soundVolume = 0;
 };

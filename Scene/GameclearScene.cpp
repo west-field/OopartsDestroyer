@@ -28,6 +28,9 @@ namespace
 
 	constexpr float kMojiNum = 30.0f;
 	constexpr float kMoveNum = 2.0f;
+
+	constexpr int kMojiSize = 90;
+	constexpr int kParticlFrame = 120;
 }
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
@@ -61,7 +64,6 @@ void GameclearScene::Draw()
 	Background::GetInstance().Draw(0);
 	m_player->Draw();
 	(this->*m_drawFunc)();
-
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
 	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -156,7 +158,7 @@ void GameclearScene::MojiDraw()
 	for (int i = 0; i < kMojiNum; i++)
 	{
 		DrawStringF(m_moji[i].pos.x + 2, m_moji[i].pos.y + 2 + m_moji[i].moveY, kMoji[i], 0xffffff);
-		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffff00);
+		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffaaff);
 	}
 	SetFontSize(0);
 }
