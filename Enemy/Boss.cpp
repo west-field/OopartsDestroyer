@@ -38,11 +38,11 @@ namespace
 	constexpr int boss_burst_frame_speed = 1;//アニメーションスピード
 }
 
-Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory) :
+Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar>hp) :
 	EnemyBase(player, pos, sFactory,itFactory), updateFunc(&Boss::StopUpdate), m_drawFunc(&Boss::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
-	m_hp->Init(-1);
+	m_hp = hp;
 	m_isLeft = true;
 	m_handle = handle;
 	m_bossBurstH = bossBurstH;
@@ -95,7 +95,6 @@ int Boss::TouchAttackPower() const
 void Boss::Damage(int damage)
 {
 	m_hp->Damage(damage);
-	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 
 	if (m_hp->GetHp() == 0)
 	{
@@ -103,7 +102,9 @@ void Boss::Damage(int damage)
 		updateFunc = &Boss::BurstUpdate;
 		m_drawFunc = &Boss::BurstDraw;
 		m_idx = 0;
+		return;
 	}
+	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
 bool Boss::IsCollidable() const
