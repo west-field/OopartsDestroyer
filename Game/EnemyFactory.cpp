@@ -18,8 +18,8 @@ namespace
 	constexpr int Y = 125;
 }
 
-EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory):
-	m_player(player), m_shotFactory(sFactory)
+EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
+	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory)
 {
 	//ìGÇÃâÊëúÇÉçÅ[ÉhÇ∑ÇÈ
 	m_handleMap[EnemyType::MoveLeft] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
@@ -83,34 +83,34 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	case EnemyType::MoveLeft:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLeft>(
-				m_player, pos, m_handleMap[EnemyType::MoveLeft], m_burstHandle,m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::MoveLeft], m_burstHandle,m_shotFactory, m_itemFactory));
 		break;
 	case EnemyType::BatteryRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_burstHandle, m_shotFactory,false));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_burstHandle, m_shotFactory, m_itemFactory,false));
 		break;
 	case EnemyType::BatteryLeft:
 		m_enemies.push_back(
 			std::make_shared<EnemyBattery>(
-				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_burstHandle, m_shotFactory,true));
+				m_player, pos, m_handleMap[EnemyType::BatteryRight], m_burstHandle, m_shotFactory, m_itemFactory,true));
 		break;
 	case EnemyType::Jump:
 		m_enemies.push_back(
 			std::make_shared<EnemyJump>(
-				m_player, pos, m_handleMap[EnemyType::Jump], m_burstHandle, m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Jump], m_burstHandle, m_shotFactory, m_itemFactory));
 		break;
 	case EnemyType::MoveLeftRight:
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLR>(
-				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_burstHandle, m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_burstHandle, m_shotFactory, m_itemFactory));
 		break;
 	case EnemyType::MoveShot:
 		break;
 	case EnemyType::Boss:
 		m_enemies.push_back(
 			std::make_shared<Boss>(
-				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory));
+				m_player, pos, m_handleMap[EnemyType::Boss], m_bossBurstHandle, m_burstHandle, m_shotFactory, m_itemFactory));
 		break;
 	default:
 		break;

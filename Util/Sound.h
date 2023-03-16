@@ -13,7 +13,7 @@ enum SoundId
 	PlayerJump,		//プレイヤージャンプ音
 	EnemyJump,		//エネミージャンプ音
 	//ItemGet,		//アイテムゲット音 itemGet.wav
-	//Recovery,		//回復音
+	Recovery,		//回復音
 
 	//攻撃音
 	PlayeyShot,		//プレイヤーの弾発射音

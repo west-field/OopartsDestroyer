@@ -148,6 +148,9 @@
     <ClCompile Include="Enemy\EnemyMoveLR.cpp" />
     <ClCompile Include="Enemy\EnemyBase.cpp" />
     <ClCompile Include="Enemy\EnemyBattery.cpp" />
+    <ClCompile Include="Game\ItemFactory.cpp" />
+    <ClCompile Include="Item\HealItem.cpp" />
+    <ClCompile Include="Item\ItemBase.cpp" />
     <ClCompile Include="Scene\MonologueScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
     <ClCompile Include="Util\Graph.cpp" />
@@ -178,6 +181,9 @@
     <ClInclude Include="Enemy\Boss.h" />
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
+    <ClInclude Include="Game\ItemFactory.h" />
+    <ClInclude Include="Item\HealItem.h" />
+    <ClInclude Include="Item\ItemBase.h" />
     <ClInclude Include="Scene\MonologueScene.h" />
     <ClInclude Include="Scene\SoundSettingScene.h" />
     <ClInclude Include="Util\Graph.h" />

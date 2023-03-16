@@ -18,8 +18,9 @@
 #include "../Game/EnemyFactory.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/HpBar.h"
+#include "../Game/ItemFactory.h"
 #include "../Enemy/EnemyBase.h"
-#include "../Shot/RockBuster.h"
+#include "../Item/ItemBase.h"
 /*
 スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
 スクリュードライバー　自機が近付くと、地面から出てきて、５方向同時に弾を二回発射する
@@ -52,8 +53,10 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_player = std::make_shared<Player>(Position2{(Game::kMapScreenLeftX- Game::kDrawSize /2),(Game::kMapScreenBottomY - Game::kDrawSize *5)},m_hp[Object_Player]);//プレイヤーの初期位置
 	//敵の弾工場
 	m_shotFactory = std::make_shared<ShotFactory>();
+	//アイテム工場
+	m_itemFactory = std::make_shared<ItemFactory>();
 	//敵工場
-	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory);//プレイヤーとショットと敵を倒した数を渡す
+	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_itemFactory);//プレイヤーとショットと敵を倒した数を渡す
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
 	m_map->Load(L"Data/map/map.fmf");
@@ -92,6 +95,7 @@ void GameplayingScene::Draw()
 	SetDrawScreen(tempScreenH_);
 	Background::GetInstance().Bg();//背景の一部を表示
 	m_map->Draw();//マップを表示
+	m_itemFactory->Draw(m_correction);//アイテム表示
 
 	m_player->Draw();//プレイヤーを表示
 	m_enemyFactory->Draw();//エネミーを表示
@@ -816,6 +820,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	m_enemyFactory->Update();
 
 	m_shotFactory->Update();//ショット更新
+	m_itemFactory->Update();//アイテム更新
 
 	//ショット
 	if (input.IsTriggered(InputType::shot))//shotを押したら弾を作る
@@ -888,6 +893,19 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 
+	//自機とアイテムの当たり判定
+	for (auto& item : m_itemFactory->GetItems())
+	{
+		if (!item->IsExist()) continue;
+		if (item->GetRect().IsHit(m_player->GetRect()))
+		{
+			SoundManager::GetInstance().Play(SoundId::Recovery);
+			m_player->Heal(item->GetHeal());
+			item->SetExist(false);
+			continue;
+		}
+	}
+
 	//ゲームオーバー判定
 	{
 		//プレイヤーのHPが０になったらゲームオーバーにする
@@ -901,8 +919,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		float posX = m_add.x + m_player->GetRect().GetCenter().x;
 		float posY = m_add.y + m_player->GetRect().GetCenter().y;
 		//プレイヤーの上座標が　death判定の部分に触れたら
-		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2) == MapEvent_death) &&
-			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2) == MapEvent_death))
+		if ((m_map->GetMapEventParam(posX - m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 + 10) == MapEvent_death) &&
+			(m_map->GetMapEventParam(posX + m_player->GetRect().GetSize().w * 0.5f, posY - m_player->GetRect().GetSize().h/2 + 10) == MapEvent_death))
 		{
 			m_updateFunc = &GameplayingScene::FadeOutUpdat;
 			m_fadeColor = 0xff0000;
@@ -986,6 +1004,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		{
 			if (!shot->IsExist())	continue;
 			shot->SetExist(false);
+		}
+		//アイテムを削除する
+		for (auto& item : m_itemFactory->GetItems())
+		{
+			if (!item->IsExist()) continue;
+			item->SetExist(false);
 		}
 		m_correction = { 0.0f,0.0f };
 		m_playerPosUp =(m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 );

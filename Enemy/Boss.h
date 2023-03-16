@@ -8,7 +8,7 @@
 class Boss :public EnemyBase
 {
 public :
-	Boss(std::shared_ptr<Player>player, const Position2& pos,int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory);
+	Boss(std::shared_ptr<Player>player, const Position2& pos,int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
 	virtual ~Boss();
 	virtual void Update()override;
 	virtual void Draw()override;

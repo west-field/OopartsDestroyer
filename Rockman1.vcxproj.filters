@@ -28,6 +28,9 @@
     <Filter Include="Enemy">
       <UniqueIdentifier>{b26fb93a-f7ba-4bba-ba03-9c5795d620ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Item">
+      <UniqueIdentifier>{7d45d2b5-cf89-476f-90ac-8a36f2d6db1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game\EnemyFactory.cpp">
@@ -120,6 +123,15 @@
     <ClCompile Include="Scene\SoundSettingScene.cpp">
       <Filter>Screen</Filter>
     </ClCompile>
+    <ClCompile Include="Item\ItemBase.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Item\HealItem.cpp">
+      <Filter>Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ItemFactory.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\EnemyFactory.h">
@@ -211,6 +223,15 @@
     </ClInclude>
     <ClInclude Include="Scene\SoundSettingScene.h">
       <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="Item\ItemBase.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Item\HealItem.h">
+      <Filter>Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ItemFactory.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

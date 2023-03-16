@@ -4,6 +4,7 @@
 #include "../Game/HpBar.h"
 #include "../game.h"
 #include "../Util/Sound.h"
+#include "../Game/ItemFactory.h"
 
 namespace
 {
@@ -24,8 +25,8 @@ namespace
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
+EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory) :
+	EnemyBase(player, pos, sFactory,itFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
 {
 	m_handle = handle;
 	m_burstHandle = burstH;
@@ -78,6 +79,11 @@ void EnemyMoveLR::Damage(int damage)
 		m_updateFunc = &EnemyMoveLR::BurstUpdate;
 		m_drawFunc = &EnemyMoveLR::BurstDraw;
 		m_idx = 0;
+		if (GetRand(100) % 2 == 0)
+		{
+			m_itemFactory->Create(ItemType::Heal, m_rect.center);
+		}
+		return;
 	}
 }
 

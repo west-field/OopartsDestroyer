@@ -11,6 +11,7 @@ class Player;               //プレイヤー
 class EnemyFactory;         //エネミーを生成
 class ShotBase;             //弾基底クラス
 class ShotFactory;          //弾を生成
+class ItemFactory;          //アイテムを生成
 class HpBar;                //Hpバー
 class Map;                  //マップ
 class Stage;                //ステージ
@@ -123,7 +124,9 @@ private:
     float m_playerPosBottom;
 
     //ショット
-    std::shared_ptr <ShotFactory> m_shotFactory;  
+    std::shared_ptr <ShotFactory> m_shotFactory;
+    //アイテム
+    std::shared_ptr <ItemFactory> m_itemFactory;
     
     //エネミー
     std::shared_ptr <EnemyFactory> m_enemyFactory;

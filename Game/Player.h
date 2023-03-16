@@ -41,6 +41,8 @@ public:
 	bool IsCollidable()const;
 	//ダメージを受けたか
 	void Damage(int damage);
+	//回復
+	void Heal(int Heal);
 	//存在しているかどうか
 	bool IsExist()const { return m_isExist; }
 	//サイズを大きくする

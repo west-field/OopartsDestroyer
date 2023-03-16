@@ -14,6 +14,7 @@ SoundManager::SoundManager()
 	LoadSoundFile(MenuOpen,L"menuOpen.mp3");
 	LoadSoundFile(PlayerJump,L"playerJump.wav");
 	LoadSoundFile(EnemyJump,L"enemyJump.wav");
+	LoadSoundFile(Recovery,L"recovery.mp3");
 	
 	LoadSoundFile(PlayeyShot,L"playerShot.wav");
 	LoadSoundFile(PlayeyHit,L"playerShotHit.wav");

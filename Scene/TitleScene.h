@@ -9,6 +9,7 @@ class EnemyMoveLeft;
 class Player;
 class HpBar;
 class ShotFactory;
+class ItemFactory;
 
 class InputState;
 /// <summary>
@@ -69,6 +70,7 @@ private:
 	std::shared_ptr<Player>m_player;
 	std::shared_ptr<HpBar>m_hp;
 	std::shared_ptr<ShotFactory>m_shot;
+	std::shared_ptr<ItemFactory>m_item;
 	int m_enemyH = -1;
 	std::shared_ptr<EnemyMoveLeft> m_enemy[3];
 public:

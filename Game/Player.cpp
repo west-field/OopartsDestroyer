@@ -98,6 +98,11 @@ void Player::Damage(int damage)
 	m_hp->Damage(damage);
 }
 
+void Player::Heal(int Heal)
+{
+	m_hp->Heal(Heal);
+}
+
 void Player::ScaleEnlarge(float scale)
 {
 	if (m_drawScale >= 3.0f)	return;

@@ -38,8 +38,8 @@ namespace
 	constexpr int boss_burst_frame_speed = 1;//アニメーションスピード
 }
 
-Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory) :
-	EnemyBase(player, pos, sFactory), updateFunc(&Boss::StopUpdate), m_drawFunc(&Boss::NormalDraw),
+Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory) :
+	EnemyBase(player, pos, sFactory,itFactory), updateFunc(&Boss::StopUpdate), m_drawFunc(&Boss::NormalDraw),
 	m_shotFrame(0), m_JumpFrame(kJumpInterval)
 {
 	m_hp->Init(-1);

@@ -15,9 +15,10 @@
 
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
+#include "../Game/ShotFactory.h"
+#include "../Game/ItemFactory.h"
 #include "../Enemy/EnemyBase.h"
 #include "../Enemy/EnemyMoveLeft.h"
-#include "../Game/ShotFactory.h"
 
 namespace
 {
@@ -133,11 +134,12 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	m_hp = std::make_shared<HpBar>();
 	m_player = std::make_shared<Player>(Position2{ 0.0f,0.0f },m_hp);
 	m_shot = std::make_shared<ShotFactory>();
+	m_item = std::make_shared<ItemFactory>();
 	for (int i = 0; i < 3; i++)
 	{
 		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
 			Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
-					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot);
+					static_cast<float>(Game::kDrawSize * (i + 2)) }, m_enemyH, 0, m_shot,m_item);
 	}
 	Background::GetInstance().Init();
 	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");

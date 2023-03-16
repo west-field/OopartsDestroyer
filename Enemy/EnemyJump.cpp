@@ -5,6 +5,7 @@
 #include "../Game/HpBar.h"
 #include "../game.h"
 #include "../Game/Player.h"
+#include "../Game/ItemFactory.h"
 #include "../Util/Sound.h"
 
 namespace
@@ -31,8 +32,8 @@ namespace
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
+EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
+	EnemyBase(player,pos,sFactory,itFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
 {
 	m_handle = handle;//敵ハンドル
 	m_burstHandle = burstH;//爆発ハンドル
@@ -81,6 +82,11 @@ void EnemyJump::Damage(int damage)
 		m_updateFunc = &EnemyJump::BurstUpdate;
 		m_drawFunc = &EnemyJump::BurstDraw;
 		m_idx = 0;
+		if (GetRand(100) % 3 == 0)
+		{
+			m_itemFactory->Create(ItemType::Heal, m_rect.center);
+		}
+		return;
 	}
 }
 

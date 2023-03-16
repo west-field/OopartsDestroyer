@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../Game/HpBar.h"
 #include "../Game/ShotFactory.h"
+#include "../Game/ItemFactory.h"
 #include "../Game/Player.h"
 #include "../Util/Sound.h"
 
@@ -23,8 +24,8 @@ namespace
 	constexpr int burst_frame_speed = 5;//アニメーションスピード
 }
 
-EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory,bool isLeft):
-	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw)
+EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft):
+	EnemyBase(player,pos,sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw)
 {
 	m_handle = handle;
 	m_burstHandle = burstH;
@@ -81,6 +82,11 @@ void EnemyBattery::Damage(int damage)
 		m_updateFunc = &EnemyBattery::BurstUpdate;
 		m_drawFunc = &EnemyBattery::BurstDraw;
 		m_idx = 0;
+		if (GetRand(100) % 3 == 0)
+		{
+			m_itemFactory->Create(ItemType::Heal, m_rect.center);
+		}
+		return;
 	}
 }
 

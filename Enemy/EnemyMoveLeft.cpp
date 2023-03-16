@@ -4,6 +4,7 @@
 #include "../game.h"
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
+#include "../Game/ItemFactory.h"
 #include "../Util/Sound.h"
 
 namespace
@@ -29,8 +30,8 @@ namespace
 	
 }
 
-EnemyMoveLeft::EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory):
-	EnemyBase(player,pos,sFactory),m_updateFunc(&EnemyMoveLeft::NormalUpdate),m_drawFunc(&EnemyMoveLeft::NormalDraw)
+EnemyMoveLeft::EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
+	EnemyBase(player,pos,sFactory,itFactory),m_updateFunc(&EnemyMoveLeft::NormalUpdate),m_drawFunc(&EnemyMoveLeft::NormalDraw)
 {
 	m_idx = 0;
 	m_handle = handle;
@@ -82,6 +83,11 @@ void EnemyMoveLeft::Damage(int damage)
 		m_updateFunc = &EnemyMoveLeft::BurstUpdate;
 		m_drawFunc = &EnemyMoveLeft::BurstDraw;
 		m_idx = 0;
+		if (GetRand(100) % 3 == 0)
+		{
+			m_itemFactory->Create(ItemType::Heal, m_rect.center);
+		}
+		return;
 	}
 }
 

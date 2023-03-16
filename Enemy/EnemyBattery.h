@@ -8,7 +8,7 @@
 class EnemyBattery : public EnemyBase
 {
 public:
-	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH,std::shared_ptr<ShotFactory> sFactory,bool isLeft);
+	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH,std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft);
 	virtual ~EnemyBattery();
 	virtual void Update()override;		//çXêV
 	virtual void Draw()override;		//ï\é¶
