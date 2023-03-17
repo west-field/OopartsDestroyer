@@ -115,5 +115,8 @@ public:
 	/// </summary>
 	void SaveKeyInfo()const;
 
+	/// <summary>
+	/// キーマップをロードする
+	/// </summary>
 	void LoadKeyInfo();
 };

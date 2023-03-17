@@ -61,7 +61,7 @@ void GameclearScene::Update(const InputState& input)
 
 void GameclearScene::Draw()
 {
-	Background::GetInstance().Draw(0);
+	Background::GetInstance().Draw();
 	m_player->Draw();
 	(this->*m_drawFunc)();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);

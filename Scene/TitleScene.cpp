@@ -170,7 +170,7 @@ TitleScene::Update(const InputState& input)
 void TitleScene::Draw()
 {
 	//”wŒi
-	Background::GetInstance().Draw(0);
+	Background::GetInstance().Draw();
 	//“G
 	for (auto& enemy : m_enemy)
 	{

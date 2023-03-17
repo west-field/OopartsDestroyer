@@ -7,16 +7,20 @@ public:
     HealItem(const Position2& pos,int handle);
     ~HealItem();
 
+    ///更新
     virtual void Update()override;
+    /// <summary>
+    /// 表示
+    /// </summary>
+    /// <param name="vel">画面移動</param>
     virtual void Draw(Vector2 vel)override;
 
-    //回復量
+    /// <summary>
+    /// 回復する量を返す
+    /// </summary>
+    /// <returns>回復量</returns>
     virtual int GetHeal()const;
 private:
-    //加算合成用
-    int m_addBlend = 0;
-    int add = 1;
-
-    int m_idx = 0;
+    int m_idx = 0;//画像インデックス
 };
 

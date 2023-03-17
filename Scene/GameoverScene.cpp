@@ -62,7 +62,7 @@ GameoverScene::Update(const InputState& input)
 void
 GameoverScene::Draw()
 {
-	Background::GetInstance().Draw(0);
+	Background::GetInstance().Draw();
 
 	(this->*m_drawFunc)();
 

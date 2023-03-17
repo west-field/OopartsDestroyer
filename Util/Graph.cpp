@@ -12,17 +12,17 @@ namespace
 
 Background::Background()
 {
-	Load(BgGraph_1, L"1.png");
-	Load(BgGraph_2, L"2.png");
-	Load(BgGraph_3, L"3.png");
-	Load(BgGraph_4, L"4.png");
-	Load(BgGraph_5, L"5.png");
+	Load(BgGraph::BgGraph_1, L"1.png");
+	Load(BgGraph::BgGraph_2, L"2.png");
+	Load(BgGraph::BgGraph_3, L"3.png");
+	Load(BgGraph::BgGraph_4, L"4.png");
+	Load(BgGraph::BgGraph_5, L"5.png");
 
-	bgImgs[BgGraph_1].scrollSpeed = 0.5f;//ç≈âú
-	bgImgs[BgGraph_2].scrollSpeed = 0.6f;
-	bgImgs[BgGraph_3].scrollSpeed = 0.75f;
-	bgImgs[BgGraph_4].scrollSpeed = 0.8f;
-	bgImgs[BgGraph_5].scrollSpeed = 1.0f;//éËëO
+	bgImgs[static_cast<int>(BgGraph::BgGraph_1)].scrollSpeed = 0.5f;//ç≈âú
+	bgImgs[static_cast<int>(BgGraph::BgGraph_2)].scrollSpeed = 0.6f;
+	bgImgs[static_cast<int>(BgGraph::BgGraph_3)].scrollSpeed = 0.75f;
+	bgImgs[static_cast<int>(BgGraph::BgGraph_4)].scrollSpeed = 0.8f;
+	bgImgs[static_cast<int>(BgGraph::BgGraph_5)].scrollSpeed = 1.0f;//éËëO
 }
 
 Background::~Background()
@@ -35,12 +35,14 @@ Background::~Background()
 
 int Background::Load(BgGraph id, const wchar_t* fileName)
 {
+	int bgId = static_cast<int>(id);
+
 	std::wstring path = L"Data/bg/";
 	path += fileName;
 	int handle = my::MyLoadGraph(path.c_str());
 	assert(handle >= 0);
-	bgImgs[id].handle = handle;
-	GetGraphSize(bgImgs[id].handle, &bgImgs[id].imgSize.w, &bgImgs[id].imgSize.h);
+	bgImgs[bgId].handle = handle;
+	GetGraphSize(bgImgs[bgId].handle, &bgImgs[bgId].imgSize.w, &bgImgs[bgId].imgSize.h);
 	
 	return handle;
 }
@@ -48,7 +50,6 @@ int Background::Load(BgGraph id, const wchar_t* fileName)
 void Background::Init()
 {
 	scrollx = 0;
-	scrolly = 0;
 }
 
 void Background::Update()
@@ -56,13 +57,8 @@ void Background::Update()
 	scrollx = scrollx + 1;
 }
 
-void Background::Draw(int scrollX)
+void Background::Draw()
 {
-	if (scrollX != 0)
-	{
-		scrollx = scrollX;
-	}
-
 	for (auto& bg : bgImgs)
 	{
 		int bgWidth = static_cast<int>(bg.imgSize.w * kBgScale);

@@ -255,7 +255,7 @@ MonologueScene::Update(const InputState& input)
 void MonologueScene::Draw()
 {
 	//”wŒi
-	Background::GetInstance().Draw(0);
+	Background::GetInstance().Draw();
 	
 	//•¶Žš
 	DrawRectGraph(0, 0, 0, 0, m_monoX, 900, m_monoH, true, false);

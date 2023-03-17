@@ -35,12 +35,20 @@ private:
 	SoundManager(const SoundManager&) = delete;
 	void operator= (const SoundManager&) = delete;
 
+	/// <summary>
+	/// サウンドハンドルを取得
+	/// </summary>
+	/// <param name="id">サウンド名</param>
+	/// <param name="fileName">サウンドファイル名</param>
+	/// <returns>サウンドハンドル</returns>
 	int LoadSoundFile(SoundId id,const wchar_t* fileName);
 	
-	//サウンド情報のロード
+	/// <summary>
+	/// サウンド情報のロード
+	/// </summary>
 	void LoadSoundConfig();
 
-	std::unordered_map<SoundId, int> nameAndHandleTable_;
+	std::unordered_map<SoundId, int> nameAndHandleTable_;//サウンドハンドル
 
 	//変更したサウンド情報をファイルに書き込む
 	struct SoundConfigInfo
@@ -49,8 +57,8 @@ private:
 		unsigned short volumeBGM;//0～255
 	};
 
-	int m_volumeSE = 255;
-	int m_volumeBGM = 255;
+	int m_volumeSE = 255;//初期SE音量
+	int m_volumeBGM = 255;//初期BGM音量
 public:
 	~SoundManager();
 	/// <summary>

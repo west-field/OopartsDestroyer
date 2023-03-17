@@ -2,7 +2,7 @@
 #include <array>
 #include "Geometry.h"
 
-enum BgGraph
+enum class BgGraph
 {
 	BgGraph_1,
 	BgGraph_2,
@@ -15,12 +15,17 @@ enum BgGraph
 class Background
 {
 private:
-	Background();
 	~Background();
-
+	//コピーも代入も禁止する
 	Background(const Background&) = delete;
 	void operator= (const Background&) = delete;
 
+	/// <summary>
+	/// 背景のロード
+	/// </summary>
+	/// <param name="id">画像名</param>
+	/// <param name="fileName">ファイル名</param>
+	/// <returns>背景ハンドル</returns>
 	int Load(BgGraph id,const wchar_t* fileName);
 
 	struct BackImg
@@ -29,19 +34,29 @@ private:
 		float scrollSpeed;//スクロールスピード
 		Size imgSize;
 	};
-	std::array<BackImg, BgGraph_Max> bgImgs;
+	std::array<BackImg, static_cast<int>(BgGraph::BgGraph_Max)> bgImgs;//背景
 
-	int scrollx = 0;
-	int scrolly = 0;
+	int scrollx = 0;//横にスクロール
 public:
+	Background();
+	/// <summary>
+	/// BackImg使用者はGetInstance()を通した参照からしか利用できない
+	/// </summary>
+	/// <returns>実体の参照を返す</returns>
 	static Background& GetInstance()
 	{
 		static Background instance;
 		return instance;
 	}
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Init();
+	/// 更新
 	void Update();
-	void Draw(int scrollX);
+	/// 表示
+	void Draw();
+	///マップの一部だけ表示する
 	void Bg();
 };
 

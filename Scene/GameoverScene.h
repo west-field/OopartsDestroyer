@@ -41,9 +41,9 @@ private:
     //•¶Žš
     struct Moji
     {
-        Position2 pos;
-        float moveY;
-        float add;
+        Position2 pos = {};
+        float moveY = 0.0f;
+        float add = 0.0f;
     };
     
     std::array<Moji, kMojiNum> m_moji;

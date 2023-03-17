@@ -4,17 +4,17 @@
 #include "../game.h"
 namespace
 {
-	constexpr int kHealSizeX = 32;
-	constexpr int kHealSizeY = 32;
+	constexpr int kHealSizeX = 32;//当たり判定サイズ
+	constexpr int kHealSizeY = 32;//当たり判定サイズ
 
-	constexpr float kHealScale = 1.5f;
+	constexpr float kHealScale = 1.5f;//画像拡大率
 
-	constexpr int kHealCardAnimNum = 8;
-	constexpr int kHealCardAnimSpeed = 10;
-	constexpr int kHealCardSizeX = 192 / kHealCardAnimNum;
-	constexpr int kHealCardSizeY = 24;
+	constexpr int kHealCardAnimNum = 8;//アニメーション枚数
+	constexpr int kHealCardAnimSpeed = 10;//アニメーション速度
+	constexpr int kHealCardSizeX = 192 / kHealCardAnimNum;//画像サイズ
+	constexpr int kHealCardSizeY = 24;//画像サイズ
 
-	constexpr int kHeal = 2;
+	constexpr int kHeal = 2;//回復量
 }
 
 HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos)
@@ -32,26 +32,13 @@ void HealItem::Update()
 {
 	m_idx = (m_idx + 1) % (kHealCardAnimSpeed * kHealCardAnimNum);
 
-	if (m_addBlend > 100 )
-	{
-		add = -2;
-	}
-	else if(m_addBlend < 0)
-	{
-		add = 2;
-	}
-	m_addBlend += add;
-
-	/*int w = m_rect.size.w / 2;
+	//表示範囲から出たら消す
+	int w = m_rect.size.w / 2;
 	int h = m_rect.size.h / 2;
-	if (m_rect.center.x + w <= Game::kMapScreenLeftX || m_rect.center.x - w >= Game::kMapScreenRightX)
+	if (m_rect.center.x + w < Game::kMapScreenLeftX || m_rect.center.x - w > Game::kMapScreenRightX)
 	{
 		m_isExist = false;
 	}
-	else if (m_rect.center.y + h <= Game::kMapScreenTopY || m_rect.center.y - h <= Game::kMapScreenBottomY)
-	{
-		m_isExist = false;
-	}*/
 }
 
 void HealItem::Draw(Vector2 vel)

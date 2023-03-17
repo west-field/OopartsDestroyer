@@ -34,4 +34,11 @@ namespace my {
 		return DrawRectRotaGraph(x, y, left, top, width, height, scale, angle, handle, transFlg, turnFlg);
 	}
 
+	int MyDrawRectRotaGraph(float x, float y, int left, int top, int width, int height, float scale, float angle, int handle, bool transFlg, bool turnFlg)
+	{
+		int X = static_cast<int>(x);
+		int Y = static_cast<int>(y);
+		return DrawRectRotaGraph(X, Y, left, top, width, height, scale, angle, handle, transFlg, turnFlg);
+	}
+
 }//end of namespace my
