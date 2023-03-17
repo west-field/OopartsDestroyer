@@ -25,6 +25,10 @@ public:
 	void Update();
 	void Draw();
 
+	/// <summary>
+	/// 画面移動
+	/// </summary>
+	/// <param name="vec">画面移動</param>
 	void Movement(Vector2 vec);
 	const Position2 GetPos()const { return m_camera; }
 	void SetPos(Position2 pos);
@@ -57,20 +61,22 @@ public:
 	/// <param name="height"></param>
 	void GetMapSize(int& width, int& height);
 
+	void EnemyPos();
+
 	//マップチップの値を取得する関数
 	int GetMapChipParam(float X, float Y);
+	//イベントチップの値を取得する関数
 	int GetMapEventParam(float X, float Y);
+	//マップチップの値がある位置を返す
 	Vector2 GetMapChipPos(float X, float Y);
-
-	void DrawFrame();
 private:
 	MapData_t m_mapData;//マップデータ
 	int m_mapWidth;//マップの横幅
 	int m_mapHeight;//マップの縦幅
 
-	Position2 m_camera;
+	Position2 m_camera;//移動
 
-	int m_stage;
+	int m_stage;//
 
 	int m_handle;//グラフィック
 

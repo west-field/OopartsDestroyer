@@ -7,13 +7,11 @@
 
 namespace
 {
-	constexpr float kScale = 1.0f;
-
-	constexpr int trap_img_width = 100;//画像サイズX
-	constexpr int trap_img_height = 100;//画像サイズY
-	constexpr float trap_draw_scale = 1.0f;//拡大率
-	constexpr int trap_frame_num = 61;//アニメーション枚数
-	constexpr int trap_frame_speed = 1;//アニメーションスピード
+	constexpr int kTrapImgWidth = 100;//画像サイズX
+	constexpr int kTrapImgHeight = 100;//画像サイズY
+	constexpr float kTrapDrawScale = 1.0f;//拡大率
+	constexpr int kTrapAnimNum = 61;//アニメーション枚数
+	constexpr int kTrapAnimSpeed = 1;//アニメーションスピード
 }
 
 Map::Map(std::shared_ptr<EnemyFactory> enemyFactory, int stage) :
@@ -62,7 +60,7 @@ void Map::Update()
 			//画面に入ったら一度だけ生成
 			if (pos.x >= Game::kMapScreenRightX && pos.x <= Game::kMapScreenRightX + size && m_enemyPos[address] != 0 ||
 				pos.y <= Game::kMapScreenTopY && pos.y >= Game::kMapScreenTopY - size && m_enemyPos[address] != 0 ||
-				pos.y >= Game::kMapScreenBottomY && pos.y <= Game::kMapScreenBottomY - size && m_enemyPos[address] != 0)
+				pos.y >= Game::kMapScreenBottomY && pos.y <= Game::kMapScreenBottomY + size && m_enemyPos[address] != 0)
 			{
 				switch (chipId)
 				{
@@ -97,7 +95,7 @@ void Map::Update()
 	}
 
 	m_trapIdx++;
-	if (m_trapIdx == trap_frame_num * trap_frame_speed)
+	if (m_trapIdx == kTrapAnimNum * kTrapAnimSpeed)
 	{
 		m_trapIdx = 0;
 	}
@@ -132,14 +130,14 @@ void Map::Draw()
 			auto eventChipId = GetChipId(static_cast<int>(MapLayer_event + m_stage), chipX, chipY);
 			if (eventChipId == 2)
 			{
-				int animNum = (m_trapIdx / trap_frame_speed);
-				if (animNum >= trap_frame_num)
+				int animNum = (m_trapIdx / kTrapAnimSpeed);
+				if (animNum >= kTrapAnimNum)
 				{
-					animNum -= trap_frame_num;
+					animNum -= kTrapAnimNum;
 				}
-				int imgX = animNum % 8 * trap_img_width;
-				int imgY = animNum / 8 * trap_img_height;
-				my::MyDrawRectRotaGraph(X, Y, imgX, imgY, trap_img_width, trap_img_height, trap_draw_scale * Game::kScale, 0.0f, m_trapH, true, false);
+				int imgX = animNum % 8 * kTrapImgWidth;
+				int imgY = animNum / 8 * kTrapImgHeight;
+				my::MyDrawRectRotaGraph(X, Y, imgX, imgY, kTrapImgWidth, kTrapImgHeight, kTrapDrawScale * Game::kScale, 0.0f, m_trapH, true, false);
 			}
 			else if (chipId != 0)
 			{
@@ -218,15 +216,7 @@ void Map::Load(const wchar_t* filePath)
 
 	FileRead_close(handle);
 
-	//敵を表示できるかどうか
-	for (int chipY = 0; chipY < m_mapHeight; chipY++)
-	{
-		for (int chipX = 0; chipX < m_mapWidth; chipX++)
-		{
-			int chipId = GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
-			m_enemyPos.push_back(chipId);
-		}
-	}
+	EnemyPos();
 }
 
 const MapData_t& Map::GetMapData() const
@@ -244,6 +234,20 @@ void Map::GetMapSize(int& width, int& height)
 {
 	width = m_mapWidth;
 	height = m_mapHeight;
+}
+
+void Map::EnemyPos()
+{
+	m_enemyPos.clear();
+	//敵を表示できるかどうか
+	for (int chipY = 0; chipY < m_mapHeight; chipY++)
+	{
+		for (int chipX = 0; chipX < m_mapWidth; chipX++)
+		{
+			int chipId = GetChipId(MapLayer_enemy + m_stage, chipX, chipY);
+			m_enemyPos.push_back(chipId);
+		}
+	}
 }
 
 int Map::GetMapChipParam(float X, float Y)
@@ -292,21 +296,4 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>(y * Game::kDrawSize) };
 
 	return aling;
-}
-
-void Map::DrawFrame()
-{
-	int startX = Game::kMapScreenLeftX - Game::ChipSize / 2 - 10;
-	int startY = Game::kMapScreenTopY - Game::ChipSize / 2 - 10;
-
-	for (int y = 0; y <= Game::kMapNumY + 1; y++)
-	{
-		for (int x = 0; x <= Game::kMapNumX + 1; x++)
-		{
-			if (y == 0 || y == Game::kMapNumY + 1 || x == 0 || x == Game::kMapNumX + 1)
-			{
-				my::MyDrawRectRotaGraph(startX + x * Game::kDrawSize, startY + y * Game::kDrawSize, 1 * Game::ChipSize, 7 * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
-			}
-		}
-	}
 }
