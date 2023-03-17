@@ -16,6 +16,14 @@ public:
 	ShotFactory();
 	virtual ~ShotFactory();
 
+	void Update();//更新
+	void Draw();//表示
+	/// <summary>
+	/// 画面が移動したら同じ分だけ移動する
+	/// </summary>
+	/// <param name="vel">移動量</param>
+	void Movement(Vector2 vel);
+
 	/// <summary>
 	/// 弾の生成
 	/// </summary>
@@ -31,9 +39,7 @@ public:
 	/// </summary>
 	/// <returns>敵の弾リスト</returns>
 	const ShotList_t& GetShot()const;
-	void Update();
-	void Draw();
-	void Movement(Vector2 vel);
+	
 private:
 	std::map<ShotType, int> m_shotHTable;//ロードする画像のテーブル
 	ShotList_t m_shots;//弾リスト

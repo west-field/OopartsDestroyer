@@ -6,7 +6,7 @@
 
 namespace
 {
-	constexpr int kSize = 5;
+	constexpr int kSize = 5;//当たり判定を小さくする
 
 	//プレイヤーグラフィック
 	constexpr int kGraphSizeWidth = 32;		//サイズ
@@ -14,11 +14,7 @@ namespace
 	constexpr float kDrawScale = 2.0f;		//拡大率
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 
-	constexpr int kBurstFrameNum = 5;
-	constexpr int kBurstFrameSpeed = 5;
-
 	constexpr int ultimate_frame = 120;//無敵時間 2秒
-
 }
 
 Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::NormalUpdate),m_drawFunc(&Player::NormalDraw),m_hp(hp)
@@ -31,17 +27,16 @@ Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::No
 
 Player::~Player()
 {
+	DeleteGraph(m_handle);
 }
 
 void Player::Update()
 {
-	if (!m_isExist)	return;
 	(this->*m_updateFunc)();
 }
 
 void Player::Draw()
 {
-	if (!m_isExist)	return;
 	(this->*m_drawFunc)();
 }
 
@@ -57,30 +52,27 @@ const Rect& Player::GetRect() const
 
 void Player::Action(ActionType type)
 {
-	//if (m_idxX == 0 || m_idxY == 0 || m_idxY == 1)
+	switch (type)
 	{
-		switch (type)
-		{
-		case ActionType::grah_idle:
-			m_idxY = static_cast<int>(ActionType::grah_idle);
-			break;
-		case ActionType::grah_walk:
-			if(m_idxX == 0 && m_idxY == 0) m_idxY = static_cast<int>(ActionType::grah_walk);
-			break;
-		case ActionType::grah_jump:
-			m_idxY = static_cast<int>(ActionType::grah_jump);
-			break;
-		case ActionType::grah_attack:
-			m_idxY = static_cast<int>(ActionType::grah_attack);
-			m_idxX = 0;
-			break;
-		case ActionType::grah_death:
-			m_idxY = static_cast<int>(ActionType::grah_death);
-			break;
-		default:
-			m_idxY = 0;
-			break;
-		}
+	case ActionType::grah_idle:
+		m_idxY = static_cast<int>(ActionType::grah_idle);
+		break;
+	case ActionType::grah_walk:
+		if (m_idxX == 0 && m_idxY == 0) m_idxY = static_cast<int>(ActionType::grah_walk);
+		break;
+	case ActionType::grah_jump:
+		m_idxY = static_cast<int>(ActionType::grah_jump);
+		break;
+	case ActionType::grah_attack:
+		m_idxY = static_cast<int>(ActionType::grah_attack);
+		m_idxX = 0;
+		break;
+	case ActionType::grah_death:
+		m_idxY = static_cast<int>(ActionType::grah_death);
+		break;
+	default:
+		m_idxY = 0;
+		break;
 	}
 	
 }
@@ -92,8 +84,6 @@ bool Player::IsCollidable() const
 
 void Player::Damage(int damage)
 {
-	/*m_updateFunc = &Player::BurstUpdate;
-	m_drawFunc = &Player::BurstDraw;*/
 	m_ultimateTimer = ultimate_frame;
 	m_hp->Damage(damage);
 }

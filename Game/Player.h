@@ -23,29 +23,73 @@ public:
 	void Update();
 	void Draw();
 
-	//プレイヤー移動
+	/// <summary>
+	/// プレイヤー移動
+	/// </summary>
+	/// <param name="vec">移動量</param>
 	void Movement(Vector2 vec);
 	
+	/// <summary>
+	/// 矩形を取得
+	/// </summary>
+	/// <returns矩形構造体></returns>
 	const Rect& GetRect()const;
-	//左を向いているかどうかを返す
+	
+	/// <summary>
+	/// 左を向いているかどうかを返す
+	/// </summary>
+	/// <returns>true:左を向いている false:右を向いている</returns>
 	bool IsLeft()const { return m_isLeft; }
-	//左を向いているかどうか
+	/// <summary>
+	/// 左を向いているかどうか
+	/// </summary>
+	/// <param name="isLeft">左を向いているか</param>
 	void SetLeft(bool isLeft) { m_isLeft = isLeft; }
-	//ジャンプしているかどうかを返す
+	
+	/// <summary>
+	/// ジャンプしているかどうかを返す
+	/// </summary>
+	/// <returns>true:ジャンプしている false:ジャンプしていない</returns>
 	bool IsJump()const { return m_isJump; }
-	//ジャンプをしているかしていないかを決める
+	/// <summary>
+	/// ジャンプをしているかしていないか
+	/// </summary>
+	/// <param name="isJump">ジャンプしているか</param>
 	void SetJump(bool isJump) { m_isJump = isJump; }
-	//今どんな行動をしているのか
+	
+	/// <summary>
+	/// 今どんな行動をしているのか
+	/// </summary>
+	/// <param name="type">行動タイプ</param>
 	void Action(ActionType type);
-	//当たり判定対象か
+	
+	/// <summary>
+	/// 当たり判定対象か
+	/// </summary>
+	/// <returns>true:当たる false:当たらない</returns>
 	bool IsCollidable()const;
-	//ダメージを受けたか
+	
+	/// <summary>
+	/// ダメージを受けた
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
 	void Damage(int damage);
-	//回復
+	/// <summary>
+	/// 回復する
+	/// </summary>
+	/// <param name="Heal">回復量</param>
 	void Heal(int Heal);
-	//存在しているかどうか
+	
+	/// <summary>
+	/// 存在しているかどうか
+	/// </summary>
+	/// <returns>true:存在する false:存在しない</returns>
 	bool IsExist()const { return m_isExist; }
-	//サイズを大きくする
+	
+	/// <summary>
+	/// サイズを大きくする
+	/// </summary>
+	/// <param name="scale">拡大率</param>
 	void ScaleEnlarge(float scale);
 private:
 	//普通のアップデート
@@ -74,6 +118,6 @@ private:
 
 	bool m_isExist = true;//存在しているかどうか
 
-	std::shared_ptr<HpBar> m_hp;
+	std::shared_ptr<HpBar> m_hp;//HP
 };
 
