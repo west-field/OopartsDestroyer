@@ -18,17 +18,17 @@ namespace
 	constexpr int kAnimFrameSpeed = 5;	//ボスグラフィックアニメーションスピード
 
 	//通常爆発アニメーション
-	constexpr int burst_img_width = 32;//画像サイズX
-	constexpr int burst_img_height = 32;//画像サイズY
-	constexpr float burst_draw_scale = 1.0f;//拡大率
-	constexpr int burst_frame_num = 8;//アニメーション枚数
-	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	constexpr int kBurstImgWidth = 32;//画像サイズX
+	constexpr int kBurstImgHeight = 32;//画像サイズY
+	constexpr float kBurstDrawScale = 1.0f;//拡大率
+	constexpr int kBurstAnimNum = 8;//アニメーション枚数
+	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 	//ボス爆発アニメーション
-	constexpr int boss_burst_img_width = 100;//画像サイズX
-	constexpr int boss_burst_img_height = 100;//画像サイズY
-	constexpr float boss_burst_draw_scale = 2.0f;//拡大率
-	constexpr int boss_burst_frame_num = 61;//アニメーション枚数
-	constexpr int boss_burst_frame_speed = 1;//アニメーションスピード
+	constexpr int kBossBurstImgWidth = 100;//画像サイズX
+	constexpr int kBossBurstImgHeight = 100;//画像サイズY
+	constexpr float kBossBurstDrawScale = 2.0f;//拡大率
+	constexpr int kBossBurstAnimNum = 61;//アニメーション枚数
+	constexpr int kBossBurstAnimSpeed = 1;//アニメーションスピード
 }
 
 Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar>hp) :
@@ -136,7 +136,7 @@ void Boss::BurstUpdate()
 {
 	//爆発アニメーション
 	m_idx += 1;
-	if (m_idx == (boss_burst_frame_num * 2) * boss_burst_frame_speed)
+	if (m_idx == (kBossBurstAnimNum * 2) * kBossBurstAnimSpeed)
 	{
 		//爆発アニメーションが終わったら存在を消す
 		m_isExist = false;
@@ -146,31 +146,31 @@ void Boss::BurstUpdate()
 void Boss::BurstDraw()
 {
 	//通常爆発エフェクトを重ねて表示
-	int animNum = (m_idx / burst_frame_speed);
-	int imgX = (animNum % burst_frame_num) * burst_img_width;
+	int animNum = (m_idx / kBurstAnimSpeed);
+	int imgX = (animNum % kBurstAnimNum) * kBurstImgWidth;
 	int imgY = 0;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 20), static_cast<int>(m_rect.center.y + 50),
-		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, imgY, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y + 50),
-		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, imgY, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x + 20), static_cast<int>(m_rect.center.y - 50),
-		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, imgY, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x - 40), static_cast<int>(m_rect.center.y - 50),
-		imgX, imgY, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, imgY, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 
 	//ボス爆発エフェクトを表示
-	animNum = (m_idx / boss_burst_frame_speed);
-	if (animNum >= boss_burst_frame_num)
+	animNum = (m_idx / kBossBurstAnimSpeed);
+	if (animNum >= kBossBurstAnimNum)
 	{
-		animNum -= boss_burst_frame_num;
+		animNum -= kBossBurstAnimNum;
 	}
-	imgX = animNum % 8 * boss_burst_img_width;
-	imgY = animNum / 8 * boss_burst_img_height;
+	imgX = animNum % 8 * kBossBurstImgWidth;
+	imgY = animNum / 8 * kBossBurstImgHeight;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, imgY, boss_burst_img_width, boss_burst_img_height, boss_burst_draw_scale * Game::kScale, 0.0f, m_bossBurstH, true, false);
+		imgX, imgY, kBossBurstImgWidth, kBossBurstImgHeight, kBossBurstDrawScale * Game::kScale, 0.0f, m_bossBurstH, true, false);
 #ifdef _DEBUG
 	DrawFormatStringF(m_rect.center.x, m_rect.center.y, 0x000000, L"%d", animNum);
-	DrawFormatStringF(m_rect.center.x, m_rect.center.y - 20, 0x000000, L"X%d,Y%d", imgX / boss_burst_img_width, imgY / boss_burst_img_height);
+	DrawFormatStringF(m_rect.center.x, m_rect.center.y - 20, 0x000000, L"X%d,Y%d", imgX / kBossBurstImgWidth, imgY / kBossBurstImgHeight);
 #endif
 }
 

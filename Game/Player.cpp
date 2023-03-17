@@ -14,7 +14,7 @@ namespace
 	constexpr float kDrawScale = 2.0f;		//拡大率
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 
-	constexpr int ultimate_frame = 120;//無敵時間 2秒
+	constexpr int kUltimateFrame = 120;//無敵時間 2秒
 }
 
 Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_updateFunc(&Player::NormalUpdate),m_drawFunc(&Player::NormalDraw),m_hp(hp)
@@ -84,7 +84,7 @@ bool Player::IsCollidable() const
 
 void Player::Damage(int damage)
 {
-	m_ultimateTimer = ultimate_frame;
+	m_ultimateTimer = kUltimateFrame;
 	m_hp->Damage(damage);
 }
 

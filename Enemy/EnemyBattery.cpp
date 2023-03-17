@@ -13,17 +13,17 @@ namespace
 	constexpr int kBatteryTouchAttackPower = 1;//接触した時の攻撃力
 
 	//エネミーアニメーション
-	constexpr int anim_frame_speed = 20;//一枚に必要なフレーム数
-	constexpr int anim_frame_num = 5;//アニメーション枚数
+	constexpr int kAnimFrameSpeed = 20;//一枚に必要なフレーム数
+	constexpr int kAnimFrameNum = 5;//アニメーション枚数
 	constexpr int kSize = 32;//大きさ
 	constexpr float kDrawScall = 1.0f;//表示拡大率
 
 	//爆発アニメーション
-	constexpr int burst_img_width = 32;//画像サイズX
-	constexpr int burst_img_height = 32;//画像サイズY
-	constexpr float burst_draw_scale = 1.0f;//拡大率
-	constexpr int burst_frame_num = 8;//アニメーション枚数
-	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	constexpr int kBurstImgWidth = 32;//画像サイズX
+	constexpr int kBurstImgHeight = 32;//画像サイズY
+	constexpr float kBurstDrawScale = 1.0f;//拡大率
+	constexpr int kBurstAnimNum = 8;//アニメーション枚数
+	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 }
 
 EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft):
@@ -87,9 +87,9 @@ bool EnemyBattery::IsCollidable() const
 void EnemyBattery::NormalUpdate()
 {
 	//アニメーション
-	m_idx = (m_idx + (GetRand(10) % 3)) % (anim_frame_speed * anim_frame_num);
+	m_idx = (m_idx + (GetRand(10) % 3)) % (kAnimFrameSpeed * kAnimFrameNum);
 	//攻撃モーションの時弾を発射する
-	if (m_idx / anim_frame_speed == 2 && m_num == 0)
+	if (m_idx / kAnimFrameSpeed == 2 && m_num == 0)
 	{
 		Vector2 vel = { 0.0f,0.0f };
 		//ランダムに方向と速度を決定する（斜め
@@ -102,7 +102,7 @@ void EnemyBattery::NormalUpdate()
 		m_num++;
 	}
 	//攻撃モーションを終えたら初期化する
-	else if (m_idx / anim_frame_speed == 0)
+	else if (m_idx / kAnimFrameSpeed == 0)
 	{
 		m_num = 0;
 	}
@@ -110,19 +110,19 @@ void EnemyBattery::NormalUpdate()
 
 void EnemyBattery::NormalDraw()
 {
-	int imgX = (m_idx / anim_frame_speed) * kSize;
+	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, kSize, kSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
-	DrawFormatString(0, 360, 0xffffff, L"グラフィック切り替え%d", m_idx / anim_frame_speed);
+	DrawFormatString(0, 360, 0xffffff, L"グラフィック切り替え%d", m_idx / kAnimFrameSpeed);
 #endif
 }
 
 void EnemyBattery::BurstUpdate()
 {
 	m_idx++;
-	if (m_idx == burst_frame_num * burst_frame_speed)
+	if (m_idx == kBurstAnimNum * kBurstAnimSpeed)
 	{
 		m_isExist = false;
 	}
@@ -130,8 +130,8 @@ void EnemyBattery::BurstUpdate()
 
 void EnemyBattery::BurstDraw()
 {
-	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
+	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, 0, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 }

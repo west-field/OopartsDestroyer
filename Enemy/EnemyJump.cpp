@@ -13,9 +13,9 @@ namespace
 	constexpr int kJumpTouchAttackPower = 4;//接触した時の攻撃力
 
 	//エネミーアニメーション
-	constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
-	constexpr int anim_frame_num = 2;//アニメーション枚数
-	constexpr int kRand = anim_frame_num * anim_frame_speed;
+	constexpr int kAnimFrameSpeed = 5;//一枚に必要なフレーム数
+	constexpr int kAnimFrameNum = 2;//アニメーション枚数
+	constexpr int kRand = kAnimFrameNum * kAnimFrameSpeed;
 	constexpr int kJumpSize = 32;//グラフィック1つの大きさ
 	constexpr float kDrawScall = 1.0f;//グラフィック拡大率
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
@@ -23,11 +23,11 @@ namespace
 	constexpr float kJumpA = 5.0f;//ジャンプ力
 
 	//爆発アニメーション
-	constexpr int burst_img_width = 32;//画像サイズX48
-	constexpr int burst_img_height = 32;//画像サイズY
-	constexpr float burst_draw_scale = 1.0f;//拡大率
-	constexpr int burst_frame_num = 8;//アニメーション枚数
-	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	constexpr int kBurstImgWidth = 32;//画像サイズX48
+	constexpr int kBurstImgHeight = 32;//画像サイズY
+	constexpr float kBurstDrawScale = 1.0f;//拡大率
+	constexpr int kBurstAnimNum = 8;//アニメーション枚数
+	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 }
 
 EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
@@ -90,7 +90,7 @@ void EnemyJump::NormalUpdate()
 	//ランダムな時にジャンプさせる
 	if (m_frame-- <= 0)
 	{
-		m_frame = GetRand(kRand) * anim_frame_speed + 60;//次ジャンプするまでの時間
+		m_frame = GetRand(kRand) * kAnimFrameSpeed + 60;//次ジャンプするまでの時間
 		m_idx = 1;
 		SoundManager::GetInstance().Play(SoundId::EnemyJump);
 		m_posTemp =  m_rect.center.y - Game::kDrawSize * 3;//三ブロックぐらいジャンプする
@@ -123,7 +123,7 @@ void EnemyJump::NormalDraw()
 void EnemyJump::BurstUpdate()
 {
 	m_idx++;
-	if (m_idx == burst_frame_num * burst_frame_speed)
+	if (m_idx == kBurstAnimNum * kBurstAnimSpeed)
 	{
 		m_isExist = false;
 	}
@@ -131,10 +131,10 @@ void EnemyJump::BurstUpdate()
 
 void EnemyJump::BurstDraw()
 {
-	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
+	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true,false);
+		imgX, 0, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true,false);
 }
 
 void EnemyJump::JumpUpdate()

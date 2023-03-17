@@ -15,15 +15,15 @@ namespace
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 	constexpr int kSize = 96;//画像サイズX
 	constexpr float kDrawScall = 0.3f;//拡大率
-	constexpr int anim_frame_num = 4;//アニメーション枚数
-	constexpr int anim_frame_speed = 20;//アニメーションスピード
+	constexpr int kAnimFrameNum = 4;//アニメーション枚数
+	constexpr int kAnimFrameSpeed = 20;//アニメーションスピード
 
 	//爆発アニメーション
-	constexpr int burst_img_width = 32;//画像サイズX
-	constexpr int burst_img_height = 32;//画像サイズY
-	constexpr float burst_draw_scale = 1.0f;//拡大率
-	constexpr int burst_frame_num = 8;//アニメーション枚数
-	constexpr int burst_frame_speed = 5;//アニメーションスピード
+	constexpr int kBurstImgWidth = 32;//画像サイズX
+	constexpr int kBurstImgHeight = 32;//画像サイズY
+	constexpr float kBurstDrawScale = 1.0f;//拡大率
+	constexpr int kBurstAnimNum = 8;//アニメーション枚数
+	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 	
 }
 
@@ -86,12 +86,12 @@ bool EnemyMoveLeft::IsCollidable() const
 void EnemyMoveLeft::NormalUpdate()
 {
 	Movement({ kEnemyMoveSpeed ,0.0f});//エネミー移動
-	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
+	m_idx = (m_idx + 1) % (kAnimFrameSpeed * kAnimFrameNum);
 }
 
 void EnemyMoveLeft::NormalDraw()
 {
-	int imgX = (m_idx / anim_frame_speed) * kSize;
+	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		imgX, 0, kSize, kSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
@@ -102,7 +102,7 @@ void EnemyMoveLeft::NormalDraw()
 void EnemyMoveLeft::BurstUpdate()
 {
 	m_idx++;
-	if (m_idx == burst_frame_num * burst_frame_speed)
+	if (m_idx == kBurstAnimNum * kBurstAnimSpeed)
 	{
 		m_isExist = false;
 	}
@@ -110,8 +110,8 @@ void EnemyMoveLeft::BurstUpdate()
 
 void EnemyMoveLeft::BurstDraw()
 {
-	int imgX = (m_idx / burst_frame_speed) * burst_img_width;
+	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;
 
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, burst_img_width, burst_img_height, burst_draw_scale * Game::kScale, 0.0f, m_burstHandle, true, false);
+		imgX, 0, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 }

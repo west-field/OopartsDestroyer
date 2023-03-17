@@ -11,13 +11,6 @@
 #include "../Enemy/Boss.h"
 #include "Player.h"
 
-namespace
-{
-	//ŒÅ’è–C‘ä‚ð•\Ž¦‚µ‚½‚¢ˆÊ’u
-	constexpr int X = 53;
-	constexpr int Y = 125;
-}
-
 EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar> hp):
 	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory),m_hp(hp)
 {
