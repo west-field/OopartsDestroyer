@@ -5,8 +5,8 @@
 
 namespace
 {
-	constexpr int kShotFive = 2;
-	constexpr float kShotBatterySpeed = 5.0f;
+	constexpr int kShotFive = 2;//攻撃力
+	constexpr float kShotBatterySpeed = 5.0f;//攻撃スピード
 }
 
 ShotBattery::ShotBattery(int handle):

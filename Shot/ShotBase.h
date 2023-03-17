@@ -30,12 +30,16 @@ public:
 	void SetExist(bool isExist) { m_isExist = isExist; }
 	//プレイヤーが撃った弾か
 	virtual void PlayerShot(bool isPlayerShot) { m_isPlayerShot = isPlayerShot; }
+	/// <summary>
+	/// プレイヤーが撃った弾か
+	/// </summary>
+	/// <returns>true:プレイヤーが撃った false:敵が撃った</returns>
 	virtual bool IsPlayerShot()const { return m_isPlayerShot; }
 	//弾を移動
 	virtual void Movement(Vector2 vec) = 0;
-	
+	//矩形を取得
 	virtual const Rect& GetRect()const;
-
+	//攻撃力
 	virtual const int AttackPower()const = 0;
 protected:
 	

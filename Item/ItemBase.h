@@ -17,11 +17,11 @@ public:
 	//回復量
 	virtual int GetHeal()const = 0;
 protected:
-	//画像ハンドル
-	int m_handle = 1;
-	//矩形
-	Rect m_rect;
-	//存在しているかどうか
-	bool m_isExist = true;
+	
+	int m_handle = 1;//画像ハンドル
+	
+	Rect m_rect;//矩形
+
+	bool m_isExist = true;	//存在しているかどうか
 };
 
