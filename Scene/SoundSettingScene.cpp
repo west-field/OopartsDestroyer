@@ -68,6 +68,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input)
 			}
 		}
 	}
+	auto& soundMgr = SoundManager::GetInstance();
 
 	if (input.IsTriggered(InputType::next))
 	{
@@ -83,6 +84,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input)
 			m_updateFunc = &SoundSettingScene::SEVolumeChange;
 			return;
 		case soundTypeBack:
+			soundMgr.SaveSoundConfig();
 			m_manager.PopScene();
 			return;
 		default:
@@ -91,6 +93,7 @@ void SoundSettingScene::NormalUpdate(const InputState& input)
 	}
 	if (input.IsTriggered(InputType::prev))
 	{
+		soundMgr.SaveSoundConfig();
 		SoundManager::GetInstance().Play(SoundId::Determinant);
 		m_selectNum = soundTypeBack;
 		m_manager.PopScene();

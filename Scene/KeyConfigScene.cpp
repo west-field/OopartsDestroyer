@@ -38,7 +38,7 @@ void KeyConfigScene::Update(const InputState& input)
 	if (currentInputIndex_ == input.inputNameTable_.size())
 	{
 #ifdef _DEBUG
-		numSize = input.inputMapTable_.size();
+		numSize = static_cast<int>(input.inputMapTable_.size());
 #endif
 		if (input.IsTriggered(InputType::next))
 		{
@@ -51,7 +51,7 @@ void KeyConfigScene::Update(const InputState& input)
 	if (currentInputIndex_ == input.inputMapTable_.size() - 1)
 	{
 #ifdef _DEBUG
-		numSize = input.inputMapTable_.size() - 1;
+		numSize = static_cast<int>(input.inputMapTable_.size() - 1);
 #endif
 		if (input.IsTriggered(InputType::next))
 		{

@@ -52,8 +52,9 @@ private:
 
 	int m_selectNum = 0;
 
-	int m_waitInterval = 60;
-	int m_puressTime = 0;
-	int m_soundH;
+	int m_waitInterval = 60;//値が変化するインターバル
+	int m_puressTime = 0;//押しっぱなしの時間
+	
+	int m_soundH;//サウンドハンドル
 };
 

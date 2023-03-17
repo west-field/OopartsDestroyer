@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-enum SoundId
+enum class SoundId
 {
 	Gameclear,		//ゲームクリア音
 	Gameover,		//ゲームオーバー音
@@ -37,10 +37,20 @@ private:
 
 	int LoadSoundFile(SoundId id,const wchar_t* fileName);
 	
+	//サウンド情報のロード
+	void LoadSoundConfig();
+
 	std::unordered_map<SoundId, int> nameAndHandleTable_;
 
-	int m_volumeSE = 200;
-	int m_volumeBGM = 200;
+	//変更したサウンド情報をファイルに書き込む
+	struct SoundConfigInfo
+	{
+		unsigned short volumeSE;//0～255
+		unsigned short volumeBGM;//0～255
+	};
+
+	int m_volumeSE = 255;
+	int m_volumeBGM = 255;
 public:
 	~SoundManager();
 	/// <summary>
@@ -52,6 +62,11 @@ public:
 		static SoundManager instance;//唯一の実体
 		return instance;//それの参照を返す
 	}
+
+	/// <summary>
+	/// サウンド情報のセーブ
+	/// </summary>
+	void SaveSoundConfig();
 
 	/// <summary>
 	/// 指定のサウンドを鳴らす

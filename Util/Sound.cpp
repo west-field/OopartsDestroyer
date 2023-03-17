@@ -3,24 +3,31 @@
 #include <cassert>
 #include <string>
 
+namespace
+{
+	constexpr char kSoundConfigFilePath[] = "sound.conf";
+}
+
 SoundManager::SoundManager()
 {
-	LoadSoundFile(Gameclear,L"gameclear.mp3");
-	LoadSoundFile(Gameover,L"gameover.mp3");
+	LoadSoundConfig();
+
+	LoadSoundFile(SoundId::Gameclear,L"gameclear.mp3");
+	LoadSoundFile(SoundId::Gameover,L"gameover.mp3");
 	
-	LoadSoundFile(Cursor,L"Cursor.mp3");
-	LoadSoundFile(Determinant,L"pushbotan.mp3");
-	LoadSoundFile(BlockMove,L"blockMove.mp3");
-	LoadSoundFile(MenuOpen,L"menuOpen.mp3");
-	LoadSoundFile(PlayerJump,L"playerJump.wav");
-	LoadSoundFile(EnemyJump,L"enemyJump.wav");
-	LoadSoundFile(Recovery,L"recovery.mp3");
+	LoadSoundFile(SoundId::Cursor,L"Cursor.mp3");
+	LoadSoundFile(SoundId::Determinant,L"pushbotan.mp3");
+	LoadSoundFile(SoundId::BlockMove,L"blockMove.mp3");
+	LoadSoundFile(SoundId::MenuOpen,L"menuOpen.mp3");
+	LoadSoundFile(SoundId::PlayerJump,L"playerJump.wav");
+	LoadSoundFile(SoundId::EnemyJump,L"enemyJump.wav");
+	LoadSoundFile(SoundId::Recovery,L"recovery.mp3");
 	
-	LoadSoundFile(PlayeyShot,L"playerShot.wav");
-	LoadSoundFile(PlayeyHit,L"playerShotHit.wav");
-	LoadSoundFile(EnemyShot,L"enemyShot.wav");
-	LoadSoundFile(EnemyHit,L"playerShotHit.wav");
-	LoadSoundFile(EnemyBurst,L"burst.wav");
+	LoadSoundFile(SoundId::PlayeyShot,L"playerShot.wav");
+	LoadSoundFile(SoundId::PlayeyHit,L"playerShotHit.wav");
+	LoadSoundFile(SoundId::EnemyShot,L"enemyShot.wav");
+	LoadSoundFile(SoundId::EnemyHit,L"playerShotHit.wav");
+	LoadSoundFile(SoundId::EnemyBurst,L"burst.wav");
 }
 SoundManager::~SoundManager()
 {
@@ -36,6 +43,35 @@ int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 	nameAndHandleTable_[id] = handle;
 
 	return handle;
+}
+
+void SoundManager::LoadSoundConfig()
+{
+	SoundConfigInfo conf = {};
+	FILE* fp = nullptr;
+	fopen_s(&fp, kSoundConfigFilePath, "rb");
+	if (fp)
+	{
+		fread(&conf, sizeof(conf), 1, fp);
+		fclose(fp);
+		m_volumeBGM = conf.volumeBGM;
+		m_volumeSE = conf.volumeSE;
+	}
+}
+
+void SoundManager::SaveSoundConfig()
+{
+	SoundConfigInfo conf = {};
+	conf.volumeSE = m_volumeSE;
+	conf.volumeBGM = m_volumeBGM;
+
+	FILE* fp = nullptr;
+	fopen_s(&fp, kSoundConfigFilePath, "wb");
+	if (fp)
+	{
+		fwrite(&conf, sizeof(conf), 1, fp);
+		fclose(fp);
+	}
 }
 
 void SoundManager::Play(SoundId id, int volume)
