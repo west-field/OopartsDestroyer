@@ -12,11 +12,21 @@ public:
 	virtual ~EnemyBattery();
 	virtual void Update()override;		//更新
 	virtual void Draw()override;		//表示
-	//移動させる
-	virtual void Movement(Vector2 vec)override;
-	//接触した時の攻撃力
+
+	/// <summary>
+	/// 接触した時の攻撃力
+	/// </summary>
+	/// <returns>攻撃力</returns>
 	virtual int TouchAttackPower()const override;
+	/// <summary>
+	/// ダメージを受けた
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
 	virtual void Damage(int damage) override;
+	/// <summary>
+	/// あたり判定対象か
+	/// </summary>
+	/// <returns>true:当たる false:当たらない</returns>
 	virtual bool IsCollidable()const override;
 private:
 	//通常
@@ -29,17 +39,6 @@ private:
 	void (EnemyBattery::* m_updateFunc)();
 	void (EnemyBattery::* m_drawFunc)();
 
-	int m_fireFrame = 0;
-	int num = 0;
-
-	struct Shot
-	{
-		Position2 pos = { 0.0f,0.0f };//位置
-		float angle = 0.0f;//向き
-		Vector2 vel = { -2.0f,0.0f };//速度
-		bool isExist = false;//存在しているか
-	};
-	static constexpr int kShotNum = 4;
-	Shot m_shot[kShotNum];//四回撃つ
+	int m_num = 0;//攻撃絵の時一度だけ弾を作成
 };
 

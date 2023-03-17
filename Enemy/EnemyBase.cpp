@@ -12,8 +12,10 @@ EnemyBase::~EnemyBase()
 {
 }
 
-void EnemyBase::EnemyMovement(Vector2 vec)
+void EnemyBase::Movement(Vector2 vec)
 {
+    //‰æ–Ê‚Æˆê‚ÉˆÚ“®
+    m_rect.center += vec;
 }
 
 const Rect& EnemyBase::GetRect() const
@@ -24,11 +26,6 @@ const Rect& EnemyBase::GetRect() const
 bool EnemyBase::IsExist() const
 {
     return m_isExist;
-}
-
-void EnemyBase::OnDamage()
-{
-    m_isOnDamage = true;
 }
 
 int EnemyBase::GetHp() const

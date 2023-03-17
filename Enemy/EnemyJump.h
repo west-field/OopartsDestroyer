@@ -12,26 +12,31 @@ public:
 
 	virtual void Update() override;
 	virtual void Draw()override;
-	virtual void Movement(Vector2 vec)override;
+	//接触した時の攻撃力
 	virtual int TouchAttackPower() const override;
+	//ダメージを受けた
 	virtual void Damage(int damage) override;
+	//当たり判定対象か
 	virtual bool IsCollidable()const override;
 private:
+	//通常
 	void NormalUpdate();
-	void JumpUpdate();
-	void DownUpdate();
-
 	void NormalDraw();
 
 	//爆発アニメーション
 	void BurstUpdate();
 	void BurstDraw();
 
+	//ジャンプする
+	void JumpUpdate();
+	//落下する
+	void DownUpdate();
+
 	void (EnemyJump::* m_updateFunc)();
 	void (EnemyJump::* m_drawFunc)();
 
 	int m_frame = 0;//ジャンプするまでの時間
 
-	float m_posTemp = 0.0f;
+	float m_posTemp = 0.0f;//ジャンプ最高点
 };
 

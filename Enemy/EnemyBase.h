@@ -5,7 +5,7 @@
 class Player;			//プレイヤー
 class HpBar;			//HPバー
 class ShotFactory;		//ショット
-class ItemFactory;
+class ItemFactory;		//アイテム
 
 /// <summary>
 /// 敵基底クラス
@@ -19,12 +19,20 @@ public:
 	virtual void Update() = 0;//更新
 	virtual void Draw() = 0;//表示
 
-	//エネミー移動
-	virtual void Movement(Vector2 vec) = 0;
-	virtual void EnemyMovement(Vector2 vec);
-	//矩形を取得
+	/// <summary>
+	/// エネミー移動
+	/// </summary>
+	/// <param name="vec">移動量</param>
+	void Movement(Vector2 vec);
+	/// <summary>
+	/// 矩形を取得
+	/// </summary>
+	/// <returns>矩形構造体</returns>
 	const Rect& GetRect() const;
-	//当たり判定対象か
+	/// <summary>
+	/// 当たり判定対象か
+	/// </summary>
+	/// <returns>true:当たる false:当たらない</returns>
 	virtual bool IsCollidable()const = 0;
 
 	/// <summary>
@@ -70,10 +78,16 @@ public:
 	/// <param name="isJump">true:ジャンプしている　false:ジャンプしていない</param>
 	void SetJump(bool isJump) { m_isJump = isJump; m_vec = {}; }
 
+	/// <summary>
+	/// 移動量を返す
+	/// </summary>
+	/// <returns>移動</returns>
 	Vector2 GetVec()const { return m_vec; }
 
-	void OnDamage();
-
+	/// <summary>
+	/// 現在のHPを返す
+	/// </summary>
+	/// <returns>現在のHP</returns>
 	int GetHp() const;
 
 	/// <summary>
@@ -92,8 +106,8 @@ protected:
 
 	Vector2 m_vec;//移動速度
 
-	int m_handle = -1;
-	int m_burstHandle = -1;
+	int m_handle = -1;//画像ハンドル
+	int m_burstHandle = -1;//爆発画像ハンドル
 
 	int m_idx = 0;//画像変更
 
@@ -103,7 +117,7 @@ protected:
 
 	int m_ultimateTimer = 0;//無敵時間
 
-	int m_chipId;//マップチップ
+	int m_chipId;//マップチップID
 	bool m_isOnDamage = false;//ダメージを受けたかどうか
 };
 

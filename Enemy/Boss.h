@@ -13,25 +13,31 @@ public :
 	virtual void Update()override;
 	virtual void Draw()override;
 
-	virtual void Movement(Vector2 vec)override;
-	virtual void EnemyMovement(Vector2 vec)override;
+	/// <summary>
+	/// 接触したときの攻撃
+	/// </summary>
+	/// <returns>接触したときの攻撃力</returns>
 	virtual int TouchAttackPower() const override;
+	/// <summary>
+	/// ダメージを受けた
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
 	virtual void Damage(int damage) override;
+	/// <summary>
+	/// あたり判定対象か
+	/// </summary>
+	/// <returns>true:当たる false:当たらない</returns>
 	virtual bool IsCollidable()const override;
 private:
-	void MoveUpdate();//ボスを移動させる
-	void StopUpdate();//次の指示を決める
-	void JumpUpdate();//ボスをジャンプさせる
-	void DownUpdate();//ボスをジャンプさせる
-	void OneShotUpdate();//ボスが1回弾を撃つ
-	void TwoShotUpdate();//ボスが2回弾を撃つ
-	
-	void NormalDraw();
+	void NormalUpdate();//次の指示を決める
+	void NormalDraw();//通常描画
 
-	void BurstUpdate();
-	void BurstDraw();
+	void BurstUpdate();//爆発更新
+	void BurstDraw();//爆発表示
 
-	void (Boss::* updateFunc)();
+	void ShotUpdate();//ボスが弾を撃つ
+
+	void (Boss::* m_updateFunc)();
 	void (Boss::* m_drawFunc)();
 
 	int m_bossBurstH = -1;//ボス爆発画像
@@ -43,9 +49,5 @@ private:
 	int m_frame = 0;//次の攻撃をするまでの時間
 	
 	int m_shotFrame = 20;//二回攻撃するとき次の弾を撃つまで
-	int m_JumpFrame;//次のジャンプまで
-
-	float m_posTemp = 0.0f;//仮入れ
-
 };
 

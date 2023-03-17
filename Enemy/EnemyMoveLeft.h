@@ -12,13 +12,16 @@ public:
 	virtual ~EnemyMoveLeft();
 	virtual void Update()override;//更新
 	virtual void Draw()override;//表示
-	virtual void Movement(Vector2 vec)override;
+	//接触時の攻撃力
 	virtual int TouchAttackPower()const override;
+	//ダメージを受けた
 	virtual void Damage(int damage) override;
+	//当たり判定対象か
 	virtual bool IsCollidable()const override;
-
+	//場所を決める(titleでのみ使用している)
 	void SetPos(Position2 pos) { m_rect.center = pos; }
 private:
+	//通常
 	void NormalUpdate();
 	void NormalDraw();
 	//爆発アニメーション

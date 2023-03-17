@@ -10,18 +10,15 @@
 namespace
 {
 	constexpr int kUpDownTouchAttackPower = 4;//接触した時の攻撃力
-
-	//constexpr int anim_frame_speed = 5;//一枚に必要なフレーム数
-	//constexpr int anim_frame_num = 5;//アニメーション枚数
-	//constexpr int kSize = 29;
-	//constexpr float kDrawScall = 1.0f;
+	
+	//エネミーアニメーション
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
-
 	constexpr int kSize = 96;//画像サイズX
 	constexpr float kDrawScall = 0.3f;//拡大率
 	constexpr int anim_frame_num = 4;//アニメーション枚数
 	constexpr int anim_frame_speed = 20;//アニメーションスピード
 
+	//爆発アニメーション
 	constexpr int burst_img_width = 32;//画像サイズX
 	constexpr int burst_img_height = 32;//画像サイズY
 	constexpr float burst_draw_scale = 1.0f;//拡大率
@@ -48,24 +45,12 @@ EnemyMoveLeft::~EnemyMoveLeft()
 
 void EnemyMoveLeft::Update()
 {
-	//存在していないときは更新しない
-	if (!m_isExist) return;
 	(this->*m_updateFunc)();
 }
 
 void EnemyMoveLeft::Draw()
 {
-	//存在していないときは表示しない
-	if (!m_isExist) return;
 	(this->*m_drawFunc)();
-}
-
-void EnemyMoveLeft::Movement(Vector2 vec)
-{
-	if (!m_isExist) return;
-	if (m_isLeft) vec *= 1.0f;
-
-	m_rect.center += vec;
 }
 
 int EnemyMoveLeft::TouchAttackPower() const
@@ -76,7 +61,7 @@ int EnemyMoveLeft::TouchAttackPower() const
 void EnemyMoveLeft::Damage(int damage)
 {
 	m_hp->Damage(damage);
-	//m_ultimateTimer = kUltimateFrame;//無敵時間
+
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
@@ -85,7 +70,7 @@ void EnemyMoveLeft::Damage(int damage)
 		m_idx = 0;
 		if (GetRand(100) % 3 == 0)
 		{
-			m_itemFactory->Create(ItemType::Heal, m_rect.center);
+			m_itemFactory->Create(ItemType::Heal, m_rect.center);//回復アイテム
 		}
 		return;
 	}
@@ -94,13 +79,13 @@ void EnemyMoveLeft::Damage(int damage)
 
 bool EnemyMoveLeft::IsCollidable() const
 {
-	//爆発アニメーションでないときは当たる
+	//BurstUpdateの時は当たらない
 	return (m_updateFunc != &EnemyMoveLeft::BurstUpdate);
 }
 
 void EnemyMoveLeft::NormalUpdate()
 {
-	m_rect.center.x += kEnemyMoveSpeed;
+	Movement({ kEnemyMoveSpeed ,0.0f});//エネミー移動
 	m_idx = (m_idx + 1) % (anim_frame_speed * anim_frame_num);
 }
 

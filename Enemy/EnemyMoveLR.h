@@ -15,19 +15,23 @@ public:
 
 	virtual void Update()override;
 	virtual void Draw()override;
-	virtual void Movement(Vector2 vec)override;
+	//接触した時の攻撃力
 	virtual int TouchAttackPower() const override;
+	//ダメージを受けた
 	virtual void Damage(int damage) override;
+	//当たり判定対象か
 	virtual bool IsCollidable()const override;
 private:
+	//通常
 	void NormalUpdate();
-	void LeftUpdate();
-	void RightUpdate();
-
 	void NormalDraw();
 
+	//爆発
 	void BurstUpdate();
 	void BurstDraw();
+
+	//左右に動く
+	void MoveUpdate();
 
 	void (EnemyMoveLR::* m_updateFunc)();
 	void (EnemyMoveLR::* m_drawFunc)();
