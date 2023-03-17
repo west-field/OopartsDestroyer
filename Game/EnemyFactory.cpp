@@ -33,21 +33,17 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 }
 EnemyFactory::~EnemyFactory()
 {
-
+	DeleteGraph(m_burstHandle);
+	DeleteGraph(m_bossBurstHandle);
 }
 
 void EnemyFactory::Update()
 {
 	//いなくなった敵は消える
-	//条件に当てはまる敵を後ろによけている 
-	//remove_if条件に合致したものを消す begin,end 対象はenemise_の最初から最後まで 消えてもらう条件を表すラムダ式 true消えるfalseだと消えない
 	auto rmIt = std::remove_if(m_enemies.begin(), m_enemies.end(),
 		[](const std::shared_ptr<EnemyBase>& enemy) {
 			return !enemy->IsExist();
 		});
-	//remove系の関数は不要なものを後ろによけて、よけた場所をイテレータとして返す。
-
-	//実際に範囲を指定して消している
 	m_enemies.erase(rmIt, m_enemies.end());
 
 	for (auto& enemy : m_enemies)
@@ -64,7 +60,7 @@ void EnemyFactory::Draw()
 {
 	for (auto& enemy : m_enemies)
 	{
-		if (enemy->IsExist())//&& enemy->GetRect().GetCenter().x < Game::kMapScreenRightX + enemy->GetRect().GetSize().w / 2)
+		if (enemy->IsExist())
 		{
 			enemy->Draw();
 		}
@@ -115,7 +111,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	default:
 		break;
 	}
-	return m_enemies.back();
+	return m_enemies.back();//最後尾の要素を返す
 }
 
 std::list<std::shared_ptr<EnemyBase>>& EnemyFactory::GetEnemies()

@@ -57,10 +57,20 @@ void HealItem::Update()
 void HealItem::Draw(Vector2 vel)
 {
 	m_rect.center -= vel;
+#if false
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0, 0, kHealSizeX, kHealSizeY,
+		kHealScale, 0.0f, m_handle, true, false);
 
+	SetDrawBlendMode(DX_BLENDMODE_ADD, m_addBlend);
+	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0, 0, kHealSizeX, kHealSizeY,
+		kHealScale, 0.0f, m_handle, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+#else
 	int img = (m_idx / kHealCardAnimSpeed) * kHealCardSizeX;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0,
 		kHealCardSizeX, kHealCardSizeY,kHealScale, 0.0f, m_handle, true, false);
+#endif
+
 
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffff);

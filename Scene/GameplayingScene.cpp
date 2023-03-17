@@ -1,6 +1,9 @@
+
 #include "GameplayingScene.h"
+
 #include <DxLib.h>
 #include <cassert>
+
 #include "SceneManager.h"
 #include "TitleScene.h"
 #include "PauseScene.h"
@@ -21,10 +24,7 @@
 #include "../Game/ItemFactory.h"
 #include "../Enemy/EnemyBase.h"
 #include "../Item/ItemBase.h"
-/*
-スーパーカッター　四角い機械の穴から大量に出てくるはさみ。HP5、攻撃力4
-スクリュードライバー　自機が近付くと、地面から出てきて、５方向同時に弾を二回発射する
-*/
+
 namespace
 {
 	constexpr float kPlayerMoveSpeed = 5.0f;//プレイヤーの移動速度
@@ -43,10 +43,11 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	tempScreenH_ = MakeScreen(se, sh);
 	assert(tempScreenH_ >= 0);
 
+	m_hp[Object_Player] = std::make_shared<HpBar>(Position2{ static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3 });
+	m_hp[Object_EnemyBoss] = std::make_shared<HpBar>(Position2{ static_cast<float>(Game::kMapScreenRightX + 40) ,Game::kScreenHeight / 3 });
 	//HPバーのグラフィック
 	for (auto& hp : m_hp)
 	{
-		hp = std::make_shared<HpBar>();
 		hp->Init(my::MyLoadGraph(L"Data/hpbar.png"));
 	}
 	//プレイヤー
@@ -62,13 +63,14 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
 	Background::GetInstance().Init();
 
+	//BGM
 	m_BgmH = LoadSoundMem(L"Sound/BGM/Disital_Delta.mp3");
 	m_bossBgm = LoadSoundMem(L"Sound/BGM/arabiantechno.mp3");
 	ChangeVolumeSoundMem(0, m_BgmH);
@@ -84,7 +86,7 @@ GameplayingScene::~GameplayingScene()
 
 void GameplayingScene::Update(const InputState& input)
 {
-	//背景を移動させる
+	//背景を常に移動させる
 	Background::GetInstance().Update();
 	(this->*m_updateFunc)(input);
 }
@@ -108,12 +110,12 @@ void GameplayingScene::Draw()
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenTopY - Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenTopY, m_framecolor, true);//上
 	DrawBox(Game::kMapScreenLeftX - Game::kDrawSize, Game::kMapScreenBottomY + Game::kDrawSize, Game::kMapScreenRightX + Game::kDrawSize, Game::kMapScreenBottomY, m_framecolor, true);//下
 
-	m_hp[Object_Player]->Draw(true);//HPバーを表示
+	m_hp[Object_Player]->Draw();//HPバーを表示
 	if (m_isBoss)
 	{
 		if (m_hp[Object_EnemyBoss]->GetHp() > 0)
 		{
-			m_hp[Object_EnemyBoss]->Draw(false);
+			m_hp[Object_EnemyBoss]->Draw();
 		}
 	}
 
@@ -406,7 +408,7 @@ void GameplayingScene::MoveBoss(float MoveX, float MoveY)
 		{
 			m_fallPlayerSpeed *= -1.0f;
 		}
-		enemy->EnemyMovement({ 0.0f,moveY });
+		enemy->Movement({ 0.0f,moveY });
 
 		//ジャンプしているときだけ横に移動する
 		if (enemy->IsJump())
@@ -424,7 +426,7 @@ void GameplayingScene::MoveBoss(float MoveX, float MoveY)
 			// 右上のチェック
 			MapHitCheck(PosX + wsize, PosY - hsize , moveX, Dummy);
 			//左右移動成分を加算
-			enemy->EnemyMovement({ moveX,0.0f });
+			enemy->Movement({ moveX,0.0f });
 		}
 		
 		// 接地判定 キャラクタの左下と右下の下に地面があるか調べる

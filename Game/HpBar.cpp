@@ -5,13 +5,14 @@
 
 namespace
 {
-	//拡大率
-	constexpr float kScale = 4.0f;
+	constexpr float kScale = 4.0f;//拡大率
+	constexpr int kHpMax = 20;//最大値指定がなかった時の最大値
 }
 
-HpBar::HpBar():m_MaxHp(0),m_Hp(0),m_HpHandle(-1)
+HpBar::HpBar(Position2 pos):m_MaxHp(0),m_Hp(0),m_HpHandle(-1)
 {
-	m_rect = { { static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3} ,{} };
+	//{ static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3}
+	m_rect = { pos ,{} };
 }
 
 HpBar::~HpBar()
@@ -99,13 +100,10 @@ void HpBar::Update()
 	}
 }
 
-void HpBar::Draw(bool isPlayer)
+void HpBar::Draw()
 {
 	int x = static_cast<int>(m_rect.center.x + m_rect.size.w / 2);
 	int y = static_cast<int>(m_rect.center.y + m_rect.size.h / 2);
-
-	//プレイヤーじゃないとき横にずらす
-	if (!isPlayer)	x = Game::kMapScreenRightX + m_rect.size.w + 10;
 
 	my::MyDrawRectRotaGraph(x, y,
 		idxX * m_rect.size.w, idxY* m_rect.size.h,

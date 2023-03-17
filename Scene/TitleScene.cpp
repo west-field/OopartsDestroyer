@@ -131,7 +131,7 @@ TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&Tit
 	m_titleH = my::MyLoadGraph(L"Data/title.png");
 	m_gearH = my::MyLoadGraph(L"Data/gear.png");
 	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
-	m_hp = std::make_shared<HpBar>();
+	m_hp = std::make_shared<HpBar>(Position2{0.0f,0.0f});
 	m_player = std::make_shared<Player>(Position2{ 0.0f,0.0f },m_hp);
 	m_shot = std::make_shared<ShotFactory>();
 	m_item = std::make_shared<ItemFactory>();

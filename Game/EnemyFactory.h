@@ -53,15 +53,15 @@ public:
 	/// <returns>エネミーすべて</returns>
 	std::list<std::shared_ptr<EnemyBase>>& GetEnemies();
 private:
-	std::list<std::shared_ptr<EnemyBase>> m_enemies;	//エネミーを作成
+	std::list<std::shared_ptr<EnemyBase>> m_enemies;	//エネミー
 	std::shared_ptr<Player> m_player;					//プレイヤー
-	std::shared_ptr<HpBar> m_hp;					//プレイヤー
+	std::shared_ptr<HpBar> m_hp;						//HP
 	std::shared_ptr<ShotFactory> m_shotFactory;			//ショット
-	std::shared_ptr<ItemFactory> m_itemFactory;			//ショット
+	std::shared_ptr<ItemFactory> m_itemFactory;			//アイテム
 
 	std::map<EnemyType, int>m_handleMap;//敵の画像ハンドル
-	int m_burstHandle = -1;
-	int m_bossBurstHandle = -1;
+	int m_burstHandle = -1;//爆発グラフィック
+	int m_bossBurstHandle = -1;//ボス爆発グラフィック
 
 	int m_frame = 0;//敵作成までのフレーム数
 };

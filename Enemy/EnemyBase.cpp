@@ -5,7 +5,7 @@
 EnemyBase::EnemyBase(std::shared_ptr<Player>player, const Position2& pos, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
     m_player(player), m_rect(pos, {}), m_vec(), m_shotFactory(sFactory),m_itemFactory(itFactory)
 {
-    m_hp = std::make_shared<HpBar>();
+    m_hp = std::make_shared<HpBar>(Position2{ 0.0f,0.0f });
 }
 
 EnemyBase::~EnemyBase()
