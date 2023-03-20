@@ -11,7 +11,7 @@
 #include "SceneManager.h"
 #include "GameplayingScene.h"
 #include "MonologueScene.h"
-#include "PauseScene.h"
+#include "SettingScene.h"
 
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
@@ -96,7 +96,7 @@ void TitleScene::NormalUpdat(const InputState& input)
 		
 		if (m_selectNum == menuConfig)
 		{
-			m_manager.PushScene(new PauseScene(m_manager,m_BgmH));
+			m_manager.PushScene(new SettingScene(m_manager,m_BgmH));
 			return;
 		}
 		else
@@ -104,6 +104,18 @@ void TitleScene::NormalUpdat(const InputState& input)
 			m_updateFunc = &TitleScene::FadeOutUpdat;
 		}
 	}
+
+#ifdef _DEBUG
+	if (CheckHitKey(KEY_INPUT_S) == 0)
+	{
+		return;
+	}
+	else
+	{
+		m_manager.ChangeScene(new GameplayingScene(m_manager));
+		return;
+	}
+#endif
 }
 
 void TitleScene::FadeOutUpdat(const InputState& input)
