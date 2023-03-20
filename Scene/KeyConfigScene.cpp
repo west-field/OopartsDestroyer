@@ -128,6 +128,7 @@ void KeyConfigScene::Draw()
 		{
 			isInputTypeSelected = true;
 			offset = 10;
+			color = 0xffa0aa;
 			if (isEditing)
 			{
 				color = 0xff0000;
@@ -253,22 +254,82 @@ std::wstring KeyConfigScene::KeyName(int id)
 	{
 	case static_cast<int>(KEY_INPUT_A):
 		path += L"A";
-		break;
-	case static_cast<int>(KEY_INPUT_P):
-		path += L"P";
-		break;
+		break;// Ａキー
+	case static_cast<int>(KEY_INPUT_B):
+		path += L"B";
+		break;// Ｂキー
 	case static_cast<int>(KEY_INPUT_C):
 		path += L"C";
-		break;
-	case static_cast<int>(KEY_INPUT_X):
-		path += L"X";
-		break;
-	case static_cast<int>(KEY_INPUT_Z):
-		path += L"Z";
-		break;
+		break;	// Ｃキー
+	case static_cast<int>(KEY_INPUT_D):
+		path += L"D";
+		break;// Ｄキー
+	case static_cast<int>(KEY_INPUT_E):
+		path += L"E";
+		break;// Ｅキー
+	case static_cast<int>(KEY_INPUT_F):
+		path += L"F";
+		break;// Ｆキー
+	case static_cast<int>(KEY_INPUT_G):
+		path += L"G";
+		break;// Ｇキー
+	case static_cast<int>(KEY_INPUT_H):
+		path += L"H";
+		break;// Ｈキー
+	case static_cast<int>(KEY_INPUT_I):
+		path += L"I";
+		break;// Ｉキー
+	case static_cast<int>(KEY_INPUT_J):
+		path += L"J";
+		break;// Ｊキー
+	case static_cast<int>(KEY_INPUT_K):
+		path += L"K";
+		break;// Ｋキー
+	case static_cast<int>(KEY_INPUT_L):
+		path += L"L";
+		break;// Ｌキー
+	case static_cast<int>(KEY_INPUT_M):
+		path += L"M";
+		break;// Ｍキー
+	case static_cast<int>(KEY_INPUT_N):
+		path += L"N";
+		break;// Ｎキー
+	case static_cast<int>(KEY_INPUT_O):
+		path += L"O";
+		break;// Ｏキー
+	case static_cast<int>(KEY_INPUT_P):
+		path += L"P";
+		break;	// Ｐキー
+	case static_cast<int>(KEY_INPUT_Q):
+		path += L"Q";
+		break;// Ｑキー
+	case static_cast<int>(KEY_INPUT_R):
+		path += L"R";
+		break;// Ｒキー
 	case static_cast<int>(KEY_INPUT_S):
 		path += L"S";
-		break;
+		break;	// Ｓキー
+	case static_cast<int>(KEY_INPUT_T):
+		path += L"T";
+		break;// Ｔキー
+	case static_cast<int>(KEY_INPUT_U):
+		path += L"U";
+		break;// Ｕキー
+	case static_cast<int>(KEY_INPUT_V):
+		path += L"V";
+		break;// Ｖキー
+	case static_cast<int>(KEY_INPUT_W):
+		path += L"W";
+		break;// Ｗキー
+	case static_cast<int>(KEY_INPUT_X):	
+		path += L"X";
+		break;// Ｘキー
+	case static_cast<int>(KEY_INPUT_Y):
+		path += L"Y";
+		break;// Ｙキー
+	case static_cast<int>(KEY_INPUT_Z):	
+		path += L"Z";
+		break;// Ｚキー
 	case static_cast<int>(KEY_INPUT_ESCAPE):
 		path += L"ESC";
 		break;
