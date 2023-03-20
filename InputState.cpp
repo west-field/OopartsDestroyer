@@ -16,7 +16,7 @@ InputState::InputState()
 										{InputCategory::mouse,MOUSE_INPUT_LEFT} };
 
 	defaultMapTable_[InputType::pause] = { {InputCategory::keybd,KEY_INPUT_P},
-										{InputCategory::pad,PAD_INPUT_R} };//start
+										{InputCategory::pad,PAD_INPUT_L} };//
 
 	defaultMapTable_[InputType::prev] = { {InputCategory::keybd,KEY_INPUT_ESCAPE},
 										{InputCategory::pad,PAD_INPUT_2} };//B
