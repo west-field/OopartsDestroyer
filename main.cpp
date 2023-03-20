@@ -6,7 +6,8 @@
 #include "Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+//int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	// windowモード設定
 	ChangeWindowMode(Game::kWindowMode);
@@ -23,11 +24,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	auto& background = Background::GetInstance();
 
 	//フォントを読み込む
-	LPCWSTR font_path = L"Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス;
+	LPCWSTR font_path = L"Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス
 	if (AddFontResourceEx(font_path, FR_PRIVATE, NULL) > 0) 
 	{
 	}
-	else 
+	else
 	{
 		//　フォント読込エラー処理
 		MessageBox(NULL, L"フォント読込失敗", L"", MB_OK);
