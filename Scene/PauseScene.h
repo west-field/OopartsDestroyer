@@ -23,6 +23,7 @@ public:
 		pauseKeyconfig,//キー設定
 		pauseSound,//音量設定
 		pauseBack,//戻る
+		pauseTitle,//タイトルに戻る
 
 		pauseMax
 	};
@@ -44,7 +45,8 @@ public:
 	Element m_pauseMenu[pauseMax] = {
 		{kPosX		,kPosY + 20 * (pauseKeyconfig+1),0xaaffaa,L"キーせってい"},
 		{kPosX + 10	,kPosY + 20 * (pauseSound +2),0xffffff,L"音量せってい"},
-		{kPosX + 10	,kPosY + 20 * (pauseBack+3),0xffffff, L"戻る"},
+		{kPosX + 10	,kPosY + 20 * (pauseBack + 3),0xffffff, L"戻る"},
+		{kPosX + 10	,kPosY + 20 * (pauseTitle + 4),0xffffff, L"タイトル戻る"},
 	};
 	int m_selectNum = 0;
 

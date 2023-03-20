@@ -4,6 +4,7 @@
 #include "../InputState.h"
 #include "../Util/Sound.h"
 #include "SceneManager.h"
+#include "TitleScene.h"
 #include "KeyConfigScene.h"
 #include "SoundSettingScene.h"
 
@@ -62,6 +63,9 @@ void PauseScene::Update(const InputState& input)
 			return;
 		case pauseBack:
 			m_manager.PopScene();
+			return;
+		case pauseTitle:
+			m_manager.ChangeScene(new TitleScene(m_manager));
 			return;
 		default:
 			break;
