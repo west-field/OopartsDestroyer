@@ -153,6 +153,7 @@
     <ClCompile Include="Item\ItemBase.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Scene\MonologueScene.cpp" />
+    <ClCompile Include="Scene\SettingScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
     <ClCompile Include="Util\Graph.cpp" />
     <ClCompile Include="Game\EnemyFactory.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="Item\ItemBase.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Scene\MonologueScene.h" />
+    <ClInclude Include="Scene\SettingScene.h" />
     <ClInclude Include="Scene\SoundSettingScene.h" />
     <ClInclude Include="Util\Graph.h" />
     <ClInclude Include="game.h" />

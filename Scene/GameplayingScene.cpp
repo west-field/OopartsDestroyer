@@ -63,8 +63,8 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
-	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
-	//Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
+	//Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };
+	Position2 pos = { -7233.0f,-2076.0f };//ボス戦前
 	m_map->Movement(pos);
 	m_add = pos * -1.0f;
 	//背景
@@ -737,12 +737,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	m_crea = 1;
 	return;
 #endif
-	for (auto& hp : m_hp)
-	{
-		hp->Update();
-	}
+	m_hp[Object_Player]->UpdatePlayer();
 	ScreenMove();//プレイヤーがセンターに居るかどうか
-	//Button::Update();
 
 	float PlayerMoveX = 0.0f, PlayerMoveY = 0.0f;//プレイヤーの移動
 	m_correction = {0.0f,0.0f};
@@ -945,6 +941,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 
 	if (m_isBoss)
 	{
+		m_hp[Object_EnemyBoss]->UpdateBoss();
 		if (m_soundVolume++ >= SoundManager::GetInstance().GetBGMVolume())
 		{
 			m_soundVolume = SoundManager::GetInstance().GetBGMVolume();

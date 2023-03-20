@@ -19,9 +19,13 @@ public:
 	/// <param name="maxHp">最大HP</param>
 	void MaxHp(int maxHp);
 	/// <summary>
-	/// 更新
+	/// 更新プレイヤー
 	/// </summary>
-	void Update();
+	void UpdatePlayer();
+	/// <summary>
+	/// 更新エネミー
+	/// </summary>
+	void UpdateBoss();
 	/// <summary>
 	/// 表示
 	/// </summary>
