@@ -115,8 +115,6 @@ protected:
 
 	bool m_isJump = false;	//ジャンプをしているか
 
-	int m_ultimateTimer = 0;//無敵時間
-
 	int m_chipId;//マップチップID
 	bool m_isOnDamage = false;//ダメージを受けたかどうか
 };

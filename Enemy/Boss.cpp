@@ -6,6 +6,7 @@
 #include "../Game/HpBar.h"
 #include "../game.h"
 #include "../Util/Sound.h"
+
 namespace
 {
 	constexpr int kCutManTouchAttackPower = 4;//ÚG‚µ‚½‚ÌUŒ‚—Í
@@ -36,6 +37,7 @@ Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int 
 	m_shotFrame(0)
 {
 	m_hp = hp;
+	m_hp->MaxHp(50);
 	m_isLeft = true;
 	m_handle = handle;
 	m_bossBurstH = bossBurstH;
@@ -67,7 +69,7 @@ int Boss::TouchAttackPower() const
 void Boss::Damage(int damage)
 {
 	m_hp->Damage(damage);
-
+	m_isOnDamage = true;
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
@@ -82,7 +84,7 @@ void Boss::Damage(int damage)
 bool Boss::IsCollidable() const
 {
 	//BurstUpdate‚Å‚È‚¢•–³“GŠÔ‚ª0‚Ì“–‚½‚é
-	return (m_updateFunc != &Boss::BurstUpdate) && m_ultimateTimer == 0;
+	return (m_updateFunc != &Boss::BurstUpdate);
 }
 
 void Boss::NormalUpdate()
@@ -92,11 +94,6 @@ void Boss::NormalUpdate()
 	{
 		m_idx = (m_idx + 1) % kGraphNum;
 		m_animFrame = 0;
-	}
-	//–³“GŠÔ‚ª‚ ‚é‚ÍŠÔ‚ğŒ¸‚ç‚µ‚Ä‚¢‚­
-	if (--m_ultimateTimer <= 0)
-	{
-		m_ultimateTimer = 0;
 	}
 
 	//1•b‚²‚Æ‚É’e‚ğ‘Å‚Â
@@ -120,12 +117,19 @@ void Boss::NormalUpdate()
 
 void Boss::NormalDraw()
 {
-	//–³“GŠÔ“_–Å‚³‚¹‚é
-	if ((m_ultimateTimer / 10) % 2 == 1)	return;
 	//ƒ{ƒX•\¦
 	int img = m_idx * kGraphSizeWidth;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
 		img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+	if (m_isOnDamage)
+	{
+		//ƒ_ƒ[ƒW‚ğó‚¯‚½‚Æ‚«“_–Å‚³‚¹‚é
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);//‰ÁZ‡¬
+		my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+			img, 0, kGraphSizeWidth, kGraphSizeHeight, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//‚à‚Æ‚É–ß‚·
+		m_isOnDamage = false;
+	}
 #ifdef _DEBUG
 	DrawFormatString(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), 0xffffff, L"%d", m_idx);
 	m_rect.Draw(0xaaffaa);
