@@ -92,14 +92,6 @@ public:
 	/// <param name="scale">拡大率</param>
 	void ScaleEnlarge(float scale);
 private:
-	//普通のアップデート
-	void NormalUpdate();
-	//普通の描画
-	void NormalDraw();
-
-	void (Player::* m_updateFunc)();//アップデートの遷移
-	void (Player::* m_drawFunc)();//描画の遷移
-	
 	Rect m_rect;//プレイヤーの矩形
 	
 	int m_handle = -1;//プレイヤーのグラフィックハンドル
@@ -119,5 +111,10 @@ private:
 	bool m_isExist = true;//存在しているかどうか
 
 	std::shared_ptr<HpBar> m_hp;//HP
+
+	bool m_isHeal = false;//回復アイテムをとったか
+	int m_healH = -1;//回復エフェクト
+	int m_healIdx = 0;//画像の表示位置
+	int m_healAnimFram = 0;//次の画像に移動
 };
 
