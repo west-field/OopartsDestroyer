@@ -28,6 +28,88 @@ namespace
 	constexpr int kGearSpeed = 10;//アニメーションスピード
 }
 
+
+TitleScene::TitleScene(SceneManager& manager) : Scene(manager), m_updateFunc(&TitleScene::FadeInUpdat)
+{
+	m_titleH = my::MyLoadGraph(L"Data/title.png");
+	m_gearH = my::MyLoadGraph(L"Data/gear.png");
+	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
+	m_hp = std::make_shared<HpBar>(Position2{ 0.0f,0.0f });
+	m_player = std::make_shared<Player>(Position2{ 0.0f,(Game::kMapScreenBottomY - Game::kDrawSize * 5) }, m_hp);
+	m_shot = std::make_shared<ShotFactory>();
+	m_item = std::make_shared<ItemFactory>();
+	for (int i = 0; i < 3; i++)
+	{
+		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
+			Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
+					static_cast<float>(Game::kDrawSize * (i + GetRand(50) / 3)) }, m_enemyH, 0, m_shot, m_item);
+	}
+	Background::GetInstance().Init();
+	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
+	ChangeVolumeSoundMem(0, m_BgmH);
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+}
+
+TitleScene::~TitleScene()
+{
+	DeleteSoundMem(m_BgmH);
+	DeleteGraph(m_titleH);
+	DeleteGraph(m_gearH);
+	DeleteGraph(m_enemyH);
+}
+
+void
+TitleScene::Update(const InputState& input)
+{
+	//◇メンバ関数ポインタを呼び出す　演算子　->*
+	(this->*m_updateFunc)(input);
+	m_gearIdx++;
+	if (m_gearIdx == kGearNum * kGearSpeed)
+	{
+		m_gearIdx = 0;
+	}
+}
+
+void TitleScene::Draw()
+{
+	//背景
+	Background::GetInstance().Draw();
+	//敵
+	for (auto& enemy : m_enemy)
+	{
+		enemy->Draw();
+	}
+
+	//歯車
+	int img = m_gearIdx / kGearSpeed * kGearSize;
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	//タイトルロゴ表示
+	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
+
+	m_player->Draw();
+
+	//メニュー項目を描画
+	SetFontSize(kMenuFontSize);
+	for (auto& menu : SelectMenu)
+	{
+		DrawString(menu.x + 5, menu.y + 5, menu.name, 0x000000);
+		DrawString(menu.x, menu.y, menu.name, menu.color);
+	}
+	SetFontSize(0);
+
+#ifdef _DEBUG
+	DrawFormatString(0, 40, 0x000000, L"m_gearIdx%d", m_gearIdx);
+#endif
+
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
 void TitleScene::FadeInUpdat(const InputState& input)
 {
 	//◇どんどん明るくなる
@@ -53,10 +135,18 @@ void TitleScene::NormalUpdat(const InputState& input)
 			m_enemy[i]->Update();
 			if (m_enemy[i]->GetRect().GetCenter().x <= -m_enemy[i]->GetRect().GetSize().w)
 			{
-				m_enemy[i]->SetPos(Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
-					static_cast<float>(Game::kDrawSize * (i + GetRand(50)/3))});
+				float X = static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2));
+				float Y = static_cast<float>(Game::kDrawSize * (i + GetRand(50) / 3));
+				m_enemy[i]->SetPos(Position2{ X,Y });
 			}
 		}
+	}
+	m_player->Action(ActionType::grah_walk);
+	m_player->Update();
+	m_player->Movement({ 4.0f,0.0f });
+	if (m_player->GetRect().GetCenter().x >= Game::kScreenWidth + m_player->GetRect().GetSize().w / 2)
+	{
+		m_player->Movement({static_cast<float>((Game::kScreenWidth + m_player->GetRect().GetSize().w / 2) * -1.0f),0.0f});
 	}
 	
 	//メニュー
@@ -136,83 +226,4 @@ void TitleScene::FadeOutUpdat(const InputState& input)
 			return;
 		}
 	}
-}
-
-TitleScene::TitleScene(SceneManager& manager) : Scene(manager),m_updateFunc(&TitleScene::FadeInUpdat)
-{	
-	m_titleH = my::MyLoadGraph(L"Data/title.png");
-	m_gearH = my::MyLoadGraph(L"Data/gear.png");
-	m_enemyH = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
-	m_hp = std::make_shared<HpBar>(Position2{0.0f,0.0f});
-	m_player = std::make_shared<Player>(Position2{ 0.0f,0.0f },m_hp);
-	m_shot = std::make_shared<ShotFactory>();
-	m_item = std::make_shared<ItemFactory>();
-	for (int i = 0; i < 3; i++)
-	{
-		m_enemy[i] = std::make_shared<EnemyMoveLeft>(m_player,
-			Position2{ static_cast<float>(Game::kScreenWidth + Game::kDrawSize * (i + 2)),
-					static_cast<float>(Game::kDrawSize * (i + GetRand(50) / 3)) }, m_enemyH, 0, m_shot,m_item);
-	}
-	Background::GetInstance().Init();
-	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
-	ChangeVolumeSoundMem( 0, m_BgmH);
-	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP,true);
-}
-
-TitleScene::~TitleScene()
-{
-	DeleteSoundMem(m_BgmH);
-	DeleteGraph(m_titleH);
-	DeleteGraph(m_gearH);
-	DeleteGraph(m_enemyH);
-}
-
-void
-TitleScene::Update(const InputState& input)
-{
-	//◇メンバ関数ポインタを呼び出す　演算子　->*
-	(this->*m_updateFunc)(input);
-	m_gearIdx++;
-	if (m_gearIdx == kGearNum * kGearSpeed)
-	{
-		m_gearIdx = 0;
-	}
-}
-
-void TitleScene::Draw()
-{
-	//背景
-	Background::GetInstance().Draw();
-	//敵
-	for (auto& enemy : m_enemy)
-	{
-		enemy->Draw();
-	}
-
-	//歯車
-	int img = m_gearIdx / kGearSpeed * kGearSize;
-	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
-	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), img, 0, kGearSize, kGearSize, kGearScale, 0.0f, m_gearH, true, false);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	//タイトルロゴ表示
-	my::MyDrawRectRotaGraph((Game::kScreenWidth / 2), (Game::kScreenHeight / 3), 0, 0, 3508, 2480, 0.45f, 0.0f, m_titleH, true, false);
-
-	//メニュー項目を描画
-	SetFontSize(kMenuFontSize);
-	for (auto& menu : SelectMenu)
-	{
-		DrawString(menu.x+5, menu.y+5, menu.name, 0x000000);
-		DrawString(menu.x, menu.y, menu.name, menu.color);
-	}
-	SetFontSize(0);
-
-#ifdef _DEBUG
-	DrawFormatString(0, 40,  0x000000, L"m_gearIdx%d", m_gearIdx);
-#endif
-
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }

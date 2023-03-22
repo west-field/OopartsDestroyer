@@ -17,6 +17,13 @@ class InputState;
 /// </summary>
 class TitleScene : public Scene
 {
+public:
+	TitleScene(SceneManager& manager);
+	virtual ~TitleScene();
+
+	void Update(const InputState& input);
+	virtual void Draw() override;
+
 private:
 	unsigned int m_color = 0x000000;
 	//フェードインの時のUpdate関数
@@ -68,15 +75,10 @@ private:
 	int m_fade;
 
 	std::shared_ptr<Player>m_player;
+	int m_playerH = -1;
 	std::shared_ptr<HpBar>m_hp;
 	std::shared_ptr<ShotFactory>m_shot;
 	std::shared_ptr<ItemFactory>m_item;
 	int m_enemyH = -1;
 	std::shared_ptr<EnemyMoveLeft> m_enemy[3];
-public:
-	TitleScene(SceneManager& manager);
-	virtual ~TitleScene();
-
-	void Update(const InputState& input);
-	virtual void Draw() override;
 };
