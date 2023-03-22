@@ -13,24 +13,10 @@
 
 namespace
 {
-	const TCHAR* const kMoji[GameoverScene::kMojiNum] =
-	{
-		L"G",
-		L"a",
-		L"m",
-		L"e",
-		L" ",
-		L"O",
-		L"v",
-		L"e",
-		L"r",
-	};
-
-	constexpr float kMojiNum = 30.0f;
-	constexpr float kMoveNum = 2.0f;
-	constexpr int kMojiSize = 90;
-	constexpr int kMenuFontSize = 50;
+	constexpr float kMoveNum = 2.0f;//プレイヤー移動スピード
+	constexpr int kMojiSize = 90;//文字の大きさ
 }
+
 GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>player) :
 	Scene(manager), m_player(player), m_updateFunc(&GameoverScene::FadeInUpdat),
 	m_drawFunc(&GameoverScene::NormalDraw) 

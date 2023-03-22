@@ -19,8 +19,6 @@ public:
 
     void Update(const InputState& input);
     void Draw();
-
-    static constexpr int kMojiNum = 9;
 private:
     unsigned int m_fadeColor = 0xff0000;//フェードの色（赤
 
@@ -46,7 +44,20 @@ private:
         float add = 0.0f;
     };
     
+    static constexpr int kMojiNum = 9;
     std::array<Moji, kMojiNum> m_moji;
+    const wchar_t* const kMoji[GameoverScene::kMojiNum] =
+    {
+        L"G",
+        L"a",
+        L"m",
+        L"e",
+        L" ",
+        L"O",
+        L"v",
+        L"e",
+        L"r",
+    };
     int  m_soundVolume = 0;
 
     static constexpr int kMenuFontSize = 50;//文字のサイズ

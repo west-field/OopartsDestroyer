@@ -12,25 +12,9 @@
 
 namespace
 {
-	const TCHAR* const kMoji[GameclearScene::kMojiNum] =
-	{
-		L"G",
-		L"a",
-		L"m",
-		L"e",
-		L" ",
-		L"C",
-		L"l",
-		L"e",
-		L"a",
-		L"r",
-	};
+	constexpr float kMoveNum = 2.0f;//プレイヤー移動スピード
 
-	constexpr float kMojiNum = 30.0f;
-	constexpr float kMoveNum = 2.0f;
-
-	constexpr int kMojiSize = 90;
-	constexpr int kParticlFrame = 120;
+	constexpr int kMojiSize = 90;//文字の大きさ
 
 	//プレイヤーグラフィック
 	constexpr int kGraphSizeWidth = 32;		//サイズ
