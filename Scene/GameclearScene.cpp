@@ -35,7 +35,7 @@ namespace
 	//プレイヤーグラフィック
 	constexpr int kGraphSizeWidth = 32;		//サイズ
 	constexpr int kGraphSizeHeight = 32;	//サイズ
-	constexpr float kDrawScale = 4.5f;		//拡大率
+	constexpr float kDrawScale = 3.5f;		//拡大率
 	constexpr int kAnimNum = 5;		//アニメーション枚数
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 
@@ -121,7 +121,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	{
 		vel.Normalize();
 		vel *= kMoveNum;
-		m_player->ScaleEnlarge(0.5f);
+		m_player->ScaleEnlarge(0.05f);
 	}
 
 	m_player->Movement(vel);
@@ -158,6 +158,7 @@ void GameclearScene::MojiUpdate(const InputState& input)
 		if (m_idx >= kAnimNum)
 		{
 			m_idx = 0;
+			m_frame = -100;
 		}
 	}
 
@@ -183,10 +184,10 @@ void GameclearScene::MojiDraw()
 	SetFontSize(0);
 
 	float w = Game::kScreenWidth / 4;
-	my::MyDrawRectRotaGraph(w, m_player->GetRect().GetCenter().y,
+	my::MyDrawRectRotaGraph(w, m_player->GetRect().GetCenter().y + 20,
 		m_idx * kGraphSizeWidth, 2 * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight,
 		kDrawScale * Game::kScale, 0.0f, m_playerH, true, false);
-	my::MyDrawRectRotaGraph(Game::kScreenWidth / 2 + w, m_player->GetRect().GetCenter().y,
+	my::MyDrawRectRotaGraph(Game::kScreenWidth / 2 + w, m_player->GetRect().GetCenter().y + 20,
 		m_idx * kGraphSizeWidth, 2 * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight,
 		kDrawScale * Game::kScale, 0.0f, m_playerH, true, true);
 }

@@ -731,11 +731,13 @@ void GameplayingScene::FadeInUpdat(const InputState& input)
 
 void GameplayingScene::NormalUpdat(const InputState& input)
 {
-#if false
-	m_updateFunc = &GameplayingScene::FadeOutUpdat;
-	m_fadeColor = 0x000000;
-	m_crea = 1;
-	return;
+#ifdef _DEBUG
+	#if true
+		m_updateFunc = &GameplayingScene::FadeOutUpdat;
+		m_fadeColor = 0x000000;
+		m_crea = 0;
+		return;
+	#endif
 #endif
 	m_hp[Object_Player]->UpdatePlayer();
 	ScreenMove();//プレイヤーがセンターに居るかどうか

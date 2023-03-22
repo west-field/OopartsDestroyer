@@ -192,7 +192,7 @@ void Player::Heal(int Heal)
 
 void Player::ScaleEnlarge(float scale)
 {
-	if (m_drawScale >= 3.0f)	return;
+	if (m_drawScale >= 4.0f)	return;
 	if(m_ultimateTimer < 0) m_ultimateTimer = 0;
 	m_drawScale += scale;
 }
