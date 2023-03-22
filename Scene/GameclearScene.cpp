@@ -179,7 +179,7 @@ void GameclearScene::MojiDraw()
 	for (int i = 0; i < kMojiNum; i++)
 	{
 		DrawStringF(m_moji[i].pos.x + 2, m_moji[i].pos.y + 2 + m_moji[i].moveY, kMoji[i], 0xffffff);
-		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffaaff);
+		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffaaaf);
 	}
 	SetFontSize(0);
 
@@ -191,6 +191,3 @@ void GameclearScene::MojiDraw()
 		m_idx * kGraphSizeWidth, 2 * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight,
 		kDrawScale * Game::kScale, 0.0f, m_playerH, true, true);
 }
-
-
-
