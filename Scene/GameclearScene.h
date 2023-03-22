@@ -32,6 +32,9 @@ private:
 
     //ƒvƒŒƒCƒ„[
     std::shared_ptr<Player> m_player;
+    int m_playerH = -1;
+    int m_idx = 0;
+    int m_frame = 0;
 
     struct Moji
     {

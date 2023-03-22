@@ -31,6 +31,14 @@ namespace
 
 	constexpr int kMojiSize = 90;
 	constexpr int kParticlFrame = 120;
+
+	//プレイヤーグラフィック
+	constexpr int kGraphSizeWidth = 32;		//サイズ
+	constexpr int kGraphSizeHeight = 32;	//サイズ
+	constexpr float kDrawScale = 4.5f;		//拡大率
+	constexpr int kAnimNum = 5;		//アニメーション枚数
+	constexpr int kFrameSpeed = 10;		//アニメーションスピード
+
 }
 
 GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>player) :
@@ -44,11 +52,13 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>pla
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
+	m_playerH = my::MyLoadGraph(L"Data/player.png");
 	m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
 }
 
 GameclearScene::~GameclearScene()
 {
+	DeleteGraph(m_playerH);
 	DeleteSoundMem(m_BgmH);
 	SoundManager::GetInstance().StopBgm(SoundId::EnemyShot);
 }
@@ -111,7 +121,7 @@ void GameclearScene::NormalUpdat(const InputState& input)
 	{
 		vel.Normalize();
 		vel *= kMoveNum;
-		m_player->ScaleEnlarge(0.05f);
+		m_player->ScaleEnlarge(0.5f);
 	}
 
 	m_player->Movement(vel);
@@ -141,6 +151,16 @@ void GameclearScene::MojiUpdate(const InputState& input)
 		moji.moveY += moji.add;
 	}
 
+	if (m_frame++ >= kFrameSpeed)
+	{
+		m_frame = 0;
+		m_idx++;
+		if (m_idx >= kAnimNum)
+		{
+			m_idx = 0;
+		}
+	}
+
 	if (input.IsTriggered(InputType::next))
 	{
 		m_updateFunc = &GameclearScene::FadeOutUpdat;
@@ -161,6 +181,14 @@ void GameclearScene::MojiDraw()
 		DrawStringF(m_moji[i].pos.x, m_moji[i].pos.y + m_moji[i].moveY, kMoji[i], 0xffaaff);
 	}
 	SetFontSize(0);
+
+	float w = Game::kScreenWidth / 4;
+	my::MyDrawRectRotaGraph(w, m_player->GetRect().GetCenter().y,
+		m_idx * kGraphSizeWidth, 2 * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight,
+		kDrawScale * Game::kScale, 0.0f, m_playerH, true, false);
+	my::MyDrawRectRotaGraph(Game::kScreenWidth / 2 + w, m_player->GetRect().GetCenter().y,
+		m_idx * kGraphSizeWidth, 2 * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight,
+		kDrawScale * Game::kScale, 0.0f, m_playerH, true, true);
 }
 
 
