@@ -8,7 +8,7 @@ namespace Game
 	constexpr bool kWindowMode = false;
 #endif
 	//ウィンドウ名
-	const wchar_t* const kTitleText = L"オーパーツ";
+	const wchar_t* const kTitleText = L"オーパーツデストロイヤー";
 	//ウィンドウサイズ
 	constexpr int kScreenWidth = 1600;//16:
 	constexpr int kScreenHeight = 900;//9
@@ -35,6 +35,6 @@ namespace Game
 	 constexpr int kMapScreenBottomY = kMapScreenTopY + kMapNumY * kDrawSize;
 
 	//マップの大きさ X218*Y135
-	 constexpr int kMapChipNumX = 218;//219;
-	 constexpr int kMapChipNumY = 135;//135;
+	 constexpr int kMapChipNumX = 218;
+	 constexpr int kMapChipNumY = 135;
 };

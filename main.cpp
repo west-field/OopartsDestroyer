@@ -11,6 +11,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	// windowモード設定
 	ChangeWindowMode(Game::kWindowMode);
+#if false
+	SetChangeScreenModeGraphicsSystemResetFlag(false);
+#endif
 	// ウインドウ名設定
 	SetMainWindowText(Game::kTitleText);
 	// 画面サイズの設定
@@ -40,7 +43,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	InputState input;
 	SceneManager sceneManeger;
 	sceneManeger.ChangeScene(new TitleScene(sceneManeger));
-	
+#if false
+	bool isTriggerWindouMode = false;//ALTとENTERを押しているか
+	bool isWindouwMode = Game::kWindowMode;//ウィンドウモードを変更する
+#endif
 	while (ProcessMessage() != -1)
 	{
 		LONGLONG  time = GetNowHiPerformanceCount();
@@ -50,7 +56,26 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		input.Update();
 		sceneManeger.Update(input);
 		sceneManeger.Draw();
-		
+#if false
+		if (CheckHitKey(KEY_INPUT_LALT))
+		{
+			if (CheckHitKey(KEY_INPUT_RETURN))
+			{
+				if (!isTriggerWindouMode)
+				{
+					isWindouwMode = !isWindouwMode;
+					ChangeWindowMode(isWindouwMode);
+					SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
+				}
+				isTriggerWindouMode = true;
+			}
+			else
+			{
+				SetDrawScreen(DX_SCREEN_BACK);//描画先を再定義
+				isTriggerWindouMode = false;
+			}
+		}
+#endif
 		//裏画面を表画面を入れ替える
 		ScreenFlip();
 
