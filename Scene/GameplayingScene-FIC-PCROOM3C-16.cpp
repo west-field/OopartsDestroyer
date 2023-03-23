@@ -1,7 +1,7 @@
 
 #include "GameplayingScene.h"
 
-#include "DxLib.h"
+#include <DxLib.h>
 #include <cassert>
 
 #include "SceneManager.h"
@@ -60,7 +60,7 @@ GameplayingScene::GameplayingScene(SceneManager& manager) :
 	m_enemyFactory = std::make_shared<EnemyFactory>(m_player, m_shotFactory, m_itemFactory, m_hp[Object_EnemyBoss]);//プレイヤーとショットと敵を倒した数を渡す
 	//マップ
 	m_map = std::make_shared<Map>(m_enemyFactory,0);
-	m_map->Load(L"Data/map/mapmini.fmf");
+	m_map->Load(L"Data/map/map.fmf");
 
 	//開始位置
 	Position2 pos = { Game::kMapScreenLeftX,((Game::kMapChipNumY * Game::kDrawSize) - Game::kMapScreenBottomY) * -1.0f };

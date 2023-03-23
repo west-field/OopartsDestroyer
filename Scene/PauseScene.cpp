@@ -66,6 +66,7 @@ void PauseScene::Update(const InputState& input)
 			return;
 		case pauseTitle:
 			m_manager.ChangeScene(new TitleScene(m_manager));
+			StopSoundMem(m_soundH);
 			return;
 		default:
 			break;

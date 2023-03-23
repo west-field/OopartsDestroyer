@@ -48,22 +48,6 @@ class KeyConfigScene;
 class InputState
 {
 	friend KeyConfigScene;//KeyConfigSceneにだけ、すべてを見せる。
-private:
-	//仮想入力情報と、実際の入力テーブルを作る
-	//キー(first)=InputType
-	//値(second)=std::vector<InputInfo>
-	using InputMap_t = std::map<InputType, std::vector<InputInfo>>;
-	InputMap_t inputMapTable_;//実際の入力とゲームボタンの対応テーブル
-
-	InputMap_t tempMapTable_;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
-	InputMap_t defaultMapTable_;//リセット用キーマップテーブル
-
-	//入力タイプとその名前の対応テーブル
-	std::map<InputType, std::wstring> inputNameTable_;
-
-	std::vector<bool> currentInput_;//現在の入力情報(押しているか押していないか)
-	std::vector<bool> lastInput_;//直前の入力情報(直前押しているか押していないか)
-
 public:
 	InputState();
 
@@ -119,4 +103,19 @@ public:
 	/// キーマップをロードする
 	/// </summary>
 	void LoadKeyInfo();
+private:
+	//仮想入力情報と、実際の入力テーブルを作る
+	//キー(first)=InputType
+	//値(second)=std::vector<InputInfo>
+	using InputMap_t = std::map<InputType, std::vector<InputInfo>>;
+	InputMap_t inputMapTable_;//実際の入力とゲームボタンの対応テーブル
+
+	InputMap_t tempMapTable_;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
+	InputMap_t defaultMapTable_;//リセット用キーマップテーブル
+
+	//入力タイプとその名前の対応テーブル
+	std::map<InputType, std::wstring> inputNameTable_;
+
+	std::vector<bool> currentInput_;//現在の入力情報(押しているか押していないか)
+	std::vector<bool> lastInput_;//直前の入力情報(直前押しているか押していないか)
 };

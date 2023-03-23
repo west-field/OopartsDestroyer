@@ -61,6 +61,9 @@ public:
 	/// <param name="height"></param>
 	void GetMapSize(int& width, int& height);
 
+	/// <summary>
+	/// 画面スクロールの後もう一度敵を表示させる
+	/// </summary>
 	void EnemyPos();
 
 	//マップチップの値を取得する関数

@@ -9,15 +9,13 @@ class SceneManager;
 /// </summary>
 class SettingScene : public Scene
 {
-private:
-
 public:
 	SettingScene(SceneManager& manager, int soundH);
 	virtual ~SettingScene();
 
 	virtual void Update(const InputState& input) override;
 	void Draw();
-
+private:
 	enum Item
 	{
 		pauseKeyconfig,//ÉLÅ[ê›íË

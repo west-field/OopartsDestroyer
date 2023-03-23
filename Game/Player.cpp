@@ -42,16 +42,7 @@ Player::~Player()
 void Player::Update()
 {
 	float chipSizeHalf = Game::kDrawSize / 2;
-	//画面の左端についたらそれ以上動けないようにする
-	if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
-	{
-		m_rect.center.x = Game::kMapScreenLeftX + chipSizeHalf;
-	}
-	//画面の右端についたらそれ以上動けないようにする
-	else if (m_rect.center.x > Game::kMapScreenRightX - chipSizeHalf)
-	{
-		m_rect.center.x = Game::kMapScreenRightX - chipSizeHalf;
-	}
+	
 	//画面の上端についたらそれ以上動けないように
 	if (m_rect.center.y < Game::kMapScreenTopY + chipSizeHalf)
 	{
@@ -61,6 +52,20 @@ void Player::Update()
 	else if (m_rect.center.y > Game::kMapScreenBottomY - chipSizeHalf)
 	{
 		m_rect.center.y = Game::kMapScreenBottomY - chipSizeHalf;
+	}
+	//範囲内にあるとき
+	if(m_rect.center.y > Game::kMapScreenTopY + chipSizeHalf && m_rect.center.y < Game::kMapScreenBottomY - chipSizeHalf)
+	{
+		//画面の左端についたらそれ以上動けないようにする
+		if (m_rect.center.x < Game::kMapScreenLeftX + chipSizeHalf)
+		{
+			m_rect.center.x = Game::kMapScreenLeftX + chipSizeHalf;
+		}
+		//画面の右端についたらそれ以上動けないようにする
+		else if (m_rect.center.x > Game::kMapScreenRightX - chipSizeHalf)
+		{
+			m_rect.center.x = Game::kMapScreenRightX - chipSizeHalf;
+		}
 	}
 
 	if (m_frame++ > kFrameSpeed)

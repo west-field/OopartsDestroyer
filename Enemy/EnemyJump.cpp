@@ -70,10 +70,7 @@ void EnemyJump::Damage(int damage)
 		m_updateFunc = &EnemyJump::BurstUpdate;
 		m_drawFunc = &EnemyJump::BurstDraw;
 		m_idx = 0;
-		if (GetRand(100) % 3 == 0)
-		{
-			m_itemFactory->Create(ItemType::Heal, m_rect.center);//回復アイテム
-		}
+		m_itemFactory->Create(ItemType::Heal, m_rect.center);//回復アイテム
 		return;
 	}
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);

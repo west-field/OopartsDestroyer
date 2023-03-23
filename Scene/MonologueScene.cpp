@@ -29,6 +29,129 @@ namespace
 	constexpr int kFrameSpeed = 10;		//アニメーションスピード
 }
 
+MonologueScene::MonologueScene(SceneManager& manager) : Scene(manager),
+m_updateFunc(&MonologueScene::FadeInUpdat)
+{
+	m_monoH = my::MyLoadGraph(L"Data/mono.png");
+	m_monoX = 100;
+
+	m_shotH = my::MyLoadGraph(L"Data/rockBuster.png");
+	m_shotPos = { -10.0f,-10.0f };
+
+	m_playerH = my::MyLoadGraph(L"Data/player.png");
+	m_player = { {0.0f,(Game::kMapScreenBottomY - Game::kDrawSize * 5)}, {kGraphSizeWidth, kGraphSizeHeight} };
+
+	m_button[Buttom_X].buttonFram = 0;
+	m_button[Buttom_X].buttonIdxX = 0;
+	m_button[Buttom_X].buttonIdxY = 2;
+	m_button[Buttom_X].buttonPos = { Game::kScreenWidth / 2,m_player.center.y + kButtonSize * kButtonDrawScale };
+
+	m_button[Buttom_A].buttonFram = 0;
+	m_button[Buttom_A].buttonIdxX = 0;
+	m_button[Buttom_A].buttonIdxY = 0;
+	m_button[Buttom_A].buttonPos = { Game::kScreenWidth / 2,m_player.center.y + kButtonSize * 2 * kButtonDrawScale };
+	m_buttonH = my::MyLoadGraph(L"Data/button.png");
+
+	Background::GetInstance().Init();
+	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
+	ChangeVolumeSoundMem(0, m_BgmH);
+	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP, true);
+}
+
+MonologueScene::~MonologueScene()
+{
+	DeleteSoundMem(m_BgmH);
+	DeleteGraph(m_monoH);
+	DeleteGraph(m_shotH);
+	DeleteGraph(m_buttonH);
+	DeleteGraph(m_playerH);
+}
+
+void
+MonologueScene::Update(const InputState& input)
+{
+	//背景
+	Background::GetInstance().Update();
+	if (m_frame++ > kFrameSpeed)
+	{
+		switch (m_idxY)
+		{
+		case 0:
+			m_idxX = (m_idxX + 1) % (1);
+			break;
+		case 1:
+			m_idxX = (m_idxX + 1) % (2);
+			break;
+		case  3:
+		case  4:
+			m_idxX = (m_idxX + 1) % (4);
+			break;
+		case  5:
+			m_idxX = (m_idxX + 1) % (6);
+			break;
+		}
+		if (m_idxX == 0)
+		{
+			m_idxY = 0;
+		}
+
+		m_frame = 0;
+	}
+	//◇メンバ関数ポインタを呼び出す　演算子　->*
+	(this->*m_updateFunc)(input);
+}
+
+void MonologueScene::Draw()
+{
+	//背景
+	Background::GetInstance().Draw();
+
+	//文字
+	DrawRectGraph(0, 0, 0, 0, m_monoX, 900, m_monoH, true, false);
+#ifdef _DEBUG
+	DrawFormatString(0, 0, 0x000000, L"m_monoX=%d", m_monoX);
+#endif
+
+	if (m_isPlayer)
+	{
+		my::MyDrawRectRotaGraph(static_cast<int>(m_player.center.x), static_cast<int>(m_player.center.y - kGraphSizeHeight / 2),
+			m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale * Game::kScale, 0.0f, m_playerH, true, false);
+
+		my::MyDrawGraph(static_cast<int>(m_shotPos.x), static_cast<int>(m_shotPos.y), m_shotH, true);
+	}
+	if (m_isButtonShot)
+	{
+		SetFontSize(kButtonFontSize);
+		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize * 3) + 3,
+			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)) + 3, 0x000000, L"shot");
+		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize * 3),
+			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00aaff, L"shot");
+		SetFontSize(0);
+
+		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_X].buttonPos.x), static_cast<int>(m_button[Buttom_X].buttonPos.y),
+			static_cast<int>(m_button[Buttom_X].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_X].buttonIdxY * kButtonSize),
+			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
+	}
+	if (m_isButtonJump)
+	{
+		SetFontSize(kButtonFontSize);
+		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3) + 3,
+			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)) + 3, 0x000000, L"jump");
+		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3),
+			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00ffaa, L"jump");
+		SetFontSize(0);
+
+		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_A].buttonPos.x), static_cast<int>(m_button[Buttom_A].buttonPos.y),
+			static_cast<int>(m_button[Buttom_A].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_A].buttonIdxY * kButtonSize),
+			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
+	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+
 void MonologueScene::FadeInUpdat(const InputState& input)
 {
 	//◇どんどん明るくなる
@@ -179,126 +302,3 @@ void MonologueScene::PlayerMoveUpdate(const InputState& input)
 	}
 	
 }
-
-MonologueScene::MonologueScene(SceneManager& manager) : Scene(manager),
-m_updateFunc(&MonologueScene::FadeInUpdat)
-{	
-	m_monoH = my::MyLoadGraph(L"Data/mono.png");
-	m_monoX = 100;
-	
-	m_shotH = my::MyLoadGraph(L"Data/rockBuster.png");
-	m_shotPos = {-10.0f,-10.0f};
-
-	m_playerH = my::MyLoadGraph(L"Data/player.png");
-	m_player = { {0.0f,(Game::kMapScreenBottomY - Game::kDrawSize * 5)}, {kGraphSizeWidth, kGraphSizeHeight} };
-
-	m_button[Buttom_X].buttonFram = 0;
-	m_button[Buttom_X].buttonIdxX = 0;
-	m_button[Buttom_X].buttonIdxY = 2;
-	m_button[Buttom_X].buttonPos = { Game::kScreenWidth/2,m_player.center.y + kButtonSize*kButtonDrawScale };
-
-	m_button[Buttom_A].buttonFram = 0;
-	m_button[Buttom_A].buttonIdxX = 0;
-	m_button[Buttom_A].buttonIdxY = 0;
-	m_button[Buttom_A].buttonPos = { Game::kScreenWidth / 2,m_player.center.y + kButtonSize*2 * kButtonDrawScale };
-	m_buttonH = my::MyLoadGraph(L"Data/button.png");
-
-	Background::GetInstance().Init();
-	m_BgmH = LoadSoundMem(L"Sound/BGM/noranekonokuchibue.mp3");
-	ChangeVolumeSoundMem( 0, m_BgmH);
-	PlaySoundMem(m_BgmH, DX_PLAYTYPE_LOOP,true);
-}
-
-MonologueScene::~MonologueScene()
-{
-	DeleteSoundMem(m_BgmH);
-	DeleteGraph(m_monoH);
-	DeleteGraph(m_shotH);
-	DeleteGraph(m_buttonH);
-	DeleteGraph(m_playerH);
-}
-
-void
-MonologueScene::Update(const InputState& input)
-{
-	//背景
-	Background::GetInstance().Update();
-	if (m_frame++ > kFrameSpeed)
-	{
-		switch (m_idxY)
-		{
-		case 0:
-			m_idxX = (m_idxX + 1) % (1);
-			break;
-		case 1:
-			m_idxX = (m_idxX + 1) % (2);
-			break;
-		case  3:
-		case  4:
-			m_idxX = (m_idxX + 1) % (4);
-			break;
-		case  5:
-			m_idxX = (m_idxX + 1) % (6);
-			break;
-		}
-		if (m_idxX == 0)
-		{
-			m_idxY = 0;
-		}
-
-		m_frame = 0;
-	}
-	//◇メンバ関数ポインタを呼び出す　演算子　->*
-	(this->*m_updateFunc)(input);
-}
-
-void MonologueScene::Draw()
-{
-	//背景
-	Background::GetInstance().Draw();
-	
-	//文字
-	DrawRectGraph(0, 0, 0, 0, m_monoX, 900, m_monoH, true, false);
-#ifdef _DEBUG
-	DrawFormatString(0, 0, 0x000000, L"m_monoX=%d", m_monoX);
-#endif
-	
-	if (m_isPlayer)
-	{
-		my::MyDrawRectRotaGraph(static_cast<int>(m_player.center.x), static_cast<int>(m_player.center.y - kGraphSizeHeight / 2),
-			m_idxX * kGraphSizeWidth, m_idxY * kGraphSizeHeight, kGraphSizeWidth, kGraphSizeHeight, kDrawScale * Game::kScale, 0.0f, m_playerH, true, false);
-
-		my::MyDrawGraph(static_cast<int>(m_shotPos.x), static_cast<int>(m_shotPos.y), m_shotH, true);
-	}
-	if (m_isButtonShot)
-	{
-		SetFontSize(kButtonFontSize);
-		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize * 3) + 3,
-			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize* kButtonDrawScale/2))+3, 0x000000, L"shot");
-		DrawFormatString(static_cast<int>(m_button[Buttom_X].buttonPos.x - kButtonFontSize*3),
-			static_cast<int>(m_button[Buttom_X].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00aaff, L"shot");
-		SetFontSize(0);
-
-		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_X].buttonPos.x), static_cast<int>(m_button[Buttom_X].buttonPos.y),
-			static_cast<int>(m_button[Buttom_X].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_X].buttonIdxY * kButtonSize),
-			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
-	}
-	if (m_isButtonJump)
-	{
-		SetFontSize(kButtonFontSize);
-		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3) + 3,
-			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)) + 3, 0x000000, L"jump");
-		DrawFormatString(static_cast<int>(m_button[Buttom_A].buttonPos.x - kButtonFontSize * 3),
-			static_cast<int>(m_button[Buttom_A].buttonPos.y - (kButtonSize * kButtonDrawScale / 2)), 0x00ffaa, L"jump");
-		SetFontSize(0);
-
-		my::MyDrawRectRotaGraph(static_cast<int>(m_button[Buttom_A].buttonPos.x), static_cast<int>(m_button[Buttom_A].buttonPos.y),
-			static_cast<int>(m_button[Buttom_A].buttonIdxX * kButtonSize), static_cast<int>(m_button[Buttom_A].buttonIdxY * kButtonSize),
-			kButtonSize, kButtonSize, kButtonDrawScale, 0.0f, m_buttonH, true, false);
-	}
-
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeValue);
-	DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-}
-

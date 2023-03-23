@@ -11,6 +11,13 @@ class InputState;
 /// </summary>
 class MonologueScene : public Scene
 {
+public:
+	MonologueScene(SceneManager& manager);
+	virtual ~MonologueScene();
+
+	void Update(const InputState& input);
+	virtual void Draw() override;
+
 private:
 	int m_selectNum = 0;//‘I‘ğ‚µ‚Ä‚¢‚éƒƒjƒ…[€–Ú
 	unsigned int m_color = 0x000000;
@@ -61,12 +68,5 @@ private:
 	int m_buttonH = -1;
 	bool m_isButtonShot = false;
 	bool m_isButtonJump = false;
-
-public:
-	MonologueScene(SceneManager& manager);
-	virtual ~MonologueScene();
-
-	void Update(const InputState& input);
-	virtual void Draw() override;
 };
 //x224,y160
