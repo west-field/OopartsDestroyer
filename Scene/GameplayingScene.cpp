@@ -1,7 +1,7 @@
 
 #include "GameplayingScene.h"
 
-#include "DxLib.h"
+#include <DxLib.h>
 #include <cassert>
 
 #include "SceneManager.h"

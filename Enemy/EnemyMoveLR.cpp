@@ -14,7 +14,7 @@ namespace
 	constexpr int kAnimFrameSpeed = 5;//一枚に必要なフレーム数
 	constexpr int kAnimFrameNum = 3;//アニメーション枚数
 	constexpr int kLeftRightSize = 32;//グラフィック1つの大きさ
-	constexpr float kDrawScall = 1.0f;//グラフィック拡大率
+	constexpr float kDrawScale = 1.0f;//グラフィック拡大率
 	constexpr float kEnemyMoveSpeed = 4.0f;//エネミーの移動速度
 
 	//爆発アニメーション
@@ -62,7 +62,7 @@ int EnemyMoveLR::TouchAttackPower() const
 void EnemyMoveLR::Damage(int damage)
 {
 	m_hp->Damage(damage);
-	
+	m_isOnDamage = true;
 	if (m_hp->GetHp() == 0)
 	{
 		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
@@ -108,7 +108,16 @@ void EnemyMoveLR::NormalDraw()
 	if (!m_isExist)	return;
 	int img = m_idx * kLeftRightSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kLeftRightSize, kLeftRightSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		img, 0, kLeftRightSize, kLeftRightSize, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+	if (m_isOnDamage)
+	{
+		//ダメージを受けたとき点滅させる
+		SetDrawBlendMode(DX_BLENDMODE_ADD, 255);//加算合成
+		my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
+			img, 0, kLeftRightSize, kLeftRightSize, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
+		m_isOnDamage = false;
+}
 #ifdef _DEBUG
 	m_rect.Draw(0xff00ff);
 #endif

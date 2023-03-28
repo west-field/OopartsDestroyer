@@ -14,7 +14,7 @@ namespace
 	//エネミーアニメーション
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 	constexpr int kSize = 96;//画像サイズX
-	constexpr float kDrawScall = 0.3f;//拡大率
+	constexpr float kDrawScale = 0.3f;//拡大率
 	constexpr int kAnimFrameNum = 4;//アニメーション枚数
 	constexpr int kAnimFrameSpeed = 20;//アニメーションスピード
 
@@ -33,7 +33,7 @@ EnemyMoveLeft::EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos,
 	m_idx = 0;
 	m_handle = handle;
 	m_burstHandle = burstH;
-	m_rect = { pos, { static_cast<int>(kSize * Game::kScale * kDrawScall),static_cast<int>(kSize * Game::kScale * kDrawScall) } };
+	m_rect = { pos, { static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) } };
 	
 	m_hp->MaxHp(1);
 }
@@ -93,7 +93,7 @@ void EnemyMoveLeft::NormalDraw()
 {
 	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, kSize, kSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		imgX, 0, kSize, kSize, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 #endif

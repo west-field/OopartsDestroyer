@@ -62,7 +62,5 @@ private:
 	std::map<EnemyType, int>m_handleMap;//敵の画像ハンドル
 	int m_burstHandle = -1;//爆発グラフィック
 	int m_bossBurstHandle = -1;//ボス爆発グラフィック
-
-	int m_frame = 0;//敵作成までのフレーム数
 };
 

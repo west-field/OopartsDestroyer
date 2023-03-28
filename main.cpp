@@ -9,7 +9,6 @@
 //int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	SetUseDirectDrawDeviceIndex(1);
 	// windowモード設定
 	ChangeWindowMode(Game::kWindowMode);
 #if true
@@ -46,7 +45,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	SceneManager sceneManeger;
 	sceneManeger.ChangeScene(new TitleScene(sceneManeger));
 #if true
-	bool isTriggerWindouMode = false;//ALTとENTERを押しているか
+	bool isTriggerWindouMode = false;//ALTとFを押しているか
 	bool isWindouwMode = Game::kWindowMode;//ウィンドウモードを変更する
 #endif
 	while (ProcessMessage() != -1)
@@ -61,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 #if true
 		if (CheckHitKey(KEY_INPUT_LALT))
 		{
-			if (CheckHitKey(KEY_INPUT_RETURN))
+			if (CheckHitKey(KEY_INPUT_F))
 			{
 				if (!isTriggerWindouMode)
 				{

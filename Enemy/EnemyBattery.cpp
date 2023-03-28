@@ -16,7 +16,7 @@ namespace
 	constexpr int kAnimFrameSpeed = 20;//一枚に必要なフレーム数
 	constexpr int kAnimFrameNum = 5;//アニメーション枚数
 	constexpr int kSize = 32;//大きさ
-	constexpr float kDrawScall = 1.0f;//表示拡大率
+	constexpr float kDrawScale = 1.0f;//表示拡大率
 
 	//爆発アニメーション
 	constexpr int kBurstImgWidth = 32;//画像サイズX
@@ -32,7 +32,7 @@ EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, i
 	m_handle = handle;
 	m_burstHandle = burstH;
 	//矩形とサイズ
-	m_rect = { pos, { static_cast<int>(kSize * Game::kScale * kDrawScall),static_cast<int>(kSize * Game::kScale * kDrawScall) } };
+	m_rect = { pos, { static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) } };
 	
 	m_hp->MaxHp(1);//この敵のマックスHP
 	m_isLeft = isLeft;
@@ -112,7 +112,7 @@ void EnemyBattery::NormalDraw()
 {
 	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		imgX, 0, kSize, kSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		imgX, 0, kSize, kSize, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 	DrawFormatString(0, 360, 0xffffff, L"グラフィック切り替え%d", m_idx / kAnimFrameSpeed);

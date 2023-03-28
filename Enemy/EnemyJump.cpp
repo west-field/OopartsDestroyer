@@ -17,7 +17,7 @@ namespace
 	constexpr int kAnimFrameNum = 2;//アニメーション枚数
 	constexpr int kRand = kAnimFrameNum * kAnimFrameSpeed;
 	constexpr int kJumpSize = 32;//グラフィック1つの大きさ
-	constexpr float kDrawScall = 1.0f;//グラフィック拡大率
+	constexpr float kDrawScale = 1.0f;//グラフィック拡大率
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 	constexpr float kGrap = 2.0f;//落下
 	constexpr float kJumpA = 5.0f;//ジャンプ力
@@ -35,7 +35,7 @@ EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int ha
 {
 	m_handle = handle;//敵ハンドル
 	m_burstHandle = burstH;//爆発ハンドル
-	m_rect = { pos,{static_cast<int>(kJumpSize * Game::kScale * kDrawScall),static_cast<int>(kJumpSize * Game::kScale * kDrawScall)} };
+	m_rect = { pos,{static_cast<int>(kJumpSize * Game::kScale * kDrawScale),static_cast<int>(kJumpSize * Game::kScale * kDrawScale)} };
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);//ジャンプするまでの時間をランダムで決める
 }
@@ -111,7 +111,7 @@ void EnemyJump::NormalDraw()
 {
 	int img = m_idx * kJumpSize;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y),
-		img, 0, kJumpSize, kJumpSize, kDrawScall * Game::kScale, 0.0f, m_handle, true, m_isLeft);
+		img, 0, kJumpSize, kJumpSize, kDrawScale * Game::kScale, 0.0f, m_handle, true, m_isLeft);
 #ifdef _DEBUG
 	m_rect.Draw(0xff0000);
 #endif

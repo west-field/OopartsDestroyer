@@ -8,7 +8,7 @@ namespace Game
 	constexpr bool kWindowMode = false;
 #endif
 	//ウィンドウ名
-	const wchar_t* const kTitleText = L"オーパーツデストロイヤー";
+	const wchar_t* const kTitleText = L"Ooparts Destroyer";
 	//ウィンドウサイズ
 	constexpr int kScreenWidth = 1600;//16:
 	constexpr int kScreenHeight = 900;//9

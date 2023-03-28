@@ -37,5 +37,7 @@ private:
 	void (EnemyMoveLR::* m_drawFunc)();
 
 	int m_frame = 0;
+
+	bool m_isOnDamage = false;
 };
 

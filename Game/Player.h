@@ -32,7 +32,7 @@ public:
 	/// <summary>
 	/// 矩形を取得
 	/// </summary>
-	/// <returns矩形構造体></returns>
+	/// <returns>矩形構造体</returns>
 	const Rect& GetRect()const;
 	
 	/// <summary>
