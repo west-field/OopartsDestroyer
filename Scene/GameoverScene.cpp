@@ -29,7 +29,7 @@ GameoverScene::GameoverScene(SceneManager& manager, std::shared_ptr<Player>playe
 		m_moji[i].moveY = i * -1.0f;
 		m_moji[i].add = 0.5f;
 	}
-	m_BgmH = LoadSoundMem(L"Sound/BGM/shizukanoumi.mp3");
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/shizukanoumi.mp3");
 }
 
 GameoverScene::~GameoverScene()

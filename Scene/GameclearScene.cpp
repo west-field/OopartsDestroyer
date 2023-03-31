@@ -37,7 +37,7 @@ GameclearScene::GameclearScene(SceneManager& manager, std::shared_ptr<Player>pla
 		m_moji[i].add = 0.5f;
 	}
 	m_playerH = my::MyLoadGraph(L"Data/player.png");
-	m_BgmH = LoadSoundMem(L"Sound/BGM/emerald.mp3");
+	m_BgmH = LoadSoundMem(L"Data/Sound/BGM/emerald.mp3");
 }
 
 GameclearScene::~GameclearScene()

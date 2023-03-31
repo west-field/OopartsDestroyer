@@ -5,7 +5,7 @@
 
 namespace
 {
-	constexpr char kSoundConfigFilePath[] = "sound.conf";
+	constexpr char kSoundConfigFilePath[] = "Data/sound.conf";
 }
 
 SoundManager::SoundManager()
@@ -35,7 +35,7 @@ SoundManager::~SoundManager()
 
 int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 {
-	std::wstring path = L"Sound/SE/";
+	std::wstring path = L"Data/Sound/SE/";
 	path += fileName;
 	int handle = LoadSoundMem(path.c_str());
 

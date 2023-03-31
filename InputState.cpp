@@ -154,7 +154,7 @@ void InputState::SaveKeyInfo()const
 {
 	FILE* fp = nullptr;
 
-	auto err = fopen_s(&fp, "key.info", "wb");
+	auto err = fopen_s(&fp, "Data/key.info", "wb");
 	if (fp == nullptr)
 	{
 		assert(0);
@@ -182,7 +182,7 @@ void InputState::SaveKeyInfo()const
 
 void InputState::LoadKeyInfo()
 {
-	int handle = FileRead_open(L"key.info");
+	int handle = FileRead_open(L"Data/key.info");
 	if (handle == 0)
 	{
 		return;

@@ -29,7 +29,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	auto& background = Background::GetInstance();
 
 	//フォントを読み込む
-	LPCWSTR font_path = L"Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス
+	LPCWSTR font_path = L"Data/Font/PixelMplus10-Regular.ttf"; //　読み込むフォントファイルのパス
 	if (AddFontResourceEx(font_path, FR_PRIVATE, NULL) > 0) 
 	{
 	}
