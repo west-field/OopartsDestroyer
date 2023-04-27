@@ -4,13 +4,14 @@
 #include "../Util/Sound.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
+#include "../Info.h"
 #include "../Game/Player.h"
 #include "../Game/ItemFactory.h"
 #include "../Util/Sound.h"
 
 namespace
 {
-	constexpr int kJumpTouchAttackPower = 4;//接触した時の攻撃力
+	constexpr int kTouchAttackPower = 4;//接触した時の攻撃力
 
 	//エネミーアニメーション
 	constexpr int kAnimFrameSpeed = 5;//一枚に必要なフレーム数
@@ -21,23 +22,16 @@ namespace
 	constexpr float kEnemyMoveSpeed = -4.0f;//エネミーの移動速度
 	constexpr float kGrap = 2.0f;//落下
 	constexpr float kJumpA = 5.0f;//ジャンプ力
-
-	//爆発アニメーション
-	constexpr int kBurstImgWidth = 32;//画像サイズX48
-	constexpr int kBurstImgHeight = 32;//画像サイズY
-	constexpr float kBurstDrawScale = 1.0f;//拡大率
-	constexpr int kBurstAnimNum = 8;//アニメーション枚数
-	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 }
 
 EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
-	EnemyBase(player,pos,sFactory,itFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
+	EnemyBase(player,pos,handle,burstH,sFactory,itFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
 {
-	m_handle = handle;//敵ハンドル
-	m_burstHandle = burstH;//爆発ハンドル
-	m_rect = { pos,{static_cast<int>(kJumpSize * Game::kScale * kDrawScale),static_cast<int>(kJumpSize * Game::kScale * kDrawScale)} };
+	m_rect.size = { static_cast<int>(kJumpSize * Game::kScale * kDrawScale),static_cast<int>(kJumpSize * Game::kScale * kDrawScale)};
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);//ジャンプするまでの時間をランダムで決める
+
+	m_touchDamagePower = kTouchAttackPower;
 }
 
 EnemyJump::~EnemyJump()
@@ -53,11 +47,6 @@ void EnemyJump::Update()
 void EnemyJump::Draw()
 {
 	(this->*m_drawFunc)();
-}
-
-int EnemyJump::TouchAttackPower() const
-{
-	return kJumpTouchAttackPower;
 }
 
 void EnemyJump::Damage(int damage)

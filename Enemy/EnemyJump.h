@@ -2,7 +2,8 @@
 #include "EnemyBase.h"
 
 /// <summary>
-/// カマドーマー　ロックマンがいる方向にジャンプしている　HP1,攻撃力2,接触2
+/// ジャンプする敵　HP1,攻撃力2,接触2
+/// (カマドーマー　ロックマンがいる方向にジャンプしている)　
 /// </summary>
 class EnemyJump : public EnemyBase
 {
@@ -10,10 +11,9 @@ public:
 	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
 	virtual ~EnemyJump();
 
-	virtual void Update() override;
-	virtual void Draw()override;
-	//接触した時の攻撃力
-	virtual int TouchAttackPower() const override;
+	virtual void Update() override;		//更新
+	virtual void Draw()override;		//表示
+
 	//ダメージを受けた
 	virtual void Damage(int damage) override;
 	//当たり判定対象か

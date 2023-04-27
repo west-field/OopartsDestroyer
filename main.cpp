@@ -9,7 +9,7 @@
 //int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	SetUseDirectDrawDeviceIndex(0);
+	SetUseDirectDrawDeviceIndex(1);
 	// windowÉÇÅ[Éhê›íË
 	ChangeWindowMode(Game::kWindowMode);
 #if true

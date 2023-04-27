@@ -106,30 +106,27 @@ private:
     
     void (GameplayingScene::* m_updateFunc)(const InputState& input);
 
-    //マップ
-    std::shared_ptr<Map> m_map; 
-    Position2 m_add;            //プレイヤーがどのくらい移動しているか
-    int m_framecolor = 0xc0c0c0;//灰色　マップの枠の色
+   
+    std::shared_ptr<Map> m_map;         //マップ
+    Position2 m_add;                    //プレイヤーがどのくらい移動しているか
+    int m_framecolor = 0xc0c0c0;        //灰色　マップの枠の色
     
+    std::shared_ptr<Player> m_player;   //プレイヤー
+    float m_fallPlayerSpeed;            //落ちていくスピード
+    bool m_isPlayerCenterLR;            //プレイヤーが画面の中心に居るか
+    
+    bool m_isScreenMoveUp;              //プレイヤーが画面移動位置にいるかどうか（上に移動）
+    bool m_isScreenMoveDown;            //プレイヤーが画面移動位置にいるかどうか（下に移動）
+    bool m_isScreenMoveWidth;           //プレイヤーが画面移動位置にいつかどうか（横に移動）
+    float m_playerPos;                  //移動するときの基準になるプレイヤーの位置
 
-    //プレイヤー
-    std::shared_ptr<Player> m_player;
-    float m_fallPlayerSpeed = 0;    //落ちていくスピード
-    bool m_isPlayerCenterLR = false;//プレイヤーが画面の中心に居るか
     
-    bool m_isScreenMoveUp = false;//プレイヤーが画面移動位置にいるかどうか（上に移動）
-    bool m_isScreenMoveDown = false;//プレイヤーが画面移動位置にいるかどうか（下に移動）
-    bool m_isScreenMoveWidth = false;//プレイヤーが画面移動位置にいつかどうか（横に移動）
-    float m_playerPos;//移動するときの基準になるプレイヤーの位置
-
-    //ショット
-    std::shared_ptr <ShotFactory> m_shotFactory;
-    //アイテム
-    std::shared_ptr <ItemFactory> m_itemFactory;
+    std::shared_ptr <ShotFactory> m_shotFactory;    //ショット
     
-    //エネミー
-    std::shared_ptr <EnemyFactory> m_enemyFactory;
-    Vector2 m_correction;//画面を動かしたとき位置を補正する
+    std::shared_ptr <ItemFactory> m_itemFactory;    //アイテム
+    
+    std::shared_ptr <EnemyFactory> m_enemyFactory;  //エネミー
+    Vector2 m_correction;                           //画面を動かしたとき位置を補正する
     
     enum HPBAR
     {
@@ -138,31 +135,27 @@ private:
 
         Object_Max
     };
-    //HPバー
-    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;
+    
+    std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;//HPバー
 
-    //梯子を上っているときtrue
-    bool m_isLadder = false;
-    //梯子を上っているときは位置を合わせる
-    bool m_isLadderAlign = false;
-    //梯子を上り終えたとき一度だけ上に移動する
-    bool m_isLadderFirst = false;
-    //落ちているかどうか 落ちているときはジャンプできない
-    bool m_isFall;
+    
+    bool m_isLadder;        //梯子を上っているときtrue
+    bool m_isLadderAlign;   //梯子を上っているときは位置を合わせる
+    bool m_isLadderFirst;   //梯子を上り終えたとき一度だけ上に移動する
+    
+    bool m_isFall;          //落ちているかどうか 落ちているときはジャンプできない
 
-    //ボス戦に入ったかどうか
-    bool m_isBoss = false;
-    //0:ゲームクリアか1:ゲームオーバーか
-    int m_crea = 0;
-    //画面移動する際一回だけエネミーを削除
-    bool m_isFirst = false;
-    //ボス音楽
-    int m_bossBgm = -1;
-    //サウンドの音量
-    int m_soundVolume;
+    bool m_isBoss;          //ボス戦に入ったかどうか
+    
+    int m_crea;             //0:ゲームクリアか1:ゲームオーバーか
+    
+    bool m_isFirst;         //画面移動する際一回だけエネミーを削除
+    
+    int m_bossBgm;          //ボス音楽
+    int m_soundVolume;      //サウンドの音量
 
-    int tempScreenH_ = -1;//画面効果用スクリーンハンドル
-    int quakeTimer_ = 0;//画面揺れタイマー
-    float quakeX_ = 0.0f;//横揺れパラメータ
+    int m_tempScreenH;  //画面効果用スクリーンハンドル
+    int m_quakeTimer ;    //画面揺れタイマー
+    float m_quakeX;   //横揺れパラメータ
 };
 

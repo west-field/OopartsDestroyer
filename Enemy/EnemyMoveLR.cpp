@@ -3,12 +3,13 @@
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
+#include "../Info.h"
 #include "../Util/Sound.h"
 #include "../Game/ItemFactory.h"
 
 namespace
 {
-	constexpr int kLeftRightTouchAttackPower = 4;//接触した時の攻撃力
+	constexpr int kTouchAttackPower = 4;//接触した時の攻撃力
 
 	//エネミーアニメーション
 	constexpr int kAnimFrameSpeed = 5;//一枚に必要なフレーム数
@@ -16,27 +17,20 @@ namespace
 	constexpr int kLeftRightSize = 32;//グラフィック1つの大きさ
 	constexpr float kDrawScale = 1.0f;//グラフィック拡大率
 	constexpr float kEnemyMoveSpeed = 4.0f;//エネミーの移動速度
-
-	//爆発アニメーション
-	constexpr int kBurstImgWidth = 32;//画像サイズX
-	constexpr int kBurstImgHeight = 32;//画像サイズY
-	constexpr float kBurstDrawScale = 1.0f;//拡大率
-	constexpr int kBurstAnimNum = 8;//アニメーション枚数
-	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 }
 
 EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory) :
-	EnemyBase(player, pos, sFactory,itFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
+	EnemyBase(player, pos,handle,burstH, sFactory,itFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
 {
-	m_handle = handle;
-	m_burstHandle = burstH;
-	m_rect = { pos,{static_cast<int>(kLeftRightSize * Game::kScale),static_cast<int>(kLeftRightSize * Game::kScale)} };
+	m_rect.size = { static_cast<int>(kLeftRightSize * Game::kScale),static_cast<int>(kLeftRightSize * Game::kScale)};
 	m_hp->MaxHp(3);
 
 	if (GetRand(100) / 2 == 0)
 	{
 		m_isLeft = true;
 	}
+
+	m_touchDamagePower = kTouchAttackPower;
 }
 
 EnemyMoveLR::~EnemyMoveLR()
@@ -52,11 +46,6 @@ void EnemyMoveLR::Update()
 void EnemyMoveLR::Draw()
 {
 	(this->*m_drawFunc)();
-}
-
-int EnemyMoveLR::TouchAttackPower() const
-{
-	return kLeftRightTouchAttackPower;
 }
 
 void EnemyMoveLR::Damage(int damage)

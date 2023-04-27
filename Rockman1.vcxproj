@@ -187,6 +187,7 @@
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
     <ClInclude Include="Game\ItemFactory.h" />
+    <ClInclude Include="Info.h" />
     <ClInclude Include="Item\HealItem.h" />
     <ClInclude Include="Item\ItemBase.h" />
     <ClInclude Include="Map.h" />

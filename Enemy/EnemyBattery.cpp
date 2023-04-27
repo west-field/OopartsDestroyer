@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
+#include "../Info.h"
 #include "../Game/HpBar.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/ItemFactory.h"
@@ -10,32 +11,23 @@
 
 namespace
 {
-	constexpr int kBatteryTouchAttackPower = 1;//接触した時の攻撃力
+	constexpr int kTouchAttackPower = 1;//接触した時の攻撃力
 
 	//エネミーアニメーション
 	constexpr int kAnimFrameSpeed = 20;//一枚に必要なフレーム数
 	constexpr int kAnimFrameNum = 5;//アニメーション枚数
 	constexpr int kSize = 32;//大きさ
 	constexpr float kDrawScale = 1.0f;//表示拡大率
-
-	//爆発アニメーション
-	constexpr int kBurstImgWidth = 32;//画像サイズX
-	constexpr int kBurstImgHeight = 32;//画像サイズY
-	constexpr float kBurstDrawScale = 1.0f;//拡大率
-	constexpr int kBurstAnimNum = 8;//アニメーション枚数
-	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 }
 
 EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft):
-	EnemyBase(player,pos,sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw)
+	EnemyBase(player,pos, handle, burstH, sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw)
 {
-	m_handle = handle;
-	m_burstHandle = burstH;
-	//矩形とサイズ
-	m_rect = { pos, { static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) } };
+	m_rect.size = {  static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) };
 	
 	m_hp->MaxHp(1);//この敵のマックスHP
 	m_isLeft = isLeft;
+	m_touchDamagePower = kTouchAttackPower;
 }
 
 EnemyBattery::~EnemyBattery()
@@ -51,11 +43,6 @@ void EnemyBattery::Update()
 void EnemyBattery::Draw()
 {
 	(this->*m_drawFunc)();
-}
-
-int EnemyBattery::TouchAttackPower() const
-{
-	return kBatteryTouchAttackPower;
 }
 
 void EnemyBattery::Damage(int damage)

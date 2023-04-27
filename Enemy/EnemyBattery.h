@@ -1,9 +1,9 @@
 #pragma once
 #include "EnemyBase.h"
-#include "../Util/Geometry.h"
 
 /// <summary>
-/// ブラスター　壁にある赤い砲台。シャッターが開いたときに攻撃してくる。HP1、攻撃力（弾）2、（接触）1
+/// 壁に張り付いて、弾を撃ってくる敵　HP1、攻撃力（弾）2、（接触）1
+/// (ブラスター　壁にある赤い砲台。シャッターが開いたときに攻撃してくる。)
 /// </summary>
 class EnemyBattery : public EnemyBase
 {
@@ -13,20 +13,9 @@ public:
 	virtual void Update()override;		//更新
 	virtual void Draw()override;		//表示
 
-	/// <summary>
-	/// 接触した時の攻撃力
-	/// </summary>
-	/// <returns>攻撃力</returns>
-	virtual int TouchAttackPower()const override;
-	/// <summary>
-	/// ダメージを受けた
-	/// </summary>
-	/// <param name="damage">ダメージ量</param>
+	// ダメージを受けた
 	virtual void Damage(int damage) override;
-	/// <summary>
-	/// あたり判定対象か
-	/// </summary>
-	/// <returns>true:当たる false:当たらない</returns>
+	// あたり判定対象か
 	virtual bool IsCollidable()const override;
 private:
 	//通常

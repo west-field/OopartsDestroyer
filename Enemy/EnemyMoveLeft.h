@@ -1,19 +1,18 @@
 #pragma once
 #include "EnemyBase.h"
-#include "../Util/Geometry.h"
 
 /// <summary>
-/// ブンビーへりー　飛行しながら近付いて、プレイヤーの近くで上下に動き回る敵。HP1、攻撃力4
+///　左に飛んでいく敵　HP1、攻撃力4
+/// (ブンビーへりー　飛行しながら近付いて、プレイヤーの近くで上下に動き回る敵。)
 /// </summary>
 class EnemyMoveLeft : public EnemyBase
 {
 public:
 	EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
 	virtual ~EnemyMoveLeft();
-	virtual void Update()override;//更新
-	virtual void Draw()override;//表示
-	//接触時の攻撃力
-	virtual int TouchAttackPower()const override;
+	virtual void Update()override;		//更新
+	virtual void Draw()override;		//表示
+
 	//ダメージを受けた
 	virtual void Damage(int damage) override;
 	//当たり判定対象か

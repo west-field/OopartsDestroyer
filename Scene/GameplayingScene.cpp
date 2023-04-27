@@ -34,14 +34,16 @@ namespace
 	constexpr float kPullPos = 15.0f;//梯子を上る範囲を決める
 }
 
-GameplayingScene::GameplayingScene(SceneManager& manager) :
-	Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),
-	m_add(), m_correction(), m_playerPos()
+GameplayingScene::GameplayingScene(SceneManager& manager) : Scene(manager), m_updateFunc(&GameplayingScene::FadeInUpdat),
+	m_add(), m_fallPlayerSpeed(0.0f), m_isPlayerCenterLR(false),
+	m_isScreenMoveUp(false), m_isScreenMoveDown(false), m_isScreenMoveWidth(false), m_correction(), m_playerPos(),
+	m_isLadder(false),m_isLadderAlign(false),m_isLadderFirst(false), m_isFall(false),m_isBoss(false),m_crea(0),m_isFirst(false),
+	m_bossBgm(-1), m_soundVolume(-1),m_tempScreenH(-1),m_quakeTimer(0),m_quakeX(0.0f)
 {
 	int se = 0, sh = 0, bit = 0;
 	GetScreenState(&se, &sh, &bit);
-	tempScreenH_ = MakeScreen(se, sh);
-	assert(tempScreenH_ >= 0);
+	m_tempScreenH = MakeScreen(se, sh);
+	assert(m_tempScreenH >= 0);
 
 	m_hp[Object_Player] = std::make_shared<HpBar>(Position2{ static_cast<float>(Game::kMapScreenLeftX - 100) ,Game::kScreenHeight / 3 });
 	m_hp[Object_EnemyBoss] = std::make_shared<HpBar>(Position2{ static_cast<float>(Game::kMapScreenRightX + 40) ,Game::kScreenHeight / 3 });
@@ -81,7 +83,7 @@ GameplayingScene::~GameplayingScene()
 {
 	DeleteSoundMem(m_BgmH);
 	DeleteSoundMem(m_bossBgm);
-	DeleteGraph(tempScreenH_);
+	DeleteGraph(m_tempScreenH);
 }
 
 void GameplayingScene::Update(const InputState& input)
@@ -94,7 +96,7 @@ void GameplayingScene::Update(const InputState& input)
 void GameplayingScene::Draw()
 {
 	//加工用スクリーンハンドル
-	SetDrawScreen(tempScreenH_);
+	SetDrawScreen(m_tempScreenH);
 	Background::GetInstance().Bg();//背景の一部を表示
 	m_map->Draw();//マップを表示
 	m_itemFactory->Draw(m_correction);//アイテム表示
@@ -220,12 +222,12 @@ void GameplayingScene::Draw()
 	//裏画面に戻す
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	DrawGraphF(quakeX_, 0, tempScreenH_, true);
-	if (quakeTimer_ > 0)
+	DrawGraphF(m_quakeX, 0, m_tempScreenH, true);
+	if (m_quakeTimer > 0)
 	{
 		//当たった時光らせる
 		SetDrawBlendMode(DX_BLENDMODE_ADD, 50);//加算合成
-		DrawGraph(static_cast<int>(quakeX_), 0, tempScreenH_, true);
+		DrawGraph(static_cast<int>(m_quakeX), 0, m_tempScreenH, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);//もとに戻す
 	}
 }
@@ -356,8 +358,6 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		{
 			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x+wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
 		}
-
-		
 	}
 
 	// 終了
@@ -870,8 +870,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 				shot->SetExist(false);
 				m_player->Damage(shot->AttackPower());
 				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
-				quakeX_ = 5.0f;
-				quakeTimer_ = 40;
+				m_quakeX = 5.0f;
+				m_quakeTimer = 40;
 				return;
 			}
 		}
@@ -887,8 +887,8 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			{
 				m_player->Damage(enemy->TouchAttackPower());
 				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
-				quakeX_ = 5.0f;
-				quakeTimer_ = 40;
+				m_quakeX = 5.0f;
+				m_quakeTimer = 40;
 				break;
 			}
 		}
@@ -955,16 +955,16 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		//エネミーのHPが０になったらゲームクリア
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
-			if(!enemy->IsCollidable() && quakeTimer_ == 0)
+			if(!enemy->IsCollidable() && m_quakeTimer == 0)
 			{
-				quakeX_ = 10.0f;
-				quakeTimer_ = 61*2;
+				m_quakeX = 10.0f;
+				m_quakeTimer = 61*2;
 			}
 
 			if (!enemy->IsExist())
 			{
-				quakeX_ = 0.0f;
-				quakeTimer_ = 0;
+				m_quakeX = 0.0f;
+				m_quakeTimer = 0;
 
 				m_updateFunc = &GameplayingScene::FadeOutUpdat;
 				m_fadeColor = 0x000000;
@@ -974,16 +974,16 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		}
 	}
 	
-	if (quakeTimer_ > 0)
+	if (m_quakeTimer > 0)
 	{
-		quakeX_ = -quakeX_;
-		quakeX_ *= 0.95f;
-		quakeTimer_--;
+		m_quakeX = -m_quakeX;
+		m_quakeX *= 0.95f;
+		m_quakeTimer--;
 	}
 	else
 	{
-		quakeX_ = 0.0f;
-		quakeTimer_ = 0;
+		m_quakeX = 0.0f;
+		m_quakeTimer = 0;
 	}
 	
 }
