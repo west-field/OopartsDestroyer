@@ -21,7 +21,8 @@ namespace
 }
 
 EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft):
-	EnemyBase(player,pos, handle, burstH, sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw)
+	EnemyBase(player,pos, handle, burstH, sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw),
+	m_createShot(0)
 {
 	m_rect.size = {  static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) };
 	
@@ -45,6 +46,14 @@ void EnemyBattery::Draw()
 	(this->*m_drawFunc)();
 }
 
+//当たり判定かどうか
+bool EnemyBattery::IsCollidable() const
+{
+	//BurstUpdateの時は当たらない
+	return (m_updateFunc != &EnemyBattery::BurstUpdate);
+}
+
+//ダメージを受けた
 void EnemyBattery::Damage(int damage)
 {
 	m_hp->Damage(damage);
@@ -65,18 +74,13 @@ void EnemyBattery::Damage(int damage)
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
-bool EnemyBattery::IsCollidable() const
-{
-	//BurstUpdateの時は当たらない
-	return (m_updateFunc != &EnemyBattery::BurstUpdate);
-}
-
+//通常更新
 void EnemyBattery::NormalUpdate()
 {
 	//アニメーション
 	m_idx = (m_idx + (GetRand(10) % 3)) % (kAnimFrameSpeed * kAnimFrameNum);
 	//攻撃モーションの時弾を発射する
-	if (m_idx / kAnimFrameSpeed == 2 && m_num == 0)
+	if (m_idx / kAnimFrameSpeed == 2 && m_createShot == 0)
 	{
 		Vector2 vel = { 0.0f,0.0f };
 		//ランダムに方向と速度を決定する（斜め
@@ -86,15 +90,16 @@ void EnemyBattery::NormalUpdate()
 		vel.Normalize();
 		
 		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
-		m_num++;
+		m_createShot++;
 	}
 	//攻撃モーションを終えたら初期化する
 	else if (m_idx / kAnimFrameSpeed == 0)
 	{
-		m_num = 0;
+		m_createShot = 0;
 	}
 }
 
+//通常表示
 void EnemyBattery::NormalDraw()
 {
 	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
@@ -106,6 +111,7 @@ void EnemyBattery::NormalDraw()
 #endif
 }
 
+//爆発更新
 void EnemyBattery::BurstUpdate()
 {
 	m_idx++;
@@ -115,6 +121,7 @@ void EnemyBattery::BurstUpdate()
 	}
 }
 
+//爆発表示
 void EnemyBattery::BurstDraw()
 {
 	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;

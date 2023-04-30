@@ -20,10 +20,12 @@ namespace
 }
 
 EnemyMoveLR::EnemyMoveLR(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory) :
-	EnemyBase(player, pos,handle,burstH, sFactory,itFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw)
+	EnemyBase(player, pos,handle,burstH, sFactory,itFactory), m_updateFunc(&EnemyMoveLR::NormalUpdate),m_drawFunc(&EnemyMoveLR::NormalDraw),
+	m_frame(0),m_isOnDamage(false)
 {
-	m_rect.size = { static_cast<int>(kLeftRightSize * Game::kScale),static_cast<int>(kLeftRightSize * Game::kScale)};
 	m_hp->MaxHp(3);
+
+	m_rect.size = { static_cast<int>(kLeftRightSize * Game::kScale),static_cast<int>(kLeftRightSize * Game::kScale)};
 
 	if (GetRand(100) / 2 == 0)
 	{
@@ -38,16 +40,25 @@ EnemyMoveLR::~EnemyMoveLR()
 
 }
 
+//更新
 void EnemyMoveLR::Update()
 {
 	(this->*m_updateFunc)();
 }
-
+//表示
 void EnemyMoveLR::Draw()
 {
 	(this->*m_drawFunc)();
 }
 
+//あたり判定対象かどうか
+bool EnemyMoveLR::IsCollidable() const
+{
+	//BurstUpdateの時は当たらない
+	return (m_updateFunc != &EnemyMoveLR::BurstUpdate);
+}
+
+//ダメージを受けた
 void EnemyMoveLR::Damage(int damage)
 {
 	m_hp->Damage(damage);
@@ -67,12 +78,7 @@ void EnemyMoveLR::Damage(int damage)
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
-bool EnemyMoveLR::IsCollidable() const
-{
-	//BurstUpdateの時は当たらない
-	return (m_updateFunc != &EnemyMoveLR::BurstUpdate);
-}
-
+//通常更新
 void EnemyMoveLR::NormalUpdate()
 {
 	//2秒間ぐらい止まる
@@ -91,7 +97,7 @@ void EnemyMoveLR::NormalUpdate()
 		m_idx = 0;
 	}
 }
-
+//通常表示
 void EnemyMoveLR::NormalDraw()
 {
 	if (!m_isExist)	return;
@@ -112,6 +118,7 @@ void EnemyMoveLR::NormalDraw()
 #endif
 }
 
+//爆発更新
 void EnemyMoveLR::BurstUpdate()
 {
 	m_idx++;
@@ -121,6 +128,7 @@ void EnemyMoveLR::BurstUpdate()
 	}
 }
 
+//爆発表示
 void EnemyMoveLR::BurstDraw()
 {
 	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;
@@ -128,6 +136,7 @@ void EnemyMoveLR::BurstDraw()
 		imgX, 0, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true, false);
 }
 
+//左右に動く
 void EnemyMoveLR::MoveUpdate()
 {
 	//目が開いている画像

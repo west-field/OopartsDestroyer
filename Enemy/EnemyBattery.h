@@ -10,24 +10,26 @@ class EnemyBattery : public EnemyBase
 public:
 	EnemyBattery(std::shared_ptr<Player>player, const Position2 pos,int handle, int burstH,std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft);
 	virtual ~EnemyBattery();
-	virtual void Update()override;		//更新
-	virtual void Draw()override;		//表示
 
+	virtual void Update()override;
+	virtual void Draw()override;
+
+	// 当たり判定対象かどうか
+	virtual bool IsCollidable()const override;
 	// ダメージを受けた
 	virtual void Damage(int damage) override;
-	// あたり判定対象か
-	virtual bool IsCollidable()const override;
 private:
 	//通常
 	void NormalUpdate();
 	void NormalDraw();
-	//爆発アニメーション
+
+	//爆発
 	void BurstUpdate();
 	void BurstDraw();
 
 	void (EnemyBattery::* m_updateFunc)();
 	void (EnemyBattery::* m_drawFunc)();
 
-	int m_num = 0;//攻撃絵の時一度だけ弾を作成
+	int m_createShot;//攻撃絵の時一度だけ弾を作成
 };
 

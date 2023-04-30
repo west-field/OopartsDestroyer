@@ -11,19 +11,19 @@ public:
 	EnemyJump(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
 	virtual ~EnemyJump();
 
-	virtual void Update() override;		//更新
-	virtual void Draw()override;		//表示
+	virtual void Update() override;
+	virtual void Draw()override;
 
+	//当たり判定対象かどうか
+	virtual bool IsCollidable()const override;
 	//ダメージを受けた
 	virtual void Damage(int damage) override;
-	//当たり判定対象か
-	virtual bool IsCollidable()const override;
 private:
 	//通常
 	void NormalUpdate();
 	void NormalDraw();
 
-	//爆発アニメーション
+	//爆発
 	void BurstUpdate();
 	void BurstDraw();
 
@@ -35,8 +35,8 @@ private:
 	void (EnemyJump::* m_updateFunc)();
 	void (EnemyJump::* m_drawFunc)();
 
-	int m_frame = 0;//ジャンプするまでの時間
+	int m_frame;		//ジャンプするまでの時間
 
-	float m_posTemp = 0.0f;//ジャンプ最高点
+	float m_posTemp;	//ジャンプ最高点
 };
 

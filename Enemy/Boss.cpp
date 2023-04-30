@@ -13,23 +13,24 @@ namespace
 	constexpr int kCutManTouchAttackPower = 4;//接触した時の攻撃力
 	
 	//ボスアニメーション
-	constexpr int kGraphNum = 13;	//ボスグラフィックの数
-	constexpr int kGraphSizeWidth = 2600 / kGraphNum;//ボスグラフィックサイズ
-	constexpr int kGraphSizeHeight = 400;	//ボスグラフィックサイズ
-	constexpr float kDrawScale = 0.5f;		//ボスグラフィック拡大率
-	constexpr int kAnimFrameSpeed = 5;	//ボスグラフィックアニメーションスピード
+	constexpr int kGraphNum = 13;						//ボス画像の数
+	constexpr int kGraphSizeWidth = 2600 / kGraphNum;	//ボス画像サイズX
+	constexpr int kGraphSizeHeight = 400;				//ボス画像サイズY
+	constexpr float kDrawScale = 0.5f;					//ボス画像拡大率
+	constexpr int kAnimFrameSpeed = 5;					//ボスアニメーションスピード
 
 	//ボス爆発アニメーション
-	constexpr int kBossBurstImgWidth = 100;//画像サイズX
-	constexpr int kBossBurstImgHeight = 100;//画像サイズY
-	constexpr float kBossBurstDrawScale = 2.0f;//拡大率
-	constexpr int kBossBurstAnimNum = 61;//アニメーション枚数
-	constexpr int kBossBurstAnimSpeed = 1;//アニメーションスピード
+	constexpr int kBossBurstImgWidth = 100;		//画像サイズX
+	constexpr int kBossBurstImgHeight = 100;	//画像サイズY
+	constexpr float kBossBurstDrawScale = 2.0f;	//拡大率
+	constexpr int kBossBurstAnimNum = 61;		//アニメーション枚数
+	constexpr int kBossBurstAnimSpeed = 1;		//アニメーションスピード
 }
 
 Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar>hp) :
 	EnemyBase(player, pos,handle, burstH, sFactory,itFactory), m_updateFunc(&Boss::NormalUpdate), m_drawFunc(&Boss::NormalDraw),
-	m_shotFrame(0)
+	m_bossBurstH(-1), m_idx(0), m_animFrame(0),
+	m_frame(0), m_shotFrame(0)
 {
 	m_hp = hp;
 	m_hp->MaxHp(50);
@@ -59,6 +60,14 @@ void Boss::Draw()
 	(this->*m_drawFunc)();
 }
 
+// 当たり判定対象かどうか
+bool Boss::IsCollidable() const
+{
+	//BurstUpdateでない＆無敵時間が0の時当たる
+	return (m_updateFunc != &Boss::BurstUpdate);
+}
+
+// ダメージを受けた
 void Boss::Damage(int damage)
 {
 	m_hp->Damage(damage);
@@ -74,12 +83,7 @@ void Boss::Damage(int damage)
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
-bool Boss::IsCollidable() const
-{
-	//BurstUpdateでない＆無敵時間が0の時当たる
-	return (m_updateFunc != &Boss::BurstUpdate);
-}
-
+//通常更新
 void Boss::NormalUpdate()
 {
 	//アニメーション
@@ -108,6 +112,7 @@ void Boss::NormalUpdate()
 	}
 }
 
+//通常表示
 void Boss::NormalDraw()
 {
 	//ボス表示
@@ -129,6 +134,7 @@ void Boss::NormalDraw()
 #endif
 }
 
+//爆発更新
 void Boss::BurstUpdate()
 {
 	//爆発アニメーション
@@ -140,6 +146,7 @@ void Boss::BurstUpdate()
 	}
 }
 
+//爆発表示
 void Boss::BurstDraw()
 {
 	//通常爆発エフェクトを重ねて表示
@@ -171,6 +178,7 @@ void Boss::BurstDraw()
 #endif
 }
 
+//ボスが弾を撃つ
 void Boss::ShotUpdate()
 {
 	//自機狙い弾を作る　自機狙いベクトル=終点(プレイヤー座標)　-　始点(敵機自身の座標)

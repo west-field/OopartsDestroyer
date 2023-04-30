@@ -25,9 +25,11 @@ namespace
 }
 
 EnemyJump::EnemyJump(std::shared_ptr<Player> player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
-	EnemyBase(player,pos,handle,burstH,sFactory,itFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw)
+	EnemyBase(player,pos,handle,burstH,sFactory,itFactory),m_updateFunc(&EnemyJump::NormalUpdate),m_drawFunc(&EnemyJump::NormalDraw),
+	m_frame(0),m_posTemp(0.0f)
 {
-	m_rect.size = { static_cast<int>(kJumpSize * Game::kScale * kDrawScale),static_cast<int>(kJumpSize * Game::kScale * kDrawScale)};
+	m_rect.size = { static_cast<int>(kJumpSize * Game::kScale * kDrawScale),
+					static_cast<int>(kJumpSize * Game::kScale * kDrawScale)};
 	m_hp->MaxHp(1);
 	m_frame = GetRand(kRand);//ジャンプするまでの時間をランダムで決める
 
@@ -49,6 +51,14 @@ void EnemyJump::Draw()
 	(this->*m_drawFunc)();
 }
 
+//当たり判定対象かどうか
+bool EnemyJump::IsCollidable() const
+{
+	//BurstUpdateの時は当たらない
+	return (m_updateFunc != &EnemyJump::BurstUpdate);
+}
+
+//ダメージを受けた
 void EnemyJump::Damage(int damage)
 {
 	m_hp->Damage(damage);
@@ -64,13 +74,7 @@ void EnemyJump::Damage(int damage)
 	}
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
-
-bool EnemyJump::IsCollidable() const
-{
-	//BurstUpdateの時は当たらない
-	return (m_updateFunc != &EnemyJump::BurstUpdate);
-}
-
+//通常更新
 void EnemyJump::NormalUpdate()
 {
 	//ランダムな時にジャンプさせる
@@ -96,6 +100,7 @@ void EnemyJump::NormalUpdate()
 	}
 }
 
+//通常表示
 void EnemyJump::NormalDraw()
 {
 	int img = m_idx * kJumpSize;
@@ -106,6 +111,7 @@ void EnemyJump::NormalDraw()
 #endif
 }
 
+//爆発更新
 void EnemyJump::BurstUpdate()
 {
 	m_idx++;
@@ -115,6 +121,7 @@ void EnemyJump::BurstUpdate()
 	}
 }
 
+//爆発表示
 void EnemyJump::BurstDraw()
 {
 	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;
@@ -123,6 +130,7 @@ void EnemyJump::BurstDraw()
 		imgX, 0, kBurstImgWidth, kBurstImgHeight, kBurstDrawScale * Game::kScale, 0.0f, m_burstHandle, true,false);
 }
 
+//ジャンプする
 void EnemyJump::JumpUpdate()
 {
 	m_rect.center += m_vec;
@@ -135,6 +143,7 @@ void EnemyJump::JumpUpdate()
 	}
 }
 
+//落下する
 void EnemyJump::DownUpdate()
 {
 	m_rect.center += m_vec;

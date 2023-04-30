@@ -14,35 +14,40 @@ public :
 	virtual void Draw()override;
 
 	/// <summary>
-	/// ダメージを受けた
-	/// </summary>
-	/// <param name="damage">ダメージ量</param>
-	virtual void Damage(int damage) override;
-	/// <summary>
 	/// あたり判定対象か
 	/// </summary>
 	/// <returns>true:当たる false:当たらない</returns>
 	virtual bool IsCollidable()const override;
+
+	/// <summary>
+	/// ダメージを受けた
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
+	virtual void Damage(int damage) override;
+	
 private:
-	void NormalUpdate();//次の指示を決める
-	void NormalDraw();//通常描画
+	//通常
+	void NormalUpdate();
+	void NormalDraw();
 
-	void BurstUpdate();//爆発更新
-	void BurstDraw();//爆発表示
+	//爆発
+	void BurstUpdate();
+	void BurstDraw();
 
-	void ShotUpdate();//ボスが弾を撃つ
+	//ボスが弾を撃つ
+	void ShotUpdate();
 
 	void (Boss::* m_updateFunc)();
 	void (Boss::* m_drawFunc)();
 
-	int m_bossBurstH = -1;//ボス爆発画像
+	int m_bossBurstH;	//ボス爆発画像
 
-	int m_idx = 0;//画像の表示範囲
+	int m_idx;			//画像の表示範囲
 	
-	int m_animFrame = 0;//次の画像に移動(ボス
+	int m_animFrame;	//次の画像に移動(ボス
 	
-	int m_frame = 0;//次の攻撃をするまでの時間
+	int m_frame;		//次の攻撃をするまでの時間
 	
-	int m_shotFrame = 20;//二回攻撃するとき次の弾を撃つまで
+	int m_shotFrame;	//二回攻撃するとき次の弾を撃つまで
 };
 

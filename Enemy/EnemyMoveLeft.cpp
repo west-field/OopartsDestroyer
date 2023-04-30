@@ -24,11 +24,12 @@ namespace
 EnemyMoveLeft::EnemyMoveLeft(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
 	EnemyBase(player,pos, handle, burstH, sFactory,itFactory),m_updateFunc(&EnemyMoveLeft::NormalUpdate),m_drawFunc(&EnemyMoveLeft::NormalDraw)
 {
-	m_idx = 0;
-	m_rect.size = {  static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) };
-	
 	m_hp->MaxHp(1);
 
+	m_idx = 0;
+
+	m_rect.size = {  static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) };
+	
 	m_touchDamagePower = kTouchAttackPower;
 }
 
@@ -47,6 +48,14 @@ void EnemyMoveLeft::Draw()
 	(this->*m_drawFunc)();
 }
 
+//当たり判定対象かどうか
+bool EnemyMoveLeft::IsCollidable() const
+{
+	//BurstUpdateの時は当たらない
+	return (m_updateFunc != &EnemyMoveLeft::BurstUpdate);
+}
+
+//ダメージを受けた
 void EnemyMoveLeft::Damage(int damage)
 {
 	m_hp->Damage(damage);
@@ -66,18 +75,14 @@ void EnemyMoveLeft::Damage(int damage)
 	SoundManager::GetInstance().Play(SoundId::EnemyHit);
 }
 
-bool EnemyMoveLeft::IsCollidable() const
-{
-	//BurstUpdateの時は当たらない
-	return (m_updateFunc != &EnemyMoveLeft::BurstUpdate);
-}
-
+//通常更新
 void EnemyMoveLeft::NormalUpdate()
 {
 	Movement({ kEnemyMoveSpeed ,0.0f});//エネミー移動
 	m_idx = (m_idx + 1) % (kAnimFrameSpeed * kAnimFrameNum);
 }
 
+//通常表示
 void EnemyMoveLeft::NormalDraw()
 {
 	int imgX = (m_idx / kAnimFrameSpeed) * kSize;
@@ -88,6 +93,7 @@ void EnemyMoveLeft::NormalDraw()
 #endif
 }
 
+//爆発更新
 void EnemyMoveLeft::BurstUpdate()
 {
 	m_idx++;
@@ -97,6 +103,7 @@ void EnemyMoveLeft::BurstUpdate()
 	}
 }
 
+//爆発表示
 void EnemyMoveLeft::BurstDraw()
 {
 	int imgX = (m_idx / kBurstAnimSpeed) * kBurstImgWidth;

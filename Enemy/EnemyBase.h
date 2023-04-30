@@ -13,7 +13,8 @@ class ItemFactory;		//アイテム
 class EnemyBase
 {
 public:
-	EnemyBase(std::shared_ptr<Player>player,const Position2& pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
+	EnemyBase(std::shared_ptr<Player>player,const Position2& pos, int handle, int burstH,
+		std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory);
 	virtual ~EnemyBase();
 
 	virtual void Update() = 0;	//更新
@@ -32,7 +33,7 @@ public:
 	const Rect& GetRect() const;
 
 	/// <summary>
-	/// 当たり判定対象か
+	/// 当たり判定対象かどうか
 	/// </summary>
 	/// <returns>true:当たる false:当たらない</returns>
 	virtual bool IsCollidable()const = 0;
@@ -108,23 +109,23 @@ protected:
 	std::shared_ptr<ShotFactory> m_shotFactory;		//ショット
 	std::shared_ptr<ItemFactory> m_itemFactory;		//アイテム
 
-	bool m_isExist;				//存在するか
-	Rect m_rect;				//敵の矩形
+	bool m_isExist;			//存在するか
+	Rect m_rect;			//敵の矩形
 
-	Vector2 m_vec;				//移動速度
+	Vector2 m_vec;			//移動速度
 
 	int m_handle;			//画像ハンドル
 	int m_burstHandle;		//爆発画像ハンドル
 
 	int m_idx;				//画像変更
 
-	bool m_isLeft;		//左を向いている
+	bool m_isLeft;			//左を向いている
 
-	bool m_isJump;		//ジャンプをしているか
+	bool m_isJump;			//ジャンプをしているか
 
-	int m_chipId;				//マップチップID
-	bool m_isOnDamage;	//ダメージを受けたかどうか
+	int m_chipId;			//マップチップID
+	bool m_isOnDamage;		//ダメージを受けたかどうか
 
-	int m_touchDamagePower;		//★当たった時の攻撃力
+	int m_touchDamagePower;	//★当たった時の攻撃力
 };
 
