@@ -14,11 +14,6 @@ public :
 	virtual void Draw()override;
 
 	/// <summary>
-	/// 接触したときの攻撃
-	/// </summary>
-	/// <returns>接触したときの攻撃力</returns>
-	virtual int TouchAttackPower() const override;
-	/// <summary>
 	/// ダメージを受けた
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>

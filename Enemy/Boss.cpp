@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
+#include "../Info.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/Player.h"
 #include "../Game/HpBar.h"
@@ -18,12 +19,6 @@ namespace
 	constexpr float kDrawScale = 0.5f;		//ボスグラフィック拡大率
 	constexpr int kAnimFrameSpeed = 5;	//ボスグラフィックアニメーションスピード
 
-	//通常爆発アニメーション
-	constexpr int kBurstImgWidth = 32;//画像サイズX
-	constexpr int kBurstImgHeight = 32;//画像サイズY
-	constexpr float kBurstDrawScale = 1.0f;//拡大率
-	constexpr int kBurstAnimNum = 8;//アニメーション枚数
-	constexpr int kBurstAnimSpeed = 5;//アニメーションスピード
 	//ボス爆発アニメーション
 	constexpr int kBossBurstImgWidth = 100;//画像サイズX
 	constexpr int kBossBurstImgHeight = 100;//画像サイズY
@@ -33,17 +28,20 @@ namespace
 }
 
 Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int bossBurstH, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar>hp) :
-	EnemyBase(player, pos, sFactory,itFactory), m_updateFunc(&Boss::NormalUpdate), m_drawFunc(&Boss::NormalDraw),
+	EnemyBase(player, pos,handle, burstH, sFactory,itFactory), m_updateFunc(&Boss::NormalUpdate), m_drawFunc(&Boss::NormalDraw),
 	m_shotFrame(0)
 {
 	m_hp = hp;
 	m_hp->MaxHp(50);
+
 	m_isLeft = true;
-	m_handle = handle;
-	m_bossBurstH = bossBurstH;
-	m_burstHandle = burstH;
-	m_rect = { {pos.x,pos.y - 8.0f},
-		{static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale) - 20} };
+
+	m_bossBurstH= bossBurstH;
+
+	m_rect.center.y -= 8.0f;
+	m_rect.size = { static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale) - 20 };
+
+	m_touchDamagePower = kCutManTouchAttackPower;
 }
 
 Boss::~Boss()
@@ -59,11 +57,6 @@ void Boss::Update()
 void Boss::Draw()
 {
 	(this->*m_drawFunc)();
-}
-
-int Boss::TouchAttackPower() const
-{
-	return kCutManTouchAttackPower;
 }
 
 void Boss::Damage(int damage)
