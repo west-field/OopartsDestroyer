@@ -27,7 +27,7 @@ public:
 	//‘¶İ‚·‚é‚©
 	virtual bool IsExist() const { return m_isExist; }
 	//Á‚·‚½‚ß
-	void SetExist(bool isExist) { m_isExist = isExist; }
+	void EraseExist() { m_isExist = false; }
 	//ƒvƒŒƒCƒ„[‚ªŒ‚‚Á‚½’e‚©
 	virtual void PlayerShot(bool isPlayerShot) { m_isPlayerShot = isPlayerShot; }
 	/// <summary>

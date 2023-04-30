@@ -40,9 +40,9 @@ bool EnemyBase::IsExist() const
 }
 
 /// Á‚·‚½‚ß
-void EnemyBase::SetExist(bool isExist)
+void EnemyBase::EraseExist()
 {
-    m_isExist = isExist;
+    m_isExist = false;
 }
 
 /// ¶‚ğŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·

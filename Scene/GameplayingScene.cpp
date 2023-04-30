@@ -329,22 +329,22 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 		moveX = enemy->GetVec().x;
 
 		enemy->Movement({ MoveX,MoveY });
-		//画面の左端に消えたら
+		//画面の左端に消えたら敵を消す
 		if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
 		{
-			enemy->SetExist(false);
+			enemy->EraseExist();
 			break;
 		}
-		//画面の下端に消えたら
+		//画面の下端に消えたら敵を消す
 		if (enemy->GetRect().GetCenter().y - hsize > Game::kMapScreenBottomY)
 		{
-			enemy->SetExist(false);
+			enemy->EraseExist();
 			break;
 		}
-		//画面の上端に消えたら
+		//画面の上端に消えたら敵を消す
 		else if (enemy->GetRect().GetCenter().y + hsize < Game::kMapScreenTopY)
 		{
-			enemy->SetExist(false);
+			enemy->EraseExist();
 			break;
 		}
 
@@ -851,7 +851,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			//敵に弾がヒットした
 			if (shot->GetRect().IsHit(enemy->GetRect()))
 			{
-				shot->SetExist(false);
+				shot->EraseExist();
 				enemy->Damage(shot->AttackPower());
 				break;
 			}
@@ -867,7 +867,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 			if (shot->IsPlayerShot())	continue;
 			if (shot->GetRect().IsHit(m_player->GetRect()))
 			{
-				shot->SetExist(false);
+				shot->EraseExist();
 				m_player->Damage(shot->AttackPower());
 				SoundManager::GetInstance().Play(SoundId::PlayeyHit);
 				m_quakeX = 5.0f;
@@ -902,7 +902,7 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		{
 			SoundManager::GetInstance().Play(SoundId::Recovery);
 			m_player->Heal(item->GetHeal());
-			item->SetExist(false);
+			item->EraseExist();
 			continue;
 		}
 	}
@@ -998,19 +998,19 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		for (auto& enemy : m_enemyFactory->GetEnemies())
 		{
 			if (!enemy->IsExist())	continue;
-			enemy->SetExist(false);
+			enemy->EraseExist();
 		}
 		//ショットを削除する
 		for (auto& shot : m_shotFactory->GetShot())
 		{
 			if (!shot->IsExist())	continue;
-			shot->SetExist(false);
+			shot->EraseExist();
 		}
 		//アイテムを削除する
 		for (auto& item : m_itemFactory->GetItems())
 		{
 			if (!item->IsExist()) continue;
-			item->SetExist(false);
+			item->EraseExist();
 		}
 		m_correction = { 0.0f,0.0f };
 		if (m_isScreenMoveUp) 

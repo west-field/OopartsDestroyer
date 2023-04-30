@@ -1,9 +1,9 @@
 #include "ItemBase.h"
 #include <DxLib.h>
 
-ItemBase::ItemBase(const Position2& pos)
+ItemBase::ItemBase(const Position2& pos) :m_handle(-1), m_rect(pos, {}),m_isExist(true)
 {
-	m_rect.center = pos;
+
 }
 
 ItemBase::~ItemBase()
@@ -21,7 +21,7 @@ bool ItemBase::IsExist() const
 	return m_isExist;
 }
 
-void ItemBase::SetExist(bool isExist)
+void ItemBase::EraseExist()
 {
-	m_isExist = isExist;
+	m_isExist = false;
 }

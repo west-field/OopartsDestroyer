@@ -60,7 +60,7 @@ public:
 	/// Á‚·‚½‚ß
 	/// </summary>
 	/// <param name="isExist">‘¶İ‚ğÁ‚·</param>
-	void SetExist(bool isExist);
+	void EraseExist();
 
 	/// <summary>
 	/// ¶‚ğŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·

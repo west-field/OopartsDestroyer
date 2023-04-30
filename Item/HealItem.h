@@ -21,6 +21,6 @@ public:
     /// <returns>回復量</returns>
     virtual int GetHeal()const;
 private:
-    int m_idx = 0;//画像インデックス
+    int m_idx;//画像インデックス
 };
 

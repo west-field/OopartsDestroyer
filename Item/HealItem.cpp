@@ -17,7 +17,7 @@ namespace
 	constexpr int kHeal = 2;//‰ñ•œ—Ê
 }
 
-HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos)
+HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos), m_idx(0)
 {
 	m_handle = handle;
 	m_rect = { pos,{kHealSizeX,kHealSizeY} };
