@@ -22,7 +22,7 @@ namespace
 
 EnemyBattery::EnemyBattery(std::shared_ptr<Player>player, const Position2 pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory,bool isLeft):
 	EnemyBase(player,pos, handle, burstH, sFactory,itFactory),m_updateFunc(&EnemyBattery::NormalUpdate),m_drawFunc(&EnemyBattery::NormalDraw),
-	m_createShot(0)
+	m_createShot(false)
 {
 	m_rect.size = {  static_cast<int>(kSize * Game::kScale * kDrawScale),static_cast<int>(kSize * Game::kScale * kDrawScale) };
 	
@@ -80,7 +80,7 @@ void EnemyBattery::NormalUpdate()
 	//アニメーション
 	m_idx = (m_idx + (GetRand(10) % 3)) % (kAnimFrameSpeed * kAnimFrameNum);
 	//攻撃モーションの時弾を発射する
-	if (m_idx / kAnimFrameSpeed == 2 && m_createShot == 0)
+	if (m_idx / kAnimFrameSpeed == 2 && !m_createShot)
 	{
 		Vector2 vel = { 0.0f,0.0f };
 		//ランダムに方向と速度を決定する（斜め
@@ -90,12 +90,12 @@ void EnemyBattery::NormalUpdate()
 		vel.Normalize();
 		
 		m_shotFactory->Create(ShotType::ShotBattery, m_rect.center, vel, m_isLeft,false);
-		m_createShot++;
+		m_createShot = true;
 	}
 	//攻撃モーションを終えたら初期化する
 	else if (m_idx / kAnimFrameSpeed == 0)
 	{
-		m_createShot = 0;
+		m_createShot = false;
 	}
 }
 

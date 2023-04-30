@@ -30,6 +30,6 @@ private:
 	void (EnemyBattery::* m_updateFunc)();
 	void (EnemyBattery::* m_drawFunc)();
 
-	int m_createShot;//UŒ‚ŠG‚Ìˆê“x‚¾‚¯’e‚ğì¬
+	bool m_createShot;//UŒ‚ŠG‚Ìˆê“x‚¾‚¯’e‚ğì¬
 };
 
