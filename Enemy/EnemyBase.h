@@ -33,6 +33,12 @@ public:
 	const Rect& GetRect() const;
 
 	/// <summary>
+	/// ボスかどうか
+	/// </summary>
+	/// <returns>true:ボス　false:エネミー</returns>
+	const bool IsBoss() { return m_isBoss; }
+
+	/// <summary>
 	/// 当たり判定対象かどうか
 	/// </summary>
 	/// <returns>true:当たる false:当たらない</returns>
@@ -127,5 +133,6 @@ protected:
 	bool m_isOnDamage;		//ダメージを受けたかどうか
 
 	int m_touchDamagePower;	//★当たった時の攻撃力
+	bool m_isBoss;//★ボスかどうか
 };
 

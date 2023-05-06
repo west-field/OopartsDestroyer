@@ -5,7 +5,7 @@
 EnemyBase::EnemyBase(std::shared_ptr<Player>player, const Position2& pos, int handle, int burstH, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory):
     m_player(player), m_shotFactory(sFactory), m_itemFactory(itFactory),
     m_rect(pos, {}), m_isExist(true), m_vec(), m_handle(handle), m_burstHandle(burstH), m_idx(0),
-    m_isLeft(false), m_isJump(false), m_chipId(0), m_isOnDamage(false), m_touchDamagePower(1)
+    m_isLeft(false), m_isJump(false), m_chipId(0), m_isOnDamage(false), m_touchDamagePower(1),m_isBoss(false)
 {
     m_hp = std::make_shared<HpBar>(Position2{ 0.0f,0.0f });
 }

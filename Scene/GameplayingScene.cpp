@@ -322,129 +322,113 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 	for (auto& enemy : m_enemyFactory->GetEnemies())
 	{
 		if (!enemy->IsExist())	continue;
+		
 		// 半分のサイズを算出
 		wsize = enemy->GetRect().GetSize().w * 0.5f;
 		hsize = enemy->GetRect().GetSize().h * 0.5f;
 		//移動量
 		moveX = enemy->GetVec().x;
 
-		enemy->Movement({ MoveX,MoveY });
-		//画面の左端に消えたら敵を消す
-		if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
-		{
-			enemy->EraseExist();
-			break;
-		}
-		//画面の下端に消えたら敵を消す
-		if (enemy->GetRect().GetCenter().y - hsize > Game::kMapScreenBottomY)
-		{
-			enemy->EraseExist();
-			break;
-		}
-		//画面の上端に消えたら敵を消す
-		else if (enemy->GetRect().GetCenter().y + hsize < Game::kMapScreenTopY)
-		{
-			enemy->EraseExist();
-			break;
-		}
-
-
-		//向いている方向で当たっているか判定する
-		if (enemy->IsLeft())
-		{
-			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x-wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
-		}
-		else
-		{
-			enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x+wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
-		}
-	}
-
-	// 終了
-	return;
-}
-
-void GameplayingScene::MoveBoss(float MoveX, float MoveY)
-{
-	float Dummy = 0.0f;
-	float PosX, PosY;
-	float hsize, wsize;
-	float moveX = 0.0f;
-	float moveY = 0.0f;
-
-	for (auto& enemy : m_enemyFactory->GetEnemies())
-	{
-		if (!enemy->IsExist())	continue;
-
-		//プレイヤーの中心位置
-		PosX = enemy->GetRect().GetCenter().x + m_add.x;
-		PosY = enemy->GetRect().GetCenter().y + m_add.y;
-		// 半分のサイズを算出
-		wsize = enemy->GetRect().GetSize().w * 0.5f;
-		hsize = enemy->GetRect().GetSize().h * 0.5f;
-
-		moveX = enemy->GetVec().x;
-		moveY = enemy->GetVec().y;
-
 		enemy->Movement({ MoveX,MoveY });//画面移動
 
-		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
-		if (MapHitCheck(PosX - wsize , PosY + hsize , Dummy, moveY) == 3)
+		if (!enemy->IsBoss())
 		{
-			m_fallPlayerSpeed = 0.0f;
-		}
-		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
-		if (MapHitCheck(PosX + wsize, PosY + hsize , Dummy, moveY) == 3)
-		{
-			m_fallPlayerSpeed = 0.0f;
-		}
-		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
-		if (MapHitCheck(PosX - wsize , PosY - hsize , Dummy, moveY) == 4)
-		{
-			m_fallPlayerSpeed *= -1.0f;
-		}
-		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
-		if (MapHitCheck(PosX + wsize , PosY - hsize , Dummy, moveY) == 4)
-		{
-			m_fallPlayerSpeed *= -1.0f;
-		}
-		enemy->Movement({ 0.0f,moveY });
-
-		//ジャンプしているときだけ横に移動する
-		if (enemy->IsJump())
-		{
-			// 後に左右移動成分だけでチェック
-			// 左下のチェック
-			MapHitCheck(PosX - wsize, PosY + hsize , moveX, Dummy);
-
-			// 右下のチェック
-			MapHitCheck(PosX + wsize, PosY + hsize , moveX, Dummy);
-
-			// 左上のチェック
-			MapHitCheck(PosX - wsize, PosY - hsize , moveX, Dummy);
-
-			// 右上のチェック
-			MapHitCheck(PosX + wsize, PosY - hsize , moveX, Dummy);
-			//左右移動成分を加算
-			enemy->Movement({ moveX,0.0f });
-		}
-		
-		// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
-		//当たり判定のある場所に来たら音を鳴らして足場がある判定にする
-		if ((m_map->GetMapEventParam(PosX - wsize, PosY + hsize + 1.0f) == MapEvent_hit) ||
-			(m_map->GetMapEventParam(PosX + wsize, PosY + hsize + 1.0f) == MapEvent_hit))
-		{
-			//足場があったら設置中にする
-			enemy->SetJump(false);
+			//画面の左端に消えたら敵を消す
+			if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
+			{
+				enemy->EraseExist();
+				break;
+			}
+			//画面の下端に消えたら敵を消す
+			if (enemy->GetRect().GetCenter().y - hsize > Game::kMapScreenBottomY)
+			{
+				enemy->EraseExist();
+				break;
+			}
+			//画面の上端に消えたら敵を消す
+			else if (enemy->GetRect().GetCenter().y + hsize < Game::kMapScreenTopY)
+			{
+				enemy->EraseExist();
+				break;
+			}
+			//向いている方向で当たっているか判定する
+			if (enemy->IsLeft())
+			{
+				enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x - wsize - moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
+			}
+			else
+			{
+				enemy->GetChip(m_map->GetMapEventParam(m_add.x + enemy->GetRect().GetCenter().x + wsize + moveX, m_add.y + enemy->GetRect().GetCenter().y + hsize - moveY));
+			}
 		}
 		else
 		{
-			//ないときはジャンプ中にする
-			enemy->SetJump(true);
+			Dummy = 0.0f;
+			float PosX, PosY;
+
+			//プレイヤーの中心位置
+			PosX = enemy->GetRect().GetCenter().x + m_add.x;
+			PosY = enemy->GetRect().GetCenter().y + m_add.y;
+
+			moveY = enemy->GetVec().y;
+
+			// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
+			if (MapHitCheck(PosX - wsize, PosY + hsize, Dummy, moveY) == 3)
+			{
+				m_fallPlayerSpeed = 0.0f;
+			}
+			// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
+			if (MapHitCheck(PosX + wsize, PosY + hsize, Dummy, moveY) == 3)
+			{
+				m_fallPlayerSpeed = 0.0f;
+			}
+			// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
+			if (MapHitCheck(PosX - wsize, PosY - hsize, Dummy, moveY) == 4)
+			{
+				m_fallPlayerSpeed *= -1.0f;
+			}
+			// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
+			if (MapHitCheck(PosX + wsize, PosY - hsize, Dummy, moveY) == 4)
+			{
+				m_fallPlayerSpeed *= -1.0f;
+			}
+			enemy->Movement({ 0.0f,moveY });
+
+			//ジャンプしているときだけ横に移動する
+			if (enemy->IsJump())
+			{
+				// 後に左右移動成分だけでチェック
+				// 左下のチェック
+				MapHitCheck(PosX - wsize, PosY + hsize, moveX, Dummy);
+
+				// 右下のチェック
+				MapHitCheck(PosX + wsize, PosY + hsize, moveX, Dummy);
+
+				// 左上のチェック
+				MapHitCheck(PosX - wsize, PosY - hsize, moveX, Dummy);
+
+				// 右上のチェック
+				MapHitCheck(PosX + wsize, PosY - hsize, moveX, Dummy);
+				//左右移動成分を加算
+				enemy->Movement({ moveX,0.0f });
+			}
+
+			// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
+			//当たり判定のある場所に来たら音を鳴らして足場がある判定にする
+			if ((m_map->GetMapEventParam(PosX - wsize, PosY + hsize + 1.0f) == MapEvent_hit) ||
+				(m_map->GetMapEventParam(PosX + wsize, PosY + hsize + 1.0f) == MapEvent_hit))
+			{
+				//足場があったら設置中にする
+				enemy->SetJump(false);
+			}
+			else
+			{
+				//ないときはジャンプ中にする
+				enemy->SetJump(true);
+			}
 		}
 	}
 
-	// 終了
 	return;
 }
 
@@ -1096,7 +1080,7 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen))
 		{
 			m_map->Movement({ moveX,0.0f });
-			MoveBoss(moveX, 0.0f);
+			MoveEnemy(moveX, 0.0f);
 			m_player->Movement({ moveX + 0.5f,0.0f });
 			moveX *= -1.0f;
 			m_add.x += moveX;

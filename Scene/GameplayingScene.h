@@ -55,12 +55,6 @@ private:
     /// <param name="MoveY">移動量</param>
     void MoveEnemy(float MoveX, float MoveY);
     /// <summary>
-    /// ボスの当たり判定
-    /// </summary>
-    /// <param name="MoveX">移動量</param>
-    /// <param name="MoveY">移動量</param>
-    void MoveBoss(float MoveX, float MoveY);
-    /// <summary>
     /// マップとの当たり判定
     /// </summary>
     /// <param name="X">自身の位置X</param>
