@@ -62,7 +62,7 @@ private:
 	int m_Hp;//Œ»İ‚ÌHP
 	int m_HpHandle;	//HP‚Ì‰æ‘œ
 
-	Rect m_rect;
+	Rect m_rect;//•\¦ˆÊ’u‚ğŒˆ‚ß‚é
 
 	int idxX = 0;
 	int idxY = 0;

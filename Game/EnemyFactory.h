@@ -10,24 +10,17 @@ class EnemyBase;
 class ShotFactory;
 class ItemFactory;
 
-/// ブンビーへりー　飛行しながら近付いて、プレイヤーの近くで上下に動き回る敵。HP1、攻撃力4
-/// ブラスター　壁にある赤い砲台。シャッターが開いたときに攻撃してくる。HP1、攻撃力（弾）2、（接触）1
-/// カマドーマー　ロックマンがいる方向にジャンプしている　HP1,攻撃力2,接触2
-///	くっつきスージー　壁、天井、床を上下、または、左右に往復　HP5,攻撃力4,接触4
-///	マンブー　まっすぐ飛んで、時々顔を出し、８方向同時に弾を打つ　HP：1、攻撃力：2（弾）、1（接触）
-
 //敵種類
 enum class EnemyType
 {
 	no,
-	MoveLeft,//自機とX軸が同じとき上下に移動する敵
-	BatteryRight,//固定砲台
-	BatteryLeft,//固定砲台
-	Jump,//ジャンプする敵
-	MoveLeftRight,//横移動する四角い敵
-	MoveShot,//移動しながら8方向に撃つ敵
+	MoveLeft,		//自機とX軸が同じとき上下に移動する敵
+	BatteryRight,	//固定砲台
+	BatteryLeft,	//固定砲台
+	Jump,			//ジャンプする敵
+	MoveLeftRight,	//横移動する四角い敵
 
-	Boss,//ボス
+	Boss,			//ボス
 };
 
 class EnemyFactory
@@ -60,7 +53,7 @@ private:
 	std::shared_ptr<ItemFactory> m_itemFactory;			//アイテム
 
 	std::map<EnemyType, int>m_handleMap;//敵の画像ハンドル
-	int m_burstHandle = -1;//爆発グラフィック
-	int m_bossBurstHandle = -1;//ボス爆発グラフィック
+	int m_burstHandle;					//爆発グラフィック
+	int m_bossBurstHandle;				//ボス爆発グラフィック
 };
 

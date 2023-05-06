@@ -1,6 +1,5 @@
 #include "EnemyFactory.h"
 #include <DxLib.h>
-#include <algorithm>//remove_ifを使うためにインクルードする
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
 #include "../Enemy/EnemyBase.h"
@@ -12,7 +11,8 @@
 #include "Player.h"
 
 EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFactory> sFactory, std::shared_ptr<ItemFactory> itFactory, std::shared_ptr<HpBar> hp):
-	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory),m_hp(hp)
+	m_player(player), m_shotFactory(sFactory),m_itemFactory(itFactory),m_hp(hp), 
+	m_burstHandle(-1), m_bossBurstHandle(-1)
 {
 	//敵の画像をロードする
 	m_handleMap[EnemyType::MoveLeft] = my::MyLoadGraph(L"Data/goldenSpaceShuttle.png");
@@ -26,6 +26,10 @@ EnemyFactory::EnemyFactory(std::shared_ptr<Player>player, std::shared_ptr<ShotFa
 }
 EnemyFactory::~EnemyFactory()
 {
+	for (auto& handle : m_handleMap)
+	{
+		DeleteGraph(handle.second);
+	}
 	DeleteGraph(m_burstHandle);
 	DeleteGraph(m_bossBurstHandle);
 }
@@ -93,8 +97,6 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 		m_enemies.push_back(
 			std::make_shared<EnemyMoveLR>(
 				m_player, pos, m_handleMap[EnemyType::MoveLeftRight], m_burstHandle, m_shotFactory, m_itemFactory));
-		break;
-	case EnemyType::MoveShot:
 		break;
 	case EnemyType::Boss:
 		m_enemies.push_back(
