@@ -19,6 +19,7 @@ enum class EnemyType
 	BatteryLeft,	//固定砲台
 	Jump,			//ジャンプする敵
 	MoveLeftRight,	//横移動する四角い敵
+	no2,
 
 	Boss,			//ボス
 };
