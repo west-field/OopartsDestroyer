@@ -20,12 +20,11 @@ ShotBattery::~ShotBattery()
 
 void ShotBattery::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 {
-	m_isExist = true;
-	m_isLeft = left;
-	m_rect.center = pos;
-	m_vel = vel* kShotBatterySpeed;
-	m_isPlayerShot = isPlayer;
+	ShotBase::Start(pos, vel, left, isPlayer);
+
+	m_vel *= kShotBatterySpeed;
 	if (m_isLeft) m_vel *= -1.0f;
+	m_hitDamagePower = kShotFive;
 }
 
 void ShotBattery::Update()
@@ -66,13 +65,3 @@ void ShotBattery::Draw()
 #endif
 }
 
-void ShotBattery::Movement(Vector2 vec)
-{
-	if (m_isLeft) vec *= -1.0f;
-	m_rect.center += vec;
-}
-
-const int ShotBattery::AttackPower() const
-{
-	return kShotFive;
-}

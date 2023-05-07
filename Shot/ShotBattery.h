@@ -19,16 +19,6 @@ public:
 	virtual void Update()override;
 	///•\¦
 	virtual void Draw()override;
-	/// <summary>
-	/// ˆÚ“®‚·‚é
-	/// </summary>
-	/// <param name="vec">‰æ–ÊˆÚ“®</param>
-	virtual void Movement(Vector2 vec);
-	/// <summary>
-	/// UŒ‚—Í‚ğ•Ô‚·
-	/// </summary>
-	/// <returns>UŒ‚—Í</returns>
-	virtual const int AttackPower()const override;
 private:
 	
 };

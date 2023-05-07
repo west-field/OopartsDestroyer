@@ -17,7 +17,7 @@ public:
 	virtual ~ShotBase();
 
 	//ショット開始
-	virtual void Start(Position2 pos, Vector2 vel, bool left, bool isPlayer) = 0;
+	virtual void Start(Position2 pos, Vector2 vel, bool left, bool isPlayer);
 	//更新
 	virtual void Update() = 0;
 	//描画
@@ -36,23 +36,25 @@ public:
 	/// <returns>true:プレイヤーが撃った false:敵が撃った</returns>
 	virtual bool IsPlayerShot()const { return m_isPlayerShot; }
 	//弾を移動
-	virtual void Movement(Vector2 vec) = 0;
+	virtual void Movement(Vector2 vec);
 	//矩形を取得
 	virtual const Rect& GetRect()const;
 	//攻撃力
-	virtual const int AttackPower()const = 0;
+	virtual const int AttackPower()const;
 protected:
 	
-	int m_handle;//グラフィックハンドル
+	int m_handle;			//グラフィックハンドル
 	
-	Rect m_rect;//矩形
+	Rect m_rect;			//矩形
 
-	Vector2 m_vel;	//弾のスピード
+	Vector2 m_vel;			//弾のスピード
 	
-	bool m_isExist;//存在するか
+	bool m_isExist;			//存在するか
 	
-	bool m_isLeft;//左に撃ったかどうか
+	bool m_isLeft;			//左に撃ったかどうか
 	
-	bool m_isPlayerShot;//プレイヤーが撃った弾か
+	bool m_isPlayerShot;	//プレイヤーが撃った弾か
+
+	int m_hitDamagePower;	//★当たった時の攻撃力
 };
 

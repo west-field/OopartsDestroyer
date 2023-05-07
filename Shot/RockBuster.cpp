@@ -21,11 +21,9 @@ RockBuster::~RockBuster()
 
 void RockBuster::Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)
 {
-	m_isExist = true;
-	m_isLeft = left;
-	m_rect.center = pos;
-	m_vel = vel;
-	m_isPlayerShot = isPlayer;
+	ShotBase::Start(pos,vel,left,isPlayer);
+
+	m_hitDamagePower = kAttackPower;
 }
 
 void RockBuster::Update()
@@ -74,11 +72,6 @@ void RockBuster::Draw()
 void RockBuster::Movement(Vector2 vec)
 {
 	if (vec.x != 8.0f)	return;
-	if (m_isLeft) vec *= -1.0f;
-	m_rect.center += vec;
+	ShotBase::Movement(vec);
 }
 
-const int RockBuster::AttackPower() const
-{
-	return kAttackPower;
-}
