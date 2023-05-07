@@ -133,6 +133,6 @@ protected:
 	bool m_isOnDamage;		//ダメージを受けたかどうか
 
 	int m_touchDamagePower;	//★当たった時の攻撃力
-	bool m_isBoss;//★ボスかどうか
+	bool m_isBoss;			//★ボスかどうか
 };
 

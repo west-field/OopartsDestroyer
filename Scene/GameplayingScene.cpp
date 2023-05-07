@@ -1,4 +1,3 @@
-
 #include "GameplayingScene.h"
 
 #include <DxLib.h>
@@ -12,11 +11,10 @@
 
 #include "../game.h"
 #include "../Map.h"
-#include "../Util/Sound.h"
 #include "../InputState.h"
+#include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/Graph.h"
-
 #include "../Game/Player.h"
 #include "../Game/EnemyFactory.h"
 #include "../Game/ShotFactory.h"

@@ -84,7 +84,6 @@ private:
     /// </summary>
     void LadderAlign();
 
-
     //プレイヤー登場シーン
     void PlayerOnScreen(const InputState& input);
     //画面のフェードイン
@@ -100,7 +99,6 @@ private:
     
     void (GameplayingScene::* m_updateFunc)(const InputState& input);
 
-   
     std::shared_ptr<Map> m_map;         //マップ
     Position2 m_add;                    //プレイヤーがどのくらい移動しているか
     int m_framecolor = 0xc0c0c0;        //灰色　マップの枠の色
@@ -132,7 +130,6 @@ private:
     
     std::array<std::shared_ptr<HpBar>, Object_Max> m_hp;//HPバー
 
-    
     bool m_isLadder;        //梯子を上っているときtrue
     bool m_isLadderAlign;   //梯子を上っているときは位置を合わせる
     bool m_isLadderFirst;   //梯子を上り終えたとき一度だけ上に移動する
@@ -148,8 +145,8 @@ private:
     int m_bossBgm;          //ボス音楽
     int m_soundVolume;      //サウンドの音量
 
-    int m_tempScreenH;  //画面効果用スクリーンハンドル
-    int m_quakeTimer ;    //画面揺れタイマー
-    float m_quakeX;   //横揺れパラメータ
+    int m_tempScreenH;      //画面効果用スクリーンハンドル
+    int m_quakeTimer ;      //画面揺れタイマー
+    float m_quakeX;         //横揺れパラメータ
 };
 
