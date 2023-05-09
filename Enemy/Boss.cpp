@@ -1,7 +1,7 @@
 #include "Boss.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
-#include "../Info.h"
+#include "../AnimInfo.h"
 #include "../Game/ShotFactory.h"
 #include "../Game/Player.h"
 #include "../Game/HpBar.h"
@@ -43,7 +43,8 @@ Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int 
 	m_rect.size = { static_cast<int>(kGraphSizeWidth * Game::kScale * kDrawScale / 2) - 20,static_cast<int>(kGraphSizeHeight * Game::kScale * kDrawScale) - 20 };
 
 	m_touchDamagePower = kCutManTouchAttackPower;
-	m_isBoss = true;
+	
+	m_type = ObjectType::Boss;
 }
 
 Boss::~Boss()

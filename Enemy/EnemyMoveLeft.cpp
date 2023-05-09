@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
 #include "../game.h"
-#include "../Info.h"
+#include "../AnimInfo.h"
 #include "../Game/HpBar.h"
 #include "../Game/Player.h"
 #include "../Game/ItemFactory.h"

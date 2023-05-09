@@ -3,7 +3,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
-#include "../Info.h"
+#include "../AnimInfo.h"
 #include "../Util/Sound.h"
 #include "../Game/ItemFactory.h"
 

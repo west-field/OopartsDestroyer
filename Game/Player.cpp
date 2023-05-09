@@ -24,13 +24,15 @@ namespace
 	constexpr int kHealAnimSpeed = 1;//アニメーションスピード
 }
 
-Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):m_hp(hp)
+Player::Player(Position2 pos, std::shared_ptr<HpBar>hp):Object()
 {
+	m_hp = hp;
 	m_drawScale = kDrawScale;
 	m_rect.center = pos;
 	m_rect.size = { static_cast<int>(kGraphSizeWidth*Game::kScale - kSize) ,static_cast<int>(kGraphSizeHeight * Game::kScale - kSize)};
 	m_handle = my::MyLoadGraph(L"Data/player.png");
 	m_healH = my::MyLoadGraph(L"Data/heal.png");
+	m_type = ObjectType::Player;
 }
 
 Player::~Player()
@@ -141,16 +143,6 @@ void Player::Draw()
 	}
 }
 
-void Player::Movement(Vector2 vec)
-{
-	m_rect.center += vec;
-}
-
-const Rect& Player::GetRect() const
-{
-	return m_rect;
-}
-
 void Player::Action(ActionType type)
 {
 	switch (type)
@@ -200,5 +192,10 @@ void Player::ScaleEnlarge(float scale)
 	if (m_drawScale >= 4.0f)	return;
 	if(m_ultimateTimer < 0) m_ultimateTimer = 0;
 	m_drawScale += scale;
+}
+
+Vector2 Player::GetVec() const
+{
+	return Vector2(0,0);
 }
 

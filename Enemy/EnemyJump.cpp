@@ -4,7 +4,7 @@
 #include "../Util/Sound.h"
 #include "../Game/HpBar.h"
 #include "../game.h"
-#include "../Info.h"
+#include "../AnimInfo.h"
 #include "../Game/Player.h"
 #include "../Game/ItemFactory.h"
 #include "../Util/Sound.h"
