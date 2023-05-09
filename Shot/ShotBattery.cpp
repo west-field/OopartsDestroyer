@@ -1,7 +1,10 @@
 #include "ShotBattery.h"
 #include <DxLib.h>
 #include "../Util/DrawFunctions.h"
+
+#ifdef _DEBUG
 #include "../game.h"
+#endif
 
 namespace
 {
@@ -29,29 +32,8 @@ void ShotBattery::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 
 void ShotBattery::Update()
 {
-	int wsize = m_rect.size.w / 2;
-	int hsize = m_rect.size.h / 2;
 	Movement(m_vel);
-	//ç∂ë§
-	if (m_rect.center.x - wsize < Game::kMapScreenLeftX)
-	{
-		m_isExist = false;
-	}
-	//âEë§
-	if (m_rect.center.x + wsize > Game::kMapScreenRightX)
-	{
-		m_isExist = false;
-	}
-	//è„í[
-	if (m_rect.center.y + hsize < Game::kMapScreenTopY)
-	{
-		m_isExist = false;
-	}
-	//â∫í[
-	if (m_rect.center.y - hsize > Game::kMapScreenBottomY)
-	{
-		m_isExist = false;
-	}
+	ShotBase::Update();
 }
 
 void ShotBattery::Draw()
@@ -64,4 +46,3 @@ void ShotBattery::Draw()
 	DrawFormatString(Game::kMapScreenRightX, Game::kMapScreenTopY, 0x000000,L"%3f,%3f", m_vel.x, m_vel.y);
 #endif
 }
-

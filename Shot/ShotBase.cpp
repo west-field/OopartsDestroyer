@@ -1,5 +1,6 @@
 #include "ShotBase.h"
 #include "DxLib.h"
+#include "../game.h"
 
 ShotBase::ShotBase(int handle) :
 	m_handle(handle), m_rect({}, {}), m_vel(), m_isExist(false), 
@@ -22,6 +23,32 @@ void ShotBase::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 	m_rect.center = pos;
 	m_vel = vel;
 	m_isPlayerShot = isPlayer;
+}
+
+void ShotBase::Update()
+{
+	int wsize = m_rect.size.w / 2;
+	int hsize = m_rect.size.h / 2;
+	//ç∂ë§
+	if (m_rect.center.x - wsize < Game::kMapScreenLeftX)
+	{
+		m_isExist = false;
+	}
+	//âEë§
+	if (m_rect.center.x + wsize > Game::kMapScreenRightX)
+	{
+		m_isExist = false;
+	}
+	//è„í[
+	if (m_rect.center.y + hsize < Game::kMapScreenTopY)
+	{
+		m_isExist = false;
+	}
+	//â∫í[
+	if (m_rect.center.y - hsize > Game::kMapScreenBottomY)
+	{
+		m_isExist = false;
+	}
 }
 
 void ShotBase::Movement(Vector2 vec)

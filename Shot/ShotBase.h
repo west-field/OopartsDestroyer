@@ -19,7 +19,7 @@ public:
 	//ショット開始
 	virtual void Start(Position2 pos, Vector2 vel, bool left, bool isPlayer);
 	//更新
-	virtual void Update() = 0;
+	virtual void Update();
 	//描画
 	virtual void Draw() = 0;
 	//左に撃ったかどうか

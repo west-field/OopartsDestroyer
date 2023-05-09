@@ -1,6 +1,5 @@
 #include "RockBuster.h"
 #include <DxLib.h>
-#include "../game.h"
 #include "../Util/DrawFunctions.h"
 
 namespace
@@ -29,33 +28,8 @@ void RockBuster::Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)
 void RockBuster::Update()
 {
 	if (!m_isExist)	return;
-	Movement({ 8.0f ,0.0f});
-	//画面の外に出たら消える
-	float hsize, wsize;
-
-	// 半分のサイズを算出
-	wsize = m_rect.size.w * 0.5f;
-	hsize = m_rect.size.h * 0.5f;
-	//左端
-	if (m_rect.center.x + wsize < Game::kMapScreenLeftX)
-	{
-		m_isExist = false;
-	}
-	//右端
-	if (m_rect.center.x - wsize > Game::kMapScreenRightX)
-	{
-		m_isExist = false;
-	}
-	//上端
-	if (m_rect.center.y + hsize < Game::kMapScreenTopY)
-	{
-		m_isExist = false;
-	}
-	//下端
-	if (m_rect.center.y - hsize > Game::kMapScreenBottomY)
-	{
-		m_isExist = false;
-	}
+	Movement({ kShotSpeed ,0.0f});
+	ShotBase::Update();
 
 }
 
@@ -74,4 +48,3 @@ void RockBuster::Movement(Vector2 vec)
 	if (vec.x != 8.0f)	return;
 	ShotBase::Movement(vec);
 }
-
