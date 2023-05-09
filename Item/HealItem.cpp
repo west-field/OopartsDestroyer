@@ -22,7 +22,7 @@ HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos)
 	m_handle = handle;
 	m_rect.size = { kHealSizeX,kHealSizeY };
 
-	m_isHeal = true;
+	m_itemType = ItemType::Heal;
 
 	m_animSpeed = kHealCardAnimSpeed;
 	m_animNum = kHealCardAnimNum;

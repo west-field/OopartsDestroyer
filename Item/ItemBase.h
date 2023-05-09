@@ -1,5 +1,6 @@
 #pragma once
 #include "../Util/Geometry.h"
+#include "../ItemInfo.h"
 
 class ItemBase
 {
@@ -15,10 +16,12 @@ public:
 	//存在を消す
 	void EraseExist();
 	
-	//回復アイテム
-	bool IsHeal()const;
 	//回復量
 	virtual int GetHeal()const = 0;
+
+	//アイテムの種類を返す
+	ItemType OnGet();
+
 protected:
 	
 	int m_handle;//画像ハンドル
@@ -29,7 +32,7 @@ protected:
 
 	int m_idx;//画像インデックス
 
-	bool m_isHeal;//回復アイテムかどうか
+	ItemType m_itemType;//どのアイテムか
 
 	int m_animSpeed;//アニメーションスピード
 	int m_animNum;//アニメーション枚数

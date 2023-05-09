@@ -6,11 +6,7 @@
 #include "../Util/Geometry.h"
 
 class ItemBase;
-
-enum class ItemType
-{
-	Heal,
-};
+#include "../ItemInfo.h"
 
 class ItemFactory
 {

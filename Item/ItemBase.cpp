@@ -3,9 +3,10 @@
 #include "../game.h"
 #include "../Util/DrawFunctions.h"
 
+
 ItemBase::ItemBase(const Position2& pos) :
 	m_handle(-1), m_rect(pos, {}),m_isExist(true),
-	m_idx(0), m_isHeal(false), m_animSpeed(0), m_animNum(0), m_drawScale(0)
+	m_idx(0), m_itemType(ItemType::Point), m_animSpeed(0), m_animNum(0), m_drawScale(0)
 {
 
 }
@@ -43,7 +44,9 @@ void ItemBase::EraseExist()
 	m_isExist = false;
 }
 
-bool ItemBase::IsHeal() const
+ItemType ItemBase::OnGet()
 {
-	return m_isHeal;
+	return m_itemType;
 }
+
+
