@@ -1,7 +1,11 @@
 #include "ItemBase.h"
 #include <DxLib.h>
+#include "../game.h"
+#include "../Util/DrawFunctions.h"
 
-ItemBase::ItemBase(const Position2& pos) :m_handle(-1), m_rect(pos, {}),m_isExist(true)
+ItemBase::ItemBase(const Position2& pos) :
+	m_handle(-1), m_rect(pos, {}),m_isExist(true),
+	m_idx(0), m_isHeal(false), m_animSpeed(0), m_animNum(0), m_drawScale(0)
 {
 
 }
@@ -9,6 +13,19 @@ ItemBase::ItemBase(const Position2& pos) :m_handle(-1), m_rect(pos, {}),m_isExis
 ItemBase::~ItemBase()
 {
 	
+}
+
+void ItemBase::Update()
+{
+	m_idx = (m_idx + 1) % (m_animSpeed * m_animNum);
+
+	//ï\é¶îÕàÕÇ©ÇÁèoÇΩÇÁè¡Ç∑
+	int w = m_rect.size.w / 2;
+	int h = m_rect.size.h / 2;
+	if (m_rect.center.x + w < Game::kMapScreenLeftX || m_rect.center.x - w > Game::kMapScreenRightX)
+	{
+		m_isExist = false;
+	}
 }
 
 const Rect& ItemBase::GetRect() const
@@ -24,4 +41,9 @@ bool ItemBase::IsExist() const
 void ItemBase::EraseExist()
 {
 	m_isExist = false;
+}
+
+bool ItemBase::IsHeal() const
+{
+	return m_isHeal;
 }

@@ -6,7 +6,7 @@ class ItemBase
 public:
 	ItemBase(const Position2& pos);
 	~ItemBase();
-	virtual void Update() = 0;
+	virtual void Update();
 	virtual void Draw(Vector2 vel) = 0;
 	//矩形を取得
 	const Rect& GetRect() const;
@@ -14,6 +14,9 @@ public:
 	bool IsExist()const;
 	//存在を消す
 	void EraseExist();
+	
+	//回復アイテム
+	bool IsHeal()const;
 	//回復量
 	virtual int GetHeal()const = 0;
 protected:
@@ -23,5 +26,14 @@ protected:
 	Rect m_rect;//矩形
 
 	bool m_isExist;	//存在しているかどうか
+
+	int m_idx;//画像インデックス
+
+	bool m_isHeal;//回復アイテムかどうか
+
+	int m_animSpeed;//アニメーションスピード
+	int m_animNum;//アニメーション枚数
+
+	float m_drawScale;//拡大率
 };
 

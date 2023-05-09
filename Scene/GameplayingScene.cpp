@@ -883,7 +883,10 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		if (item->GetRect().IsHit(m_player->GetRect()))
 		{
 			SoundManager::GetInstance().Play(SoundId::Recovery);
-			m_player->Heal(item->GetHeal());
+			if (item->IsHeal())
+			{
+				m_player->Heal(item->GetHeal());
+			}
 			item->EraseExist();
 			continue;
 		}

@@ -17,10 +17,16 @@ namespace
 	constexpr int kHeal = 2;//âÒïúó 
 }
 
-HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos), m_idx(0)
+HealItem::HealItem(const Position2& pos, int handle) : ItemBase(pos)
 {
 	m_handle = handle;
-	m_rect = { pos,{kHealSizeX,kHealSizeY} };
+	m_rect.size = { kHealSizeX,kHealSizeY };
+
+	m_isHeal = true;
+
+	m_animSpeed = kHealCardAnimSpeed;
+	m_animNum = kHealCardAnimNum;
+	m_drawScale = kHealScale;
 }
 
 HealItem::~HealItem()
@@ -28,26 +34,13 @@ HealItem::~HealItem()
 
 }
 
-void HealItem::Update()
-{
-	m_idx = (m_idx + 1) % (kHealCardAnimSpeed * kHealCardAnimNum);
-
-	//ï\é¶îÕàÕÇ©ÇÁèoÇΩÇÁè¡Ç∑
-	int w = m_rect.size.w / 2;
-	int h = m_rect.size.h / 2;
-	if (m_rect.center.x + w < Game::kMapScreenLeftX || m_rect.center.x - w > Game::kMapScreenRightX)
-	{
-		m_isExist = false;
-	}
-}
-
 void HealItem::Draw(Vector2 vel)
 {
 	m_rect.center -= vel;
 
-	int img = (m_idx / kHealCardAnimSpeed) * kHealCardSizeX;
+	int img = (m_idx / m_animSpeed) * kHealCardSizeX;
 	my::MyDrawRectRotaGraph(static_cast<int>(m_rect.center.x), static_cast<int>(m_rect.center.y), img, 0,
-		kHealCardSizeX, kHealCardSizeY,kHealScale, 0.0f, m_handle, true, false);
+		kHealCardSizeX, kHealCardSizeY,m_drawScale, 0.0f, m_handle, true, false);
 
 #ifdef _DEBUG
 	m_rect.Draw(0xaaffff);
