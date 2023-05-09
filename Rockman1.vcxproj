@@ -156,6 +156,7 @@
     <ClCompile Include="Item\HealItem.cpp" />
     <ClCompile Include="Item\ItemBase.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Game\Object.cpp" />
     <ClCompile Include="Scene\MonologueScene.cpp" />
     <ClCompile Include="Scene\SettingScene.cpp" />
     <ClCompile Include="Scene\SoundSettingScene.cpp" />
@@ -187,10 +188,13 @@
     <ClInclude Include="Enemy\EnemyJump.h" />
     <ClInclude Include="Enemy\EnemyMoveLR.h" />
     <ClInclude Include="Game\ItemFactory.h" />
-    <ClInclude Include="Info.h" />
+    <ClInclude Include="AnimInfo.h" />
+    <ClInclude Include="ItemInfo.h" />
     <ClInclude Include="Item\HealItem.h" />
     <ClInclude Include="Item\ItemBase.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Game\Object.h" />
+    <ClInclude Include="ObjectInfo.h" />
     <ClInclude Include="Scene\MonologueScene.h" />
     <ClInclude Include="Scene\SettingScene.h" />
     <ClInclude Include="Scene\SoundSettingScene.h" />

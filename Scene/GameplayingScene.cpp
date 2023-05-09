@@ -12,6 +12,7 @@
 #include "../game.h"
 #include "../Map.h"
 #include "../InputState.h"
+#include "../ObjectInfo.h"
 #include "../Util/Sound.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/Graph.h"
@@ -230,84 +231,204 @@ void GameplayingScene::Draw()
 	}
 }
 
-void GameplayingScene::MovePlayer(float MoveX, float MoveY)
+void GameplayingScene::Move(std::shared_ptr<Object> object, float MoveX, float MoveY)
 {
 	float Dummy = 0.0f;
 	float hsize, wsize;
+	float moveX = 0.0f;
+	float moveY = 0.5f;
 
 	// キャラクタの左上、右上、左下、右下部分が当たり判定のあるマップに衝突しているか調べ、衝突していたら補正する
-	// 半分のサイズ
-	wsize = m_player->GetRect().GetSize().w * 0.5f;
-	hsize = m_player->GetRect().GetSize().h * 0.5f;
+		// 半分のサイズ
+	wsize = object->GetRect().GetSize().w * 0.5f;
+	hsize = object->GetRect().GetSize().h * 0.5f;
 
-	// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
-	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
+	int ob = 0;
+
+	switch (object->Type())
 	{
-		m_fallPlayerSpeed = 0.0f;
+	case ObjectType::Player:	ob = static_cast<int>(ObjectType::Player); break;
+	case ObjectType::Enemy:		ob = static_cast<int>(ObjectType::Enemy); break;
+	case ObjectType::Boss:		ob = static_cast<int>(ObjectType::Boss); break;
+	default:
+		break;
 	}
-	// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
-	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
+
+	//プレイヤーとマップの当たり判定
+	if (ob == static_cast<int>(ObjectType::Player))
 	{
-		m_fallPlayerSpeed = 0.0f;
-	}
-	// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
-	if (MapHitCheck(m_player->GetRect().GetCenter().x - wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
-	{
-		m_fallPlayerSpeed *= -1.0f;
-	}
-	// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
-	if (MapHitCheck(m_player->GetRect().GetCenter().x + wsize + m_add.x, m_player->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
-	{
-		m_fallPlayerSpeed *= -1.0f;
-	}
-	m_player->Movement({ 0.0f,MoveY });//移動
-
-	// 後に左右移動成分だけでチェック
-	// 左下のチェック
-	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
-
-	// 右下のチェック
-	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_player->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
-
-	// 左上のチェック
-	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
-
-	// 右上のチェック
-	MapHitCheck(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_player->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
-
-	m_player->Movement({ MoveX,0.0f });//移動
-
-	// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
-	if ((m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - wsize, m_add.y + m_player->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit) ||
-		(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + wsize, m_add.y + m_player->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit))
-	{
-		//当たり判定のある場所に来たら音を鳴らす
-		if (m_player->IsJump())
+		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
+		if (MapHitCheck(object->GetRect().GetCenter().x - wsize + m_add.x, object->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
 		{
-			SoundManager::GetInstance().Play(SoundId::BlockMove);
+			m_fallPlayerSpeed = 0.0f;
+		}
+		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
+		if (MapHitCheck(object->GetRect().GetCenter().x + wsize + m_add.x, object->GetRect().GetCenter().y + hsize + m_add.y, Dummy, MoveY) == 3)
+		{
+			m_fallPlayerSpeed = 0.0f;
+		}
+		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
+		if (MapHitCheck(object->GetRect().GetCenter().x - wsize + m_add.x, object->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
+		{
+			m_fallPlayerSpeed *= -1.0f;
+		}
+		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
+		if (MapHitCheck(object->GetRect().GetCenter().x + wsize + m_add.x, object->GetRect().GetCenter().y - hsize + m_add.y, Dummy, MoveY) == 4)
+		{
+			m_fallPlayerSpeed *= -1.0f;
+		}
+		object->Movement({ 0.0f,MoveY });//移動
+
+		// 後に左右移動成分だけでチェック
+		// 左下のチェック
+		MapHitCheck(m_add.x + object->GetRect().GetCenter().x - wsize, object->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
+
+		// 右下のチェック
+		MapHitCheck(m_add.x + object->GetRect().GetCenter().x + wsize, object->GetRect().GetCenter().y + hsize + m_add.y, MoveX, Dummy);
+
+		// 左上のチェック
+		MapHitCheck(m_add.x + object->GetRect().GetCenter().x - wsize, object->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
+
+		// 右上のチェック
+		MapHitCheck(m_add.x + object->GetRect().GetCenter().x + wsize, object->GetRect().GetCenter().y - hsize + m_add.y, MoveX, Dummy);
+
+		object->Movement({ MoveX,0.0f });//移動
+
+		// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
+		if ((m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x - wsize, m_add.y + object->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit) ||
+			(m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x + wsize, m_add.y + object->GetRect().GetCenter().y + hsize + 1.0f) == MapEvent_hit))
+		{
+			//当たり判定のある場所に来たら音を鳴らす
+			if (object->IsJump())
+			{
+				SoundManager::GetInstance().Play(SoundId::BlockMove);
+			}
+
+			//足場があったら設置中にする
+			m_fallPlayerSpeed = 0.0f;
+			m_isFall = false;
+			object->SetJump(false);
+			m_isLadderFirst = false;
+		}
+		//梯子があったら足場がある判定にする
+		else if ((m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x + object->GetRect().GetSize().w / 2 - kPullPos, m_add.y + object->GetRect().GetCenter().y + object->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder) ||
+			(m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x - object->GetRect().GetSize().w / 2 + kPullPos, m_add.y + object->GetRect().GetCenter().y + object->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
+		{
+			m_isFall = false;
+			m_fallPlayerSpeed = 0.0f;
+			object->SetJump(false);
+		}
+		else
+		{
+			//ないときはジャンプ中にする
+			object->SetJump(true);
+		}
+		return;
+	}
+	else if (ob == static_cast<int>(ObjectType::Enemy))
+	{
+		//移動量
+		moveX = object->GetVec().x;
+
+		object->Movement({ MoveX,MoveY });//画面移動
+		//画面の左端に消えたら敵を消す
+		if (object->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
+		{
+			object->EraseExist();
+		}
+		//画面の下端に消えたら敵を消す
+		else if (object->GetRect().GetCenter().y - hsize > Game::kMapScreenBottomY)
+		{
+			object->EraseExist();
+		}
+		//画面の上端に消えたら敵を消す
+		else if (object->GetRect().GetCenter().y + hsize < Game::kMapScreenTopY)
+		{
+			object->EraseExist();
+		}
+		//向いている方向で当たっているか判定する
+		if (object->IsLeft())
+		{
+			object->GetChip(m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x - wsize - moveX, m_add.y + object->GetRect().GetCenter().y + hsize - moveY));
+		}
+		else
+		{
+			object->GetChip(m_map->GetMapEventParam(m_add.x + object->GetRect().GetCenter().x + wsize + moveX, m_add.y + object->GetRect().GetCenter().y + hsize - moveY));
+		}
+		return;
+	}
+	else if (ob == static_cast<int>(ObjectType::Boss))
+	{
+		Dummy = 0.0f;
+		float PosX, PosY;
+
+		//移動量
+		moveX = object->GetVec().x;
+
+		object->Movement({ MoveX,MoveY });//画面移動
+
+		//プレイヤーの中心位置
+		PosX = object->GetRect().GetCenter().x + m_add.x;
+		PosY = object->GetRect().GetCenter().y + m_add.y;
+
+		moveY = object->GetVec().y;
+
+		// 左下のチェック、もしブロックの上辺に着いていたら落下を止める
+		if (MapHitCheck(PosX - wsize, PosY + hsize, Dummy, moveY) == 3)
+		{
+			m_fallPlayerSpeed = 0.0f;
+		}
+		// 右下のチェック、もしブロックの上辺に着いていたら落下を止める
+		if (MapHitCheck(PosX + wsize, PosY + hsize, Dummy, moveY) == 3)
+		{
+			m_fallPlayerSpeed = 0.0f;
+		}
+		// 左上のチェック、もしブロックの下辺に当たっていたら落下させる
+		if (MapHitCheck(PosX - wsize, PosY - hsize, Dummy, moveY) == 4)
+		{
+			m_fallPlayerSpeed *= -1.0f;
+		}
+		// 右上のチェック、もしブロックの下辺に当たっていたら落下させる
+		if (MapHitCheck(PosX + wsize, PosY - hsize, Dummy, moveY) == 4)
+		{
+			m_fallPlayerSpeed *= -1.0f;
+		}
+		object->Movement({ 0.0f,moveY });
+
+		//ジャンプしているときだけ横に移動する
+		if (object->IsJump())
+		{
+			// 後に左右移動成分だけでチェック
+			// 左下のチェック
+			MapHitCheck(PosX - wsize, PosY + hsize, moveX, Dummy);
+
+			// 右下のチェック
+			MapHitCheck(PosX + wsize, PosY + hsize, moveX, Dummy);
+
+			// 左上のチェック
+			MapHitCheck(PosX - wsize, PosY - hsize, moveX, Dummy);
+
+			// 右上のチェック
+			MapHitCheck(PosX + wsize, PosY - hsize, moveX, Dummy);
+			//左右移動成分を加算
+			object->Movement({ moveX,0.0f });
 		}
 
-		//足場があったら設置中にする
-		m_fallPlayerSpeed = 0.0f;
-		m_isFall = false;
-		m_player->SetJump(false);
-		m_isLadderFirst = false;
+		// 接地判定 キャラクタの左下と右下の下に地面があるか調べる
+		//当たり判定のある場所に来たら音を鳴らして足場がある判定にする
+		if ((m_map->GetMapEventParam(PosX - wsize, PosY + hsize + 1.0f) == MapEvent_hit) ||
+			(m_map->GetMapEventParam(PosX + wsize, PosY + hsize + 1.0f) == MapEvent_hit))
+		{
+			//足場があったら設置中にする
+			object->SetJump(false);
+		}
+		else
+		{
+			//ないときはジャンプ中にする
+			object->SetJump(true);
+		}
+		return;
 	}
-	//梯子があったら足場がある判定にする
-	else if (	(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x + m_player->GetRect().GetSize().w / 2 - kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder)||
-				(m_map->GetMapEventParam(m_add.x + m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 + kPullPos, m_add.y + m_player->GetRect().GetCenter().y + m_player->GetRect().GetSize().h / 2 + 1.0f) == MapEvent_ladder))
-	{
-		m_isFall = false;
-		m_fallPlayerSpeed = 0.0f;
-		m_player->SetJump(false);
-	}
-	else
-	{
-		//ないときはジャンプ中にする
-		m_player->SetJump(true);
-	}
-	
-	return;
 }
 
 void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
@@ -329,7 +450,7 @@ void GameplayingScene::MoveEnemy(float MoveX, float MoveY)
 
 		enemy->Movement({ MoveX,MoveY });//画面移動
 
-		if (!enemy->IsBoss())
+		if (true)
 		{
 			//画面の左端に消えたら敵を消す
 			if (enemy->GetRect().GetCenter().x + wsize < Game::kMapScreenLeftX)
@@ -621,7 +742,7 @@ void GameplayingScene::Ladder(const InputState& input)
 			m_isLadder = false;
 			Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
 					(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };//移動させる量
-			MovePlayer(0.0f, aling.y);//移動
+			Move(m_player,0.0f, aling.y);//移動
 		}
 	}
 	//下キーで梯子を下がれる　
@@ -649,7 +770,7 @@ void GameplayingScene::Ladder(const InputState& input)
 		m_isFall = true;
 	}
 
-	MovePlayer(0.0f, PlayerMoveY);
+	Move(m_player,0.0f, PlayerMoveY);
 }
 
 void GameplayingScene::LadderAlign()
@@ -666,7 +787,7 @@ void GameplayingScene::LadderAlign()
 	Vector2 aling = { (lader.x + m_map->GetPos().x) - (m_player->GetRect().GetCenter().x - m_player->GetRect().GetSize().w / 2 - 1.0f),
 						(lader.y + m_map->GetPos().y) - (m_player->GetRect().GetCenter().y) };
 	//移動
-	MovePlayer(aling.x, 0.0f);
+	Move(m_player,aling.x, 0.0f);
 }
 
 void GameplayingScene::PlayerOnScreen(const InputState& input)
@@ -691,7 +812,7 @@ void GameplayingScene::PlayerOnScreen(const InputState& input)
 	}
 
 	// 移動量に基づいてキャラクタの座標を移動
-	MovePlayer(PlayerMoveX, PlayerMoveY);
+	Move(m_player,PlayerMoveX, PlayerMoveY);
 
 	if (!m_player->IsJump())
 	{
@@ -797,13 +918,20 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 	}
 
 	// 移動量に基づいてキャラクタの座標を移動
-	MovePlayer(PlayerMoveX, PlayerMoveY);
+	Move(m_player, PlayerMoveX, PlayerMoveY);
 
 	m_map->Update();		//	マップ更新
 	m_player->Update();		//	プレイヤー更新
 	//エネミー
 	float MoveX = m_correction.x, MoveY = m_correction.y;
-	MoveEnemy(MoveX, MoveY);
+	//MoveEnemy(MoveX, MoveY);
+
+	for (auto& enemy : m_enemyFactory->GetEnemies())
+	{
+		if (!enemy->IsExist())	continue;
+		Move(enemy,MoveX, MoveY);
+	}
+
 	m_enemyFactory->Update();
 
 	m_shotFactory->Update();//ショット更新
@@ -883,9 +1011,13 @@ void GameplayingScene::NormalUpdat(const InputState& input)
 		if (item->GetRect().IsHit(m_player->GetRect()))
 		{
 			SoundManager::GetInstance().Play(SoundId::Recovery);
-			if (item->IsHeal())
+
+			switch (item->OnGet())
 			{
+			case ItemType::Heal:
 				m_player->Heal(item->GetHeal());
+			default:
+				break;
 			}
 			item->EraseExist();
 			continue;
@@ -1030,8 +1162,13 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		if (m_playerPos + m_correction.y < Game::kMapScreenBottomY)
 		{
 			m_map->Movement({ 0.0f,moveY });//mapを移動させる
-			MoveEnemy( 0.0f,moveY);//エネミーを移動させる
-			MovePlayer(0.0f, moveY - 0.5f);//プレイヤーを移動させる
+			//MoveEnemy( 0.0f,moveY);//エネミーを移動させる
+			for (auto& enemy : m_enemyFactory->GetEnemies())
+			{
+				if (!enemy->IsExist())	continue;
+				Move(enemy, 0.0f, moveY);
+			}
+			Move(m_player,0.0f, moveY - 0.5f);//プレイヤーを移動させる
 			m_correction.y += moveY;
 			moveY *= -1.0f;
 			m_add.y += moveY;//どのくらいプレイヤーが移動したか
@@ -1053,7 +1190,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 		if (m_playerPos+ m_correction.y > Game::kMapScreenTopY)
 		{
 			m_map->Movement({ 0.0f,moveY });
-			MoveEnemy(0.0f, moveY);
+			//MoveEnemy(0.0f, moveY);
+			for (auto& enemy : m_enemyFactory->GetEnemies())
+			{
+				if (!enemy->IsExist())	continue;
+				Move(enemy, 0.0f, moveY);
+			}
 			m_player->Movement({ 0.0f,moveY + 0.5f });
 			m_correction.y += moveY;
 			moveY *= -1.0f;
@@ -1081,7 +1223,12 @@ void GameplayingScene::MoveMapUpdat(const InputState& input)
 			m_map->GetMapEventParam(m_add.x + Game::kMapScreenRightX, m_add.y + Game::kMapScreenBottomY - 1.0f) != MapEvent_screen))
 		{
 			m_map->Movement({ moveX,0.0f });
-			MoveEnemy(moveX, 0.0f);
+			//MoveEnemy(moveX, 0.0f);
+			for (auto& enemy : m_enemyFactory->GetEnemies())
+			{
+				if (!enemy->IsExist())	continue;
+				Move(enemy, moveX, 0.0f);
+			}
 			m_player->Movement({ moveX + 0.5f,0.0f });
 			moveX *= -1.0f;
 			m_add.x += moveX;

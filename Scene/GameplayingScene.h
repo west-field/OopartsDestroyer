@@ -30,6 +30,7 @@ enum MapEvent
     MapEvent_restart,//リスタート地点
 };
 
+class Object;
 /// <summary>
 /// ゲーム中シーン
 /// </summary>
@@ -43,11 +44,12 @@ public:
     virtual void Draw();
 private:
     /// <summary>
-    /// キャラクターとマップの当たり判定
+    /// 当たり判定
     /// </summary>
-    /// <param name="MoveX">移動量</param>
-    /// <param name="MoveY">移動量</param>
-    void MovePlayer(float MoveX, float MoveY);
+    /// <param name="object">判定するObject</param>
+    /// <param name="MoveX">移動量X</param>
+    /// <param name="MoveY">移動量Y</param>
+    void Move(std::shared_ptr<Object> object, float MoveX, float MoveY);
     /// <summary>
     /// エネミーとマップの当たり判定
     /// </summary>
