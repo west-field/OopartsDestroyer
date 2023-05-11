@@ -67,7 +67,7 @@ void EnemyFactory::Draw()
 #endif
 
 }
-
+//敵オブジェクトの生成
 std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 pos)
 {
 	//EnemyTypeによって作るものを決める
@@ -108,7 +108,7 @@ std::shared_ptr<EnemyBase> EnemyFactory::Create(EnemyType type, const Position2 
 	}
 	return m_enemies.back();//最後尾の要素を返す
 }
-
+//エネミーすべてを取得する
 std::list<std::shared_ptr<EnemyBase>>& EnemyFactory::GetEnemies()
 {
 	return m_enemies;

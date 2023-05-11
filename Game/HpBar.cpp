@@ -20,6 +20,7 @@ HpBar::~HpBar()
 	DeleteGraph(m_HpHandle);
 }
 
+//初期化
 void HpBar::Init(int handle)
 {
 	m_HpHandle = handle;
@@ -32,11 +33,13 @@ void HpBar::Init(int handle)
 	m_MaxHp = m_Hp = kHpMax;
 }
 
+//最大HPを指定する
 void HpBar::MaxHp(int maxHp)
 {
 	m_MaxHp = m_Hp = maxHp;
 }
 
+//プレイヤー用
 void HpBar::UpdatePlayer()
 {
 	/*idxX = m_Hp / 10;
@@ -100,6 +103,7 @@ void HpBar::UpdatePlayer()
 	}
 }
 
+//ボス用
 void HpBar::UpdateBoss()
 {
 	//m_hp->GetHp() <= (m_hp->GetMaxHp() / 3)
@@ -192,6 +196,7 @@ void HpBar::UpdateBoss()
 	}
 }
 
+//表示
 void HpBar::Draw()
 {
 	int x = static_cast<int>(m_rect.center.x + m_rect.size.w / 2);
@@ -206,16 +211,19 @@ void HpBar::Draw()
 #endif
 }
 
+//ダメージ計算
 void HpBar::Damage(int damage)
 {
 	SetHp(m_Hp - damage);
 }
 
+//回復計算
 void HpBar::Heal(const int heal)
 {
 	SetHp(m_Hp + heal);
 }
 
+//HPが最大値または0を超えていないか
 void HpBar::SetHp(const int hp)
 {
 	if (hp >= m_MaxHp)

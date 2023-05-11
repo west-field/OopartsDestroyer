@@ -34,6 +34,7 @@ HealItem::~HealItem()
 
 }
 
+//•\Ž¦
 void HealItem::Draw(Vector2 vel)
 {
 	m_rect.center -= vel;
@@ -49,6 +50,7 @@ void HealItem::Draw(Vector2 vel)
 #endif
 }
 
+//‰ñ•œ‚·‚é—Ê‚ð•Ô‚·
 int HealItem::GetHeal() const
 {
 	return kHeal;

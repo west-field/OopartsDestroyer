@@ -51,17 +51,21 @@ void ShotBase::Update()
 	}
 }
 
+//ˆÚ“®‚³‚¹‚é
 void ShotBase::Movement(Vector2 vec)
 {
+	//¶‚ğŒü‚¢‚Ä‚¢‚½‚çA‹t•ûŒü‚É‚·‚é
 	if (m_isLeft) vec *= -1.0f;
 	m_rect.center += vec;
 }
 
+//‹éŒ`‚ğæ“¾
 const Rect& ShotBase::GetRect() const
 {
 	return m_rect;
 }
 
+//UŒ‚—Í‚ğæ“¾‚·‚é
 const int ShotBase::AttackPower() const
 {
 	return m_hitDamagePower;

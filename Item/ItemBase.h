@@ -19,7 +19,10 @@ public:
 	//回復量
 	virtual int GetHeal()const = 0;
 
-	//アイテムの種類を返す
+	/// <summary>
+	/// アイテムの種類を返す
+	/// </summary>
+	/// <returns>アイテムの種類</returns>
 	ItemType OnGet();
 
 protected:

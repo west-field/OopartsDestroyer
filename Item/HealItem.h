@@ -14,7 +14,7 @@ public:
     /// ‰ñ•œ‚·‚é—Ê‚ð•Ô‚·
     /// </summary>
     /// <returns>‰ñ•œ—Ê</returns>
-    virtual int GetHeal()const;
+    virtual int GetHeal()const override;
 private:
     
 };

@@ -21,12 +21,15 @@ ShotBattery::~ShotBattery()
 {
 }
 
+//ショット開始
 void ShotBattery::Start(Position2 pos, Vector2 vel, bool left, bool isPlayer)
 {
 	ShotBase::Start(pos, vel, left, isPlayer);
 
 	m_vel *= kShotBatterySpeed;
+	//左を向いていたら、逆方向にする
 	if (m_isLeft) m_vel *= -1.0f;
+	//攻撃力を指定する
 	m_hitDamagePower = kShotFive;
 }
 

@@ -144,23 +144,6 @@ void Map::Draw()
 				//マップチップ表示
 				my::MyDrawRectRotaGraph(X, Y, (chipId % 16) * Game::ChipSize, (chipId / 16) * Game::ChipSize, Game::ChipSize, Game::ChipSize, Game::kScale, 0.0f, m_handle, true, false);
 			}
-
-#ifdef _DEBUG
-			auto enemyId = GetChipId(static_cast<int>(MapLayer_enemy + m_stage), chipX, chipY);
-			if (enemyId != 0)
-			{
-				int size = Game::kDrawSize / 2;
-				int X = static_cast<int>((chipX * Game::kDrawSize + size) + m_camera.x);
-				int Y = static_cast<int>((chipY * Game::kDrawSize + size) + m_camera.y);
-				//画面外を表示しない
-				if (X < Game::kMapScreenLeftX - size) continue;
-				if (Y < Game::kMapScreenTopY - size)continue;
-				if (X > Game::kMapScreenRightX + size) continue;
-				if (Y > Game::kMapScreenBottomY + size) continue;
-				//敵の位置に敵の番号を表示
-				DrawFormatString(X, Y, 0x000000, L"%d", enemyId);
-			}
-#endif
 		}
 	}
 #ifdef _DEBUG
@@ -168,6 +151,7 @@ void Map::Draw()
 #endif
 }
 
+//画面移動
 void Map::Movement(Vector2 vec)
 {
 	int size = Game::kDrawSize / 2;
@@ -178,11 +162,13 @@ void Map::Movement(Vector2 vec)
 	m_camera += vec;
 }
 
+//初期化
 void Map::SetPos(Position2 pos)
 {
 	m_camera.x = pos.x;
 }
 
+//ファイルを読み込む
 void Map::Load(const wchar_t* filePath)
 {
 	struct Header
@@ -219,23 +205,27 @@ void Map::Load(const wchar_t* filePath)
 	EnemyPos();
 }
 
+//マップデータの参照を返す
 const MapData_t& Map::GetMapData() const
 {
 	return m_mapData;
 }
 
+//マップのIDを取得する
 const int Map::GetChipId(int layerId, int chipX, int chipY) const
 {
 	auto address = chipY * m_mapWidth + chipX;
 	return m_mapData[layerId][address];
 }
 
+//マップのサイズを取得する
 void Map::GetMapSize(int& width, int& height)
 {
 	width = m_mapWidth;
 	height = m_mapHeight;
 }
 
+//画面スクロール後もう一度敵を表示させる
 void Map::EnemyPos()
 {
 	m_enemyPos.clear();
@@ -250,6 +240,7 @@ void Map::EnemyPos()
 	}
 }
 
+//マップチップの値を取得する
 int Map::GetMapChipParam(float X, float Y)
 {
 	int x, y;
@@ -264,6 +255,7 @@ int Map::GetMapChipParam(float X, float Y)
 	return GetChipId(static_cast<int>(MapLayer_map + m_stage), x, y);
 }
 
+//イベントチップの値を取得する
 int Map::GetMapEventParam(float X, float Y)
 {
 	int x, y;
@@ -278,6 +270,7 @@ int Map::GetMapEventParam(float X, float Y)
 	return GetChipId(static_cast<int>(MapLayer_event + m_stage), x, y);
 }
 
+//マップチップの値がある位置を取得する
 Vector2 Map::GetMapChipPos(float X, float Y)
 {
 	int x, y;
@@ -293,6 +286,7 @@ Vector2 Map::GetMapChipPos(float X, float Y)
 		y = 0;
 	}
 
+	//マップチップの位置
 	Vector2 aling = { static_cast<float>(x * Game::kDrawSize),static_cast<float>(y * Game::kDrawSize) };
 
 	return aling;

@@ -3,7 +3,7 @@
 #include "../Util/Geometry.h"
 
 /// <summary>
-/// カットマン（ボス） 攻撃力,接触:4
+/// ボス（カットマン） 攻撃力,接触:4
 /// </summary>
 class Boss :public EnemyBase
 {

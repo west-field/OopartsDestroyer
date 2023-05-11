@@ -35,7 +35,7 @@ Boss::Boss(std::shared_ptr<Player>player, const Position2& pos, int handle, int 
 	m_hp = hp;
 	m_hp->MaxHp(50);
 
-	m_isLeft = true;
+	m_isLeft = true;//最初は左を向いている
 
 	m_bossBurstH= bossBurstH;
 
@@ -76,9 +76,11 @@ void Boss::Damage(int damage)
 	m_isOnDamage = true;
 	if (m_hp->GetHp() == 0)
 	{
-		SoundManager::GetInstance().Play(SoundId::EnemyBurst);
+		SoundManager::GetInstance().Play(SoundId::EnemyBurst);//ヒットしたときの音を鳴らす
+		//爆発用の関数に変更
 		m_updateFunc = &Boss::BurstUpdate;
 		m_drawFunc = &Boss::BurstDraw;
+		//初期化
 		m_idx = 0;
 		return;
 	}

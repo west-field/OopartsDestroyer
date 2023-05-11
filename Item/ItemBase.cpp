@@ -29,21 +29,25 @@ void ItemBase::Update()
 	}
 }
 
+//矩形を取得する
 const Rect& ItemBase::GetRect() const
 {
 	return m_rect;
 }
 
+//存在しているかどうか
 bool ItemBase::IsExist() const
 {
 	return m_isExist;
 }
 
+//取得した後存在を消す
 void ItemBase::EraseExist()
 {
 	m_isExist = false;
 }
 
+//アイテムをすべて取得する
 ItemType ItemBase::OnGet()
 {
 	return m_itemType;

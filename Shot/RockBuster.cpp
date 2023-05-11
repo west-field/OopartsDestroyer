@@ -18,6 +18,7 @@ RockBuster::~RockBuster()
 	
 }
 
+//ショット開始
 void RockBuster::Start(Position2 pos, Vector2 vel,bool left, bool isPlayer)
 {
 	ShotBase::Start(pos,vel,left,isPlayer);
@@ -43,8 +44,10 @@ void RockBuster::Draw()
 #endif
 }
 
+//移動
 void RockBuster::Movement(Vector2 vec)
 {
+	//移動速度が8.0fじゃないときは別のショットなので移動させない
 	if (vec.x != 8.0f)	return;
 	ShotBase::Movement(vec);
 }

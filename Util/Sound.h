@@ -92,13 +92,22 @@ public:
 	/// </summary>
 	/// <param name="volume">音量</param>
 	void SetSEVolume(int volume);
+	/// <summary>
+	/// SEのボリュームを取得する
+	/// </summary>
+	/// <returns>SEボリューム</returns>
 	int GetSEVolume()const;
+
 	/// <summary>
 	/// BGMのボリュームを設定する
 	/// </summary>
 	/// <param name="volume">音量</param>
 	/// <param name="soundH">サウンドハンドル</param>
 	void SetBGMVolume(int volume,int soundH);
+	/// <summary>
+	/// BGMのボリュームを取得する
+	/// </summary>
+	/// <returns>BGMボリューム</returns>
 	int GetBGMVolume()const;
 
 	/// <summary>

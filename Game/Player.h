@@ -53,13 +53,6 @@ public:
 	/// <param name="scale">拡大率</param>
 	void ScaleEnlarge(float scale);
 
-
-	/// <summary>
-	/// 移動量を返す
-	/// </summary>
-	/// <returns>移動</returns>
-	virtual Vector2 GetVec()const override;
-
 	/// <summary>
 	/// マップチップを入手する
 	/// </summary>

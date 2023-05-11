@@ -39,7 +39,7 @@ public:
 	virtual void Movement(Vector2 vec);
 	//‹éŒ`‚ğæ“¾
 	virtual const Rect& GetRect()const;
-	//UŒ‚—Í
+	//UŒ‚—Íæ“¾
 	virtual const int AttackPower()const;
 protected:
 	

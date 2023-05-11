@@ -44,18 +44,12 @@ public:
     virtual void Draw();
 private:
     /// <summary>
-    /// 当たり判定
+    /// 当たり判定＆移動
     /// </summary>
     /// <param name="object">判定するObject</param>
     /// <param name="MoveX">移動量X</param>
     /// <param name="MoveY">移動量Y</param>
     void Move(std::shared_ptr<Object> object, float MoveX, float MoveY);
-    /// <summary>
-    /// エネミーとマップの当たり判定
-    /// </summary>
-    /// <param name="MoveX">移動量</param>
-    /// <param name="MoveY">移動量</param>
-    void MoveEnemy(float MoveX, float MoveY);
     /// <summary>
     /// マップとの当たり判定
     /// </summary>

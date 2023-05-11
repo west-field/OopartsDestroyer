@@ -38,6 +38,7 @@ void ShotFactory::Draw()
 	}
 }
 
+//ˆÚ“®‚·‚é
 void ShotFactory::Movement(Vector2 vel)
 {
 	for (auto& shot : m_shots)
@@ -46,6 +47,7 @@ void ShotFactory::Movement(Vector2 vel)
 	}
 }
 
+//’e‚Ì¶¬
 void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel,bool isleft, bool isPlayer)
 {
 	SoundManager::GetInstance().Play(SoundId::EnemyShot);
@@ -64,6 +66,7 @@ void ShotFactory::Create(ShotType type, const Position2& pos, const Vector2& vel
 	}
 }
 
+//‘S‚Ä‚Ì’e‚ğæ“¾‚·‚é
 const ShotList_t& ShotFactory::GetShot() const
 {
 	return m_shots;

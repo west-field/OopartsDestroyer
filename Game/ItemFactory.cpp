@@ -44,6 +44,7 @@ void ItemFactory::Draw(Vector2 vel)
 	}
 }
 
+//アイテムを生成
 std::shared_ptr<ItemBase> ItemFactory::Create(ItemType type, const Position2 pos)
 {
 	switch (type)
@@ -57,6 +58,7 @@ std::shared_ptr<ItemBase> ItemFactory::Create(ItemType type, const Position2 pos
 	return m_items.back();
 }
 
+//全てのアイテムを取得する
 std::list<std::shared_ptr<ItemBase>>& ItemFactory::GetItems()
 {
 	return m_items;

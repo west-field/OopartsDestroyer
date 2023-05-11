@@ -34,7 +34,7 @@ public:
 	void SetPos(Position2 pos);
 
 	/// <summary>
-	/// ヘッダーを読み込む
+	/// ファイルを読み込む
 	/// </summary>
 	/// <param name="filePath">読み込むファイル名</param>
 	void Load(const wchar_t* filePath);

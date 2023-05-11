@@ -143,6 +143,7 @@ void Player::Draw()
 	}
 }
 
+//今どんな行動をしているのか
 void Player::Action(ActionType type)
 {
 	switch (type)
@@ -170,32 +171,31 @@ void Player::Action(ActionType type)
 	
 }
 
+//当たり判定対象か
 bool Player::IsCollidable() const
 {
 	return m_ultimateTimer == 0;
 }
 
+//ダメージを受けた
 void Player::Damage(int damage)
 {
 	m_ultimateTimer = kUltimateFrame;
 	m_hp->Damage(damage);
 }
 
+//回復する
 void Player::Heal(int Heal)
 {
 	m_isHeal = true;
 	m_hp->Heal(Heal);
 }
 
+//サイズを大きくする
 void Player::ScaleEnlarge(float scale)
 {
 	if (m_drawScale >= 4.0f)	return;
 	if(m_ultimateTimer < 0) m_ultimateTimer = 0;
 	m_drawScale += scale;
-}
-
-Vector2 Player::GetVec() const
-{
-	return Vector2(0,0);
 }
 
