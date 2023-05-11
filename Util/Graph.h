@@ -34,9 +34,9 @@ private:
 		float scrollSpeed;//スクロールスピード
 		Size imgSize;
 	};
-	std::array<BackImg, static_cast<int>(BgGraph::BgGraph_Max)> bgImgs;//背景
+	std::array<BackImg, static_cast<int>(BgGraph::BgGraph_Max)> m_bgImgs;//背景
 
-	int scrollx = 0;//横にスクロール
+	int m_scrollx = 0;//横にスクロール
 public:
 	Background();
 	/// <summary>

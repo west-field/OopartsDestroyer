@@ -6,39 +6,39 @@
 #include "SceneManager.h"
 
 KeyConfigScene::KeyConfigScene(SceneManager& manager, const InputState& input) :
-	inputState_(input), Scene(manager), currentInputIndex_(0)
+	m_inputState(input), Scene(manager), m_currentInputIndex(0)
 {
 }
 
 KeyConfigScene::~KeyConfigScene()
 {
-	inputState_.SaveKeyInfo();
+	m_inputState.SaveKeyInfo();
 }
 
 void KeyConfigScene::Update(const InputState& input)
 {
 	auto& configInput = const_cast<InputState&>(input);
-	if (!isEditing)
+	if (!m_isEditing)
 	{
-		const int nameCount = static_cast<int>(input.inputNameTable_.size() + 2);
+		const int nameCount = static_cast<int>(input.m_inputNameTable.size() + 2);
 
 		if (input.IsTriggered(InputType::up))
 		{
 			SoundManager::GetInstance().Play(SoundId::Cursor);
-			currentInputIndex_ = ((currentInputIndex_ - 1) + nameCount) % nameCount;
+			m_currentInputIndex = ((m_currentInputIndex - 1) + nameCount) % nameCount;
 		}
 		else if (input.IsTriggered(InputType::down))
 		{
 			SoundManager::GetInstance().Play(SoundId::Cursor);
-			currentInputIndex_ = (currentInputIndex_ + 1) % nameCount;
+			m_currentInputIndex = (m_currentInputIndex + 1) % nameCount;
 		}
 	}
 
 	//この時もう、「決定」を選択している
-	if (currentInputIndex_ == input.inputNameTable_.size())
+	if (m_currentInputIndex == input.m_inputNameTable.size())
 	{
 #ifdef _DEBUG
-		numSize = static_cast<int>(input.inputMapTable_.size());
+		m_numSize = static_cast<int>(input.m_inputMapTable.size());
 #endif
 		if (input.IsTriggered(InputType::next))
 		{
@@ -48,10 +48,10 @@ void KeyConfigScene::Update(const InputState& input)
 			return;
 		}
 	}
-	if (currentInputIndex_ == input.inputMapTable_.size() - 1)
+	if (m_currentInputIndex == input.m_inputMapTable.size() - 1)
 	{
 #ifdef _DEBUG
-		numSize = static_cast<int>(input.inputMapTable_.size() - 1);
+		m_numSize = static_cast<int>(input.m_inputMapTable.size() - 1);
 #endif
 		if (input.IsTriggered(InputType::next))
 		{
@@ -64,11 +64,11 @@ void KeyConfigScene::Update(const InputState& input)
 	if (input.IsTriggered(InputType::next))
 	{
 		SoundManager::GetInstance().Play(SoundId::Determinant);
-		isEditing = !isEditing;
+		m_isEditing = !m_isEditing;
 		return;
 	}
 
-	if (isEditing)
+	if (m_isEditing)
 	{
 		char keystate[256];
 		GetHitKeyStateAll(keystate);
@@ -77,9 +77,9 @@ void KeyConfigScene::Update(const InputState& input)
 
 		int idx = 0;
 		InputType currentType = InputType::max;
-		for (const auto& name : inputState_.inputNameTable_)
+		for (const auto& name : m_inputState.m_inputNameTable)
 		{
-			if (currentInputIndex_ == idx)
+			if (m_currentInputIndex == idx)
 			{
 				currentType = name.first;
 				break;
@@ -120,26 +120,26 @@ void KeyConfigScene::Draw()
 	auto y = pw_start_y + 40;
 	int idx = 0;
 	bool isInputTypeSelected = false;
-	for (const auto& name : inputState_.inputNameTable_)
+	for (const auto& name : m_inputState.m_inputNameTable)
 	{
 		int offset = 0;
 		unsigned int color = 0xffffff;
-		if (currentInputIndex_ == idx)
+		if (m_currentInputIndex == idx)
 		{
 			isInputTypeSelected = true;
 			offset = 10;
 			color = 0xffa0aa;
-			if (isEditing)
+			if (m_isEditing)
 			{
 				color = 0xff0000;
 			}
 		}
 
 		//各キーの表示
-		if (currentInputIndex_ == idx)
+		if (m_currentInputIndex == idx)
 		{
 			offset = 10;
-			if (isEditing)
+			if (m_isEditing)
 			{
 				color = 0xff0000;
 			}
@@ -149,7 +149,7 @@ void KeyConfigScene::Draw()
 		DrawString(x, y, name.second.c_str(), color);
 
 		auto type = name.first;
-		auto it = inputState_.tempMapTable_.find(type);
+		auto it = m_inputState.m_tempMapTable.find(type);
 
 		x += 64;
 		DrawString(x, y, L":", color);
@@ -181,7 +181,7 @@ void KeyConfigScene::Draw()
 	if (!isInputTypeSelected)
 	{
 		int yoffset = 0;
-		if (currentInputIndex_ == inputState_.inputNameTable_.size() + 1)
+		if (m_currentInputIndex == m_inputState.m_inputNameTable.size() + 1)
 		{
 			yoffset = 20;
 		}
@@ -196,8 +196,8 @@ void KeyConfigScene::Draw()
 	DrawBox(pw_start_x, pw_start_y, pw_start_x + pw_width, pw_start_y + pw_height, 0xffffff, false);
 
 #ifdef _DEBUG
-	DrawFormatString(0, 0, 0x000000, L"位置%d", currentInputIndex_);
-	DrawFormatString(0, 20, 0x000000, L"    %d", numSize);
+	DrawFormatString(0, 0, 0x000000, L"位置%d", m_currentInputIndex);
+	DrawFormatString(0, 20, 0x000000, L"    %d", m_numSize);
 #endif
 }
 

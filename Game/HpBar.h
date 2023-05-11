@@ -64,7 +64,7 @@ private:
 
 	Rect m_rect;//•\Ž¦ˆÊ’u‚ðŒˆ‚ß‚é
 
-	int idxX = 0;
-	int idxY = 0;
+	int m_idxX = 0;
+	int m_idxY = 0;
 };
 

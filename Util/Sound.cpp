@@ -41,7 +41,7 @@ int SoundManager::LoadSoundFile(SoundId id, const wchar_t* fileName)
 	int handle = LoadSoundMem(path.c_str());
 
 	assert(handle >= 0);
-	nameAndHandleTable_[id] = handle;
+	m_nameAndHandleTable[id] = handle;
 
 	return handle;
 }
@@ -80,7 +80,7 @@ void SoundManager::SaveSoundConfig()
 //指定のサウンドを鳴らす
 void SoundManager::Play(SoundId id, int volume)
 {
-	PlaySoundMem(nameAndHandleTable_[id], DX_PLAYTYPE_BACK);
+	PlaySoundMem(m_nameAndHandleTable[id], DX_PLAYTYPE_BACK);
 }
 
 //BGMを鳴らす
@@ -93,7 +93,7 @@ void SoundManager::PlayBGM(int soundH)
 //SEのボリュームを設定する
 void SoundManager::SetSEVolume(int volume)
 {
-	for (auto& record : nameAndHandleTable_)
+	for (auto& record : m_nameAndHandleTable)
 	{
 		ChangeVolumeSoundMem(volume, record.second);
 	}
@@ -122,5 +122,5 @@ int SoundManager::GetBGMVolume() const
 //サウンドを止める
 void SoundManager::StopBgm(SoundId id)
 {
-	StopSoundMem(nameAndHandleTable_[id]);
+	StopSoundMem(m_nameAndHandleTable[id]);
 }

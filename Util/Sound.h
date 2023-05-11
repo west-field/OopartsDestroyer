@@ -48,7 +48,7 @@ private:
 	/// </summary>
 	void LoadSoundConfig();
 
-	std::unordered_map<SoundId, int> nameAndHandleTable_;//サウンドハンドル
+	std::unordered_map<SoundId, int> m_nameAndHandleTable;//サウンドハンドル
 
 	//変更したサウンド情報をファイルに書き込む
 	struct SoundConfigInfo

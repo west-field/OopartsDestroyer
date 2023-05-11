@@ -108,14 +108,14 @@ private:
 	//キー(first)=InputType
 	//値(second)=std::vector<InputInfo>
 	using InputMap_t = std::map<InputType, std::vector<InputInfo>>;
-	InputMap_t inputMapTable_;//実際の入力とゲームボタンの対応テーブル
+	InputMap_t m_inputMapTable;//実際の入力とゲームボタンの対応テーブル
 
-	InputMap_t tempMapTable_;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
-	InputMap_t defaultMapTable_;//リセット用キーマップテーブル
+	InputMap_t m_tempMapTable;//書き換え用の一時的なinputMapTable_のコピー いきなりかえてしまわないように
+	InputMap_t m_defaultMapTable;//リセット用キーマップテーブル
 
 	//入力タイプとその名前の対応テーブル
-	std::map<InputType, std::wstring> inputNameTable_;
+	std::map<InputType, std::wstring> m_inputNameTable;
 
-	std::vector<bool> currentInput_;//現在の入力情報(押しているか押していないか)
-	std::vector<bool> lastInput_;//直前の入力情報(直前押しているか押していないか)
+	std::vector<bool> m_currentInput;//現在の入力情報(押しているか押していないか)
+	std::vector<bool> m_lastInput;//直前の入力情報(直前押しているか押していないか)
 };

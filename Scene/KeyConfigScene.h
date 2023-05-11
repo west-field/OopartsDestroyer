@@ -20,12 +20,12 @@ private:
     std::wstring KeyName(int id);
     std::wstring MouseName(int id);
 
-    const InputState& inputState_;
-    int currentInputIndex_;//現在選択中のインデックス
-    bool isEditing = false;//現在特定のにゅうりょくは編集中です。
+    const InputState& m_inputState;
+    int m_currentInputIndex;//現在選択中のインデックス
+    bool m_isEditing = false;//現在特定のにゅうりょくは編集中です。
 
 #ifdef _DEBUG
-    int numSize = 0;
+    int m_numSize = 0;
 #endif
 };
 
